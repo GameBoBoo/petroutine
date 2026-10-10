@@ -1,0 +1,4 @@
+services:
+  db:
+    ports:
+      - "127.0.0.1:${PAWROUTINE_DB_PORT:-55430}:5432"

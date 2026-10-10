@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS user_settings (
+  user_id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  notifications_enabled BOOLEAN NOT NULL DEFAULT TRUE,
+  lead_minutes INTEGER NOT NULL DEFAULT 60 CHECK (lead_minutes BETWEEN 0 AND 1440),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

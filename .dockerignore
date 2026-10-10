@@ -1,0 +1,17 @@
+node_modules
+.next
+out
+coverage
+test-results
+playwright-report
+.env
+.env.*
+!.env.example
+legacy
+PawRoutine-Codex-Starter
+.codex
+.superpowers
+docs
+tests
+.git
+*.log
