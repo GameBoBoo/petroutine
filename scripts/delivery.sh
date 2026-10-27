@@ -14,7 +14,7 @@ case "${1:-help}" in
   init)
     if [[ -e "$config" ]]; then echo 'Delivery environment already exists'; exit 0; fi
     umask 077
-    printf 'JWT_SECRET=%s\nDELIVERY_DB_PASSWORD=%s\nDELIVERY_PORT=3000\n' "$(openssl rand -hex 32)" "$(openssl rand -hex 24)" > "$config"
+    printf 'JWT_SECRET=%s\nDELIVERY_DB_PASSWORD=%s\nDELIVERY_PORT=3000\nDELIVERY_BIND_ADDRESS=%s\n' "$(openssl rand -hex 32)" "$(openssl rand -hex 24)" "${DELIVERY_BIND_ADDRESS:-127.0.0.1}" > "$config"
     echo 'Created private delivery environment (AI disabled)'
     ;;
   verify)

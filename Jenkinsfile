@@ -8,7 +8,11 @@ pipeline {
     string(name: 'REGISTRY_CREDENTIALS_ID', defaultValue: '', description: 'Jenkins username/password credential ID; required outside loopback registry')
     booleanParam(name: 'PUBLISH_AND_DEPLOY', defaultValue: true, description: 'Publish and deploy to the isolated Course project after verification')
   }
-  environment { DELIVERY_PROJECT = 'pawroutine-course-delivery' }
+  environment {
+    DELIVERY_PROJECT = 'pawroutine-course-delivery'
+    // Inside Course only: the outer container limits access to host loopback.
+    DELIVERY_BIND_ADDRESS = '0.0.0.0'
+  }
   stages {
     stage('Source and configuration') {
       steps {

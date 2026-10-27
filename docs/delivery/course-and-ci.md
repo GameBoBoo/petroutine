@@ -25,6 +25,7 @@ git clone https://github.com/GameBoBoo/pawroutine.git /workspace/pawroutine-sour
 cd /workspace/pawroutine-source
 git checkout <commit-or-tag-that-contains-delivery-files>
 docker info
+export DELIVERY_BIND_ADDRESS=0.0.0.0
 bash scripts/delivery.sh init
 bash scripts/delivery.sh verify
 bash scripts/delivery.sh build
@@ -34,6 +35,10 @@ bash scripts/delivery.sh deploy
 หาก commit บน remote ยังไม่มีไฟล์ใหม่ ต้อง push รุ่นส่งก่อน Clone ห้ามอ้างว่า initial commit เก่าคือ source รุ่นปัจจุบัน Local snapshot ที่ทดสอบระหว่างพัฒนาต้องติดป้ายแยกจาก remote release
 
 เปิดเว็บจาก host ที่ `http://127.0.0.1:3300` เริ่มด้วยบัญชีใหม่ในฐานข้อมูล synthetic แยกจากเว็บเดิมที่ port 3000
+
+ภายใน Course ต้อง bind nested web ที่ `0.0.0.0` เพื่อรับ traffic ที่ outer Docker ส่งเข้า eth0; ชั้น host ถูกจำกัดที่ `127.0.0.1:3300` แล้ว Compose default เมื่อไม่ตั้งค่าคือ loopback เหมาะกับการรันบน host โดยตรง Jenkinsfile ตั้ง bind นี้เฉพาะ agent ของ Course
+
+ต้องเก็บ `.delivery.env` เดิมไว้เมื่ออัปเกรด เพราะ DB volume ใช้รหัสเดิม การสร้างไฟล์ใหม่ไม่เปลี่ยนรหัสในฐานข้อมูลเดิม และอาจทำให้ login DB ไม่สำเร็จ
 
 ## เปิด Jenkins และ registry ในกล่อง
 

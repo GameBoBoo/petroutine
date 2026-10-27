@@ -7,7 +7,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET}
       PAWROUTINE_AI_ENABLED: "false"
     ports:
-      - "127.0.0.1:${DELIVERY_PORT:-3000}:3000"
+      - "${DELIVERY_BIND_ADDRESS:-127.0.0.1}:${DELIVERY_PORT:-3000}:3000"
     depends_on:
       db:
         condition: service_healthy
