@@ -10,6 +10,26 @@ Course Container จำเป็นต้องใช้ privileged ตามค
 
 ## เริ่มจากเครื่องผู้ตรวจ
 
+ชุดนี้ผู้ใช้เลือกเก็บ commits ในเครื่อง จึงใช้ Git bundle ใน `.delivery-build/pawroutine-delivery.bundle` สำหรับส่งต่อ source พร้อมประวัติและ tag โดยไม่ push ไป GitHub
+
+หลังเปิด Course ตามคำสั่งด้านล่าง คัดลอกจาก host:
+
+```bash
+docker exec pawroutine-course mkdir -p /workspace
+docker cp .delivery-build/pawroutine-delivery.bundle pawroutine-course:/workspace/pawroutine.bundle
+```
+
+จากนั้นภายใน Course ใหม่ที่ยังไม่มี checkout:
+
+```bash
+git clone -b delivery/course-verification-20261028 /workspace/pawroutine.bundle /workspace/pawroutine-source
+cd /workspace/pawroutine-source
+git checkout course-verified-20261028
+git branch main HEAD
+```
+
+Tag ต้องตรงกับ Jenkins artifact ของรุ่นส่ง หากใช้ checkout ที่มีอยู่แล้ว ให้ตรวจ branch/working tree ก่อนเปลี่ยนรุ่น ไม่เขียนทับงานที่ยังไม่ commit
+
 ```bash
 docker run -dit --name pawroutine-course --privileged \
   -p 127.0.0.1:3300:3000 -p 127.0.0.1:38080:8080 \
@@ -18,6 +38,8 @@ docker exec -it pawroutine-course bash
 ```
 
 ภายในกล่อง:
+
+ตัวอย่างต่อไปนี้สำหรับกรณีที่ทีมได้ push รุ่นส่งแล้ว หากยังไม่ push ให้ใช้ bundle ด้านบนแทนบรรทัด git clone/checkout
 
 ```bash
 mkdir -p /workspace
@@ -56,7 +78,7 @@ docker compose --env-file /workspace/jenkins-private.env -p pawroutine-ci -f com
 1. Checkout source และบันทึก commit
 2. Unit/API → production build → E2E ใน verification container; ถ้าไม่ผ่าน pipeline หยุด
 3. Build image tag ตาม full commit SHA
-4. Push ไป registry ตาม parameter
+4. Push และ pull image กลับจาก registry ตาม parameter เพื่อยืนยัน manifest/tag ที่ publish
 5. Deploy isolated Compose → health และ API smoke
 6. Backup → restore ลง DB แยก → เทียบจำนวน core rows
 7. Archive log, JSON results, image ID, revision และผลกู้คืน ไม่ archive secret หรือ database dump

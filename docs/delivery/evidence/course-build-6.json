@@ -1,0 +1,53 @@
+{
+  "recorded_at": "2026-10-27T17:51:50.585Z",
+  "source_revision": "e38d0d9b72cf47839ec34a9b847ab0eddbe657e8",
+  "environment": "tuchsanai/devtools:2569_1; nested Docker daemon",
+  "jenkins": {
+    "build": 6,
+    "result": "SUCCESS",
+    "url": "http://127.0.0.1:38080/job/PawRoutine-delivery/6/"
+  },
+  "unit_api": {
+    "tests": 76,
+    "passed": 76,
+    "failed": 0
+  },
+  "production_build": "passed",
+  "e2e": {
+    "passed": 14,
+    "skipped": 4,
+    "failed": 0
+  },
+  "image": {
+    "tag": "127.0.0.1:5000/pawroutine:e38d0d9b72cf47839ec34a9b847ab0eddbe657e8",
+    "id": "sha256:18c44a8d2ed74e4f7e7d35846dcc2892c9dc88c7d577c0f31c4b84d58e6eeb4d"
+  },
+  "smoke": {
+    "status": "passed",
+    "checks": [
+      "health/database",
+      "unauthenticated access denied",
+      "landing",
+      "register",
+      "create household",
+      "create/read pet"
+    ],
+    "data": "synthetic only"
+  },
+  "recovery": "PASS backup checksum, pg_restore, core row counts=3|3|3|0; restored database=recovery_20261027174726",
+  "ai_chat": {
+    "passed": 5,
+    "total": 5,
+    "scope": "synthetic live provider + date checks + manual review; no clinical validation"
+  },
+  "ai_draft": {
+    "passed": 3,
+    "total": 3,
+    "scope": "three synthetic cases; no records saved"
+  },
+  "human_evidence_pending": [
+    "real user interviews/pilot outcomes",
+    "team responsibilities",
+    "actual operating costs"
+  ]
+}

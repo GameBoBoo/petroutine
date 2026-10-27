@@ -24,7 +24,7 @@ bash scripts/delivery.sh backup
 bash scripts/delivery.sh recovery-check
 ```
 
-คำสั่ง `verify` ใช้ testdb แยกแบบ tmpfs ไม่มี port บน host และไม่ใช้ฐานข้อมูล production หลัก เมื่อขั้นใดไม่ผ่านต้องหยุดและบันทึก defect ผลลัพธ์เก็บใน `artifacts/`
+คำสั่ง `verify` ตรวจ production dependency audit แล้วรัน unit/API, build และ E2E ใช้ testdb แยกแบบ tmpfs ไม่มี port บน host และไม่ใช้ฐานข้อมูล production หลัก เมื่อขั้นใดไม่ผ่านต้องหยุดและบันทึก defect ผลลัพธ์เก็บใน `artifacts/`
 
 ## 4. รัน Jenkins
 

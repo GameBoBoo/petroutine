@@ -64,7 +64,7 @@ Notes: เปิด Jenkins build จริงและ course-results.md ไม
 
 ## 11 — หลักฐานและข้อจำกัด
 
-Local เดิม: unit/API 76/76; E2E 14 ผ่าน 4 skip ตามแพลตฟอร์ม; AI provider 4/5 โดยหนึ่ง timeout ผล Course/Jenkins ใช้บันทึกที่ตรวจจริงล่าสุด
+Course Jenkins #7: audit ผ่าน, unit/API 76/76, E2E 14 ผ่าน 4 skip; AI live synthetic Chat 5/5 และ Draft 3/3 ดู revision 1bf3dc6 กับผลจริงใน course-results.md
 
 Notes: ผล local 27 ต.ค. 2026 ไม่ใช่ผล Course ใหม่ ห้ามสรุป AI quality ผ่านครบจาก mocked tests
 

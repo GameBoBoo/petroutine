@@ -34,6 +34,8 @@ bash scripts/delivery.sh rollback
 
 Rollback เปลี่ยนเฉพาะ web image แล้วตรวจ health/smoke ไม่ย้อน schema อัตโนมัติ ต้องตรวจ compatibility ของ migration ก่อน รุ่นที่มี migration แบบทำลายข้อมูลใช้แผน restore แยก ไม่ใช้คำสั่งนี้โดยไม่ตรวจ
 
+เลือก previous image ที่ผ่าน security audit ด้วย รุ่นที่ใช้ Next.js 15.5.27 ในประวัติ build เป็นหลักฐานก่อน patch ไม่ใช่ rollback target ที่แนะนำหลังแก้ advisory ผลซ้อม release/image switch ล่าสุดและการตรวจว่าข้อมูลเดโมยังอยู่เก็บใน `artifacts/rollback-summary.json`
+
 ## ข้อจำกัดที่ต้องติดตาม
 
 - ยังไม่มี production SLA, load test, alerting channel หรือ offsite backup schedule ที่ยืนยันแล้ว

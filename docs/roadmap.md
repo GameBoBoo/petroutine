@@ -2,7 +2,7 @@
 
 ## Delivery track — 28 ตุลาคม 2026
 
-กำลังดำเนินงานตามข้อกำหนดรายวิชา: Jenkins pipeline, clean verification container, Course deployment, health/API smoke, backup/recovery, traceability, demo และสไลด์ ดู [Runbook](delivery/README.md) และ [ผลตรวจจริง](delivery/course-results.md) สถานะเก่าด้านล่างเป็นประวัติก่อน delivery รอบนี้
+งานเทคนิค delivery มีผลตรวจจริงแล้ว: Jenkins #7 ผ่าน audit, unit/API 76/76, build, E2E 14 ผ่าน/4 ข้าม, registry, Course deploy, health/API smoke และ backup/recovery หลัง patch Next.js 15.5.28 พร้อม traceability, demo และสไลด์ ดู [Runbook](delivery/README.md) และ [ผลตรวจจริง](delivery/course-results.md) ยังรอข้อมูลผู้ใช้จริง สมาชิก/หน้าที่ และต้นทุนเพื่อปิดหลักฐานด้านคน/ผลกระทบ สถานะเก่าด้านล่างเป็นประวัติก่อน delivery รอบนี้
 
 โค้ดปัจจุบันมี AI Care Brief และ care draft ที่ต้องผู้ใช้ตรวจยืนยันก่อนบันทึก รายการนี้ต้องแยกผลตรวจจาก read-only chatbot และไม่ถือว่า live quality ผ่านจนมีหลักฐาน ดู AC-20–23
 

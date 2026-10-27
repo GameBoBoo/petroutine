@@ -49,10 +49,11 @@ pipeline {
                 trap 'docker logout "$REGISTRY_HOST" >/dev/null 2>&1 || true; rm -f "$DOCKER_CONFIG/config.json"' EXIT
                 printf '%s' "$REGISTRY_PASSWORD" | docker login "$REGISTRY_HOST" --username "$REGISTRY_USER" --password-stdin
                 docker push "$DELIVERY_IMAGE"
+                docker pull "$DELIVERY_IMAGE"
               '''
             }
           } else {
-            sh 'docker push "$DELIVERY_IMAGE"'
+            sh 'docker push "$DELIVERY_IMAGE" && docker pull "$DELIVERY_IMAGE"'
           }
         }
       }

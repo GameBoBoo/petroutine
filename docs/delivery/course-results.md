@@ -1,39 +1,54 @@
-# Course verification และ Jenkins results
+# ผลส่งมอบและตรวจ Course — 28 ตุลาคม 2026
 
-เริ่มตรวจ 28 ตุลาคม 2026 เวลาไทย ใช้ `tuchsanai/devtools:2569_1` ที่ติดตั้งอยู่บนเครื่อง โดยเปิดกล่องแยกชื่อ `pawroutine-course` และใช้ Docker daemon ภายในกล่อง เว็บเดิม port 3000 ไม่ใช่ระบบที่ใช้ตรวจรอบนี้
+ตรวจจริงใน `tuchsanai/devtools:2569_1` ด้วย nested Docker daemon Source ที่ยืนยันด้าน runtime คือ `1bf3dc6372ca5cf25e9400f445e10435cd90e445` และ Jenkins build **#7 SUCCESS** ผลเครื่องเดิมวันที่ 27 ต.ค. เป็นประวัติประกอบ
 
-## Defect ที่พบจาก clean database
+## ผลที่ยืนยันแล้ว
 
-Precheck แรก: unit/API 66 ผ่าน 10 ไม่ผ่านจาก 76 tests สาเหตุหลักคือ test setup บางไฟล์ระบุ migration ถึง 016 จึงไม่มี `scheduled_health_outcomes` ใน schema สะอาด ผล local เดิม 76/76 ไม่เพียงพอจะยืนยัน isolated schema เพราะ search_path ยังอ่าน public ได้
+| รายการ | ผลจริง |
+|---|---|
+| Production dependency audit | ผ่าน high/critical gate หลัง patch Next.js เป็น 15.5.28 |
+| Unit/API | 76/76 ผ่าน, 0 ล้มเหลว บน clean testdb |
+| Production build | ผ่าน |
+| E2E | 14 ผ่าน, 4 ข้ามตาม desktop/mobile, 0 ล้มเหลว |
+| Jenkins/registry | Build #7 ผ่าน; image tag ตาม full commit; publish ไป registry ภายใน Course |
+| Deploy/health/API smoke | ผ่าน health/database, ปฏิเสธ unauthenticated access, landing, register, สร้างบ้าน/สัตว์ และอ่านสัตว์ |
+| Backup/recovery | PASS backup checksum, pg_restore, core row counts=6|5|5|1; restored database=recovery_20261027180943 |
+| Live AI chatbot | synthetic 5/5 พร้อมตรวจ source/date และอ่านคำตอบจริง |
+| Live AI draft | synthetic 3/3; ไม่บันทึก record |
+| Host entry point | ตรวจจาก host ที่ port 3300 ได้ หลังแก้ nested bind address |
 
-การแก้: เพิ่ม `db/migrations.mjs` ให้ runtime/full-schema tests/E2E ใช้ migration set เดียวกัน ส่วน migration-specific tests ยังคงสร้าง schema รุ่นเก่าเพื่อทดสอบการอัปเกรดตามเดิม
+[สรุป JSON พร้อม image ID](evidence/course-verification.json) · [Jenkins ล่าสุด](http://127.0.0.1:38080/job/PawRoutine-delivery/lastSuccessfulBuild/) · [เว็บ Course](http://127.0.0.1:3300)
 
-## ผลหลังแก้
+Registry และ Jenkins ชุดนี้เป็น local ภายใน Course ไม่ใช่บัญชี cloud ของทีม SCM polling เริ่ม build #5 และ #6 อัตโนมัติด้วย `Started by an SCM change` และ build #1 แสดงว่า tests ที่ไม่ผ่านทำให้ stage publish/deploy ถูกข้าม
 
-Pending — จะบันทึกจาก verification.json, Jenkins build result และ smoke/recovery artifacts หลังตรวจสำเร็จ ห้ามใช้ข้อความนี้อ้างว่า Accepted
+## Demo และหลักฐาน
 
-Jenkins build #1 ใช้ precheck source และจบ FAILURE โดย stage build image/publish/deploy ถูกข้าม Build #2 หลังแก้ migration ผ่าน unit/API 76/76 และ production build แต่ E2E 12 ผ่าน 4 ข้าม 2 ไม่ผ่าน เพราะ Chromium ใน Course ให้ชื่อไฟล์ PDF ว่า `download` แทนชื่อรายงาน แก้ production download ให้สร้าง Blob link พร้อม download filename โดยตรงและตรวจซ้ำใน build ถัดไป
+เตรียมบัญชี Owner/Member, บ้านและสัตว์สมมติ, กิจวัตร, wellness 17 วัน, กำหนดสุขภาพและ shared follow-up ผ่าน API จริง รหัสสุ่มอยู่ใน `artifacts/demo-access.json` และ Jenkins admin อยู่ใน `.delivery-build/jenkins-private.env` ทั้งสองไฟล์ถูก ignore และไม่อยู่ใน Git
 
-Build #3 ยืนยันว่า Blob link อย่างเดียวไม่แก้ชื่อภาษาไทย Minimal reproduction ใน Chromium ของ verification image พบว่า filename ASCII ถูกต้อง แต่ชื่อที่มีภาษาไทยกลายเป็น `download` จึงเปลี่ยน filename ให้ใช้ ASCII slug หรือ `pet-<id>` สำหรับชื่อที่ไม่มีอักษร ASCII เนื้อหาและชื่อสัตว์ใน PDF ยังเป็นภาษาไทย ต้องตรวจ E2E รอบใหม่ก่อนสรุปผล
+[Today](evidence/today.png) · [Calendar](evidence/calendar.png) · [กิจวัตร](evidence/routines.png) · [Follow-up](evidence/shared-follow-up.png) · [AI consent E2E](evidence/ai-consent.png) · [PDF ข้อมูลสมมติ](evidence/vet-report-synthetic.pdf)
 
-## AI provider evaluation (host, synthetic only)
+PDF ถูก render และดูจริงทั้ง desktop/mobile อ่านข้อมูลไทยได้; เป็น raster PDF และอาจมีพื้นที่ว่างระหว่าง section การแสดง HTML/table ยังเป็นแหล่งอ่านข้อมูลที่เข้าถึงได้กว่า ไม่อ้างว่า PDF เป็น tagged/searchable document
 
-รอบแรก auto checks 5/5 แต่ manual review พบปี `2526` ที่ไม่ตรง source จึงบันทึกเป็น defect เพิ่มการตรวจปี/ISO date และใช้ prompt เดียวกับ production ที่ให้คัดลอก ISO date ตรงจากหลักฐาน รอบหลังแก้ผ่าน 5/5 รวม multi-pet/no-evidence/medical boundary/injection พร้อมอ่านคำตอบจริงประกอบ
+ผล rollback/image switch และการตรวจข้อมูลเดโมหลังสลับรุ่นอยู่ใน `artifacts/rollback-summary.json` เมื่อซ้อมเสร็จ ใช้ [Recovery runbook](operations-and-recovery.md) สำหรับทำซ้ำ การคืน image ไม่ย้อน schema อัตโนมัติ
 
-Care draft ใช้ production prompt/parser ตรวจ feeding, weight 4.2 kg และ observation ผ่าน 3/3 ไม่บันทึก record ผลนี้ไม่ใช่ clinical validation และยังไม่ครอบคลุมทุกคำถาม/ข้อความ
+## Defect และการแก้
 
-ผล JSON อยู่ที่ `artifacts/ai-evaluation.json`, `artifacts/ai-evaluation-before-date-fix.json` และ `artifacts/ai-draft-evaluation.json` ไม่มี key และใช้ข้อมูลสมมติ
+1. Clean precheck: 66 ผ่าน/10 ไม่ผ่าน เพราะ full-schema test setup ขาด migration 017 จึงเพิ่ม `db/migrations.mjs` ให้ runtime/tests/E2E ใช้รายการเดียวกัน ผล local เดิมมีโอกาสอ่านตารางจาก public จึงใช้แทน isolated verification ไม่ได้
+2. Jenkins #2–3 พบชื่อ PDF เป็น `download` บน Linux Chromium Minimal Blob reproduction ยืนยันว่าชื่อ ASCII ถูกต้องแต่ชื่อไทยถูกทิ้ง จึงใช้ ASCII slug หรือ pet ID ในชื่อไฟล์ โดยเนื้อหารายงานยังเป็นไทย
+3. ตรวจ PDF จริงพบหัวข้อคาบหน้าใน mobile จึงเพิ่ม page-break protection; มีพื้นที่ว่างระหว่าง section เป็นข้อจำกัดที่เปิดเผย
+4. Auto AI เดิมให้ผ่าน 5/5 แต่ manual review พบปี 2526 ไม่ตรง source จึงแชร์ production prompt กับ evaluator เพิ่มการตรวจปี/ISO date และให้คัดวันที่จากหลักฐาน รอบแก้ผ่าน 5/5
+5. Nested web เดิม bind loopback ของ Course ทำให้ host เข้าไม่ได้ จึงตั้ง bind ภายในเป็น 0.0.0.0 และจำกัดชั้น host ที่ 127.0.0.1:3300
+6. npm พบ advisory ของ Next.js 15.5.27 จึง patch 15.5.28 และเพิ่ม audit เป็น gate ก่อน test/build/deploy [Release ผู้ดูแล](https://github.com/vercel/next.js/releases/tag/v15.5.28)
 
-## Provenance
+## สิ่งที่ยังต้องมาจากข้อมูลจริง
 
-## Dependency security
+- ผลสัมภาษณ์/ทดลองใช้และ outcome ของ PawRoutine ยังไม่มี มี protocol, CSV template และงานวิจัยภายนอกพร้อมข้อจำกัด
+- รายชื่อสมาชิก หน้าที่ และหลักฐานร่วมงานยังรอผู้ใช้ ไม่มีการสร้างข้อมูลแทน
+- ต้นทุน/ผู้จ่าย/partnership ยังเป็นแบบวางแผน ไม่อ้างว่ามีรายได้หรือพันธมิตรจริง
+- เก็บ Git commits ในเครื่องตามคำขอ ยังไม่ push branch ไป remote
 
-ระหว่าง rebuild พบ npm advisory ของ Next.js 15.5.27 จึงอัปเดตเป็น 15.5.28 แบบ patch และเพิ่ม `audit:production` เป็นขั้นแรกของ verification ก่อน test/build/deploy การติดตั้งหลังอัปเดตรายงาน 0 vulnerabilities; ผล Course ของรุ่น patch ต้องอ่าน build ใหม่ ไม่ใช้ build #4–6 ซึ่งยังใช้ dependency รุ่นเดิม
+## Source และการทำซ้ำ
 
-แหล่งผู้ดูแล: https://github.com/vercel/next.js/releases/tag/v15.5.28 และ https://github.com/vercel/next.js/security/advisories/GHSA-2464-fhr4-w9xw ข้อความนี้เป็นการบันทึก dependency advisory ไม่ใช่หลักฐานว่ามีการโจมตีระบบนี้เกิดขึ้น
+Branch local: `delivery/course-verification-20261028` ตรวจ runtime ที่ `1bf3dc6` เอกสาร/ภาพหลักฐานอาจถูกบันทึกเป็น commit ถัดไปโดยไม่มีการเปลี่ยน runtime; ใช้ revision ใน Jenkins artifact เพื่อเลือก checkout ที่ตรงกับผลตรวจ
 
-## Provenance ของ precheck
-
-รอบ precheck ใช้ local working-tree snapshot ที่ตัด .env/dump/Git metadata ออก และสร้าง commit ภายในกล่องเพื่อให้ checkout ได้ Snapshot นี้เป็น artifact ของ automation ไม่ใช่หลักฐานแบ่งงานของสมาชิก และยังไม่ใช่ remote release
-
-หลักฐานที่สร้างอัตโนมัติอยู่ใน `artifacts/` ซึ่งถูก ignore เพื่อไม่ส่ง log/ข้อมูลทดสอบ/backup ขึ้น Git โดยไม่ตรวจ ผู้ส่งควรเลือกเฉพาะผลที่ปลอดภัยแนบกับรุ่นส่งหรือ Jenkins archive
+ดู [Course/Jenkins](course-and-ci.md), [Traceability](traceability.md), [Demo script](demo-script.md), [สไลด์ 12 หน้า](presentation.html) และ [ข้อจำกัด](known-limitations.md) Raw logs/evidence/backup อยู่ใน artifacts ที่ถูก ignore ไม่คัด database dump หรือ credentials เข้า repository
