@@ -9,7 +9,7 @@ export default function Modal({ title, description, children, onClose }) {
   useEffect(() => {
     previousFocus.current = document.activeElement;
     dialogRef.current?.focus();
-    const onKeyDown = event => { if (event.key === 'Escape') onClose(); };
+    const onKeyDown = event => { if (event.key === 'Escape' && !document.querySelector('.select-field-menu')) onClose(); };
     document.addEventListener('keydown', onKeyDown);
     return () => { document.removeEventListener('keydown', onKeyDown); previousFocus.current?.focus?.(); };
   }, [onClose]);

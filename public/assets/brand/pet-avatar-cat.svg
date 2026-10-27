@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
+  <title id="title">รูปโปรไฟล์แมว PetRoutine แบบมินิมอล</title>
+  <desc id="desc">โครงหน้าแมวอย่างเรียบง่าย ใช้เส้นโค้งไม่กี่เส้น</desc>
+  <circle cx="80" cy="80" r="78" fill="#FEF3E7"/>
+  <path d="M45 62 39 34c-1-5 3-7 7-4l22 19m47 13 6-28c1-5-3-7-7-4L92 49" fill="#FFFAF4" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M45 70c0-21 14-35 35-35s35 14 35 35v15c0 24-14 38-35 38S45 109 45 85V70Z" fill="#FFFAF4" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/>
+  <circle cx="67" cy="73" r="3" fill="#1F2937"/><circle cx="93" cy="73" r="3" fill="#1F2937"/>
+  <path d="M73 91c4-4 10-4 14 0m-7 1v7m0 0c-4 4-8 4-12 0m12 0c4 4 8 4 12 0" fill="none" stroke="#1F2937" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M52 52 49 42l14 10m48 0 3-10-14 10" fill="none" stroke="#F59E0B" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

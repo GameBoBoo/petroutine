@@ -1,7 +1,7 @@
+import { applyMigrations } from '../db/migrations.mjs';
 import 'dotenv/config';
 import crypto from 'node:crypto';
 import { spawn } from 'node:child_process';
-import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import pg from 'pg';
 
@@ -12,9 +12,7 @@ await admin.query(`CREATE SCHEMA ${schema}`);
 const setup = new pg.Client({ connectionString: process.env.DATABASE_URL, options: `-c search_path=${schema},public` });
 await setup.connect();
 try {
-  for (const filename of ['001_initial.sql', '002_phase4.sql', '003_ci_calendar_settings.sql', '004_product_refinement.sql', '005_household_trash.sql']) {
-    await setup.query(await readFile(new URL(`../db/migrations/${filename}`, import.meta.url), 'utf8'));
-  }
+  await applyMigrations(setup);
 } finally { await setup.end(); }
 
 let exitCode = 1;
@@ -37,7 +35,7 @@ try {
   if (Date.now() >= deadline) throw new Error('Timed out waiting for the Next.js test server');
   exitCode = await new Promise((resolve, reject) => {
     const cli = fileURLToPath(new URL('../node_modules/@playwright/test/cli.js', import.meta.url));
-    const child = spawn(process.execPath, [cli, 'test'], {
+    const child = spawn(process.execPath, [cli, 'test', ...process.argv.slice(2)], {
       cwd: process.cwd(), stdio: 'inherit',
       env: { ...process.env, PGOPTIONS: `-c search_path=${schema},public`, PLAYWRIGHT_BASE_URL: 'http://127.0.0.1:3105', PLAYWRIGHT_MANAGED_SERVER: '1' },
     });

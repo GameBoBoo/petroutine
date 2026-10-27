@@ -1,7 +1,7 @@
+import { applyMigrations } from '../db/migrations.mjs';
 import 'dotenv/config';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
-import { readFile } from 'node:fs/promises';
 import { before, after, test } from 'node:test';
 import pg from 'pg';
 
@@ -18,9 +18,7 @@ before(async () => {
   const setup = new pg.Client({ connectionString: process.env.DATABASE_URL, options: `-c search_path=${schema},public` });
   await setup.connect();
   try {
-    for (const filename of ['001_initial.sql', '002_phase4.sql', '003_ci_calendar_settings.sql', '004_product_refinement.sql', '005_household_trash.sql']) {
-      await setup.query(await readFile(new URL(`../db/migrations/${filename}`, import.meta.url), 'utf8'));
-    }
+    await applyMigrations(setup);
   } finally { await setup.end(); }
   process.env.PGOPTIONS = `-c search_path=${schema},public`;
   handlers = await import('../app/api/v1/[...path]/route.js');
@@ -53,11 +51,28 @@ test('calendar projects a real one-time appointment and rejects invalid or forei
   const pet = await call('POST', `households/${id}/pets`, owner.body.token, { name: 'Mochi', species: 'dog' });
   const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Bangkok', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
   const future = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Bangkok', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(Date.now() + 5 * 86_400_000));
+  await call('POST', `pets/${pet.body.pet.id}/routines`, owner.body.token, { title: 'Today care', activity_type: 'feeding', time: '00:00', days: [0, 1, 2, 3, 4, 5, 6] });
+  await call('GET', `households/${id}/tasks/today`, owner.body.token);
   const added = await call('POST', `pets/${pet.body.pet.id}/routines`, owner.body.token, { title: 'Vet visit', activity_type: 'vet', schedule_type: 'once', date: future, time: '10:30' });
   assert.equal(added.status, 201);
+  const vaccine = await call('POST', `pets/${pet.body.pet.id}/passport`, owner.body.token, { entry_type: 'vaccination', title: 'วัคซีนประจำปี', next_due_date: today });
+  assert.equal(vaccine.status, 201);
+  const appointment = await call('POST', `pets/${pet.body.pet.id}/passport`, owner.body.token, { entry_type: 'appointment', title: 'ตรวจสุขภาพ', next_due_date: future });
+  assert.equal(appointment.status, 201);
+  const medicationDue = await call('POST', `pets/${pet.body.pet.id}/passport`, owner.body.token, { entry_type: 'medication', title: 'ทบทวนยาประจำ', next_due_date: future });
+  assert.equal(medicationDue.status, 201);
+  const datedVisit = await call('POST', `pets/${pet.body.pet.id}/health-records`, owner.body.token, { record_type: 'appointment', title: 'พบคุณหมอ', recorded_at: `${future}T14:00:00+07:00` });
+  assert.equal(datedVisit.status, 201);
+  const todayItems = await call('GET', `households/${id}/tasks/today`, owner.body.token);
+  assert.ok(todayItems.body.tasks.some(item => item.title === 'วัคซีนประจำปี' && item.source_type === 'passport_due' && item.read_only));
   const calendar = await call('GET', `households/${id}/calendar?from=${today}&to=${future}`, owner.body.token);
   assert.equal(calendar.status, 200);
   assert.ok(calendar.body.events.some(event => event.title === 'Vet visit' && event.date === future && event.status === 'scheduled'));
+  assert.ok(calendar.body.events.some(event => event.title === 'วัคซีนประจำปี' && event.date === today && event.all_day));
+  assert.ok(calendar.body.events.some(event => event.title === 'ตรวจสุขภาพ' && event.date === future && event.all_day));
+  assert.ok(calendar.body.events.some(event => event.title === 'ทบทวนยาประจำ' && event.date === future && event.all_day));
+  assert.ok(calendar.body.events.some(event => event.title === 'พบคุณหมอ' && event.date === future && !event.all_day));
+  assert.ok(calendar.body.events.some(event => event.title === 'Today care' && event.date === today), 'stored and projected timestamps sort together');
   assert.equal((await call('GET', `households/${id}/calendar?from=${future}&to=${today}`, owner.body.token)).status, 400);
   assert.equal((await call('GET', `households/${id}/calendar?from=${today}&to=${future}`, outsider.body.token)).status, 403);
 });

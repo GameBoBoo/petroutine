@@ -1,3 +1,4 @@
+import { manageMembers, listArchived, restoreArchived } from '../../../../lib/services/experience-service.js';
 import { NextResponse } from 'next/server.js';
 import bcrypt from 'bcryptjs';
 import crypto from 'node:crypto';
@@ -9,12 +10,22 @@ import { ServiceError } from '../../../../lib/services/service-errors.js';
 import { createRoutine, ensureTasksForDate, ensureTodayTasks, updateRoutine } from '../../../../lib/services/routine-service.js';
 import { archiveCareEntry, createCareEntry, listCareEntries, updateCareEntry } from '../../../../lib/services/care-entry-service.js';
 import { archiveHealthRecord, createHealthRecord, listHealthRecords, updateHealthRecord } from '../../../../lib/services/health-record-service.js';
+import { archivePassportEntry, createPassportEntry, listPassportEntries, updatePassportEntry } from '../../../../lib/services/passport-service.js';
+import { archiveWellnessLog, createWellnessLog, listWellnessLogs, updateWellnessLog } from '../../../../lib/services/wellness-log-service.js';
+import { getWellnessBaseline } from '../../../../lib/services/wellness-baseline-service.js';
+import { acknowledgeWellnessAlert, completeWellnessAlertFollowUp, listWellnessAlerts, monitorWellnessAlert, updateWellnessAlertFollowUp } from '../../../../lib/services/wellness-alert-service.js';
+import { getWellnessDashboard } from '../../../../lib/services/wellness-dashboard-service.js';
+import { listWellnessReminders } from '../../../../lib/services/wellness-reminder-service.js';
+import { getVetReport } from '../../../../lib/services/vet-report-service.js';
 import { listAccountActivity, listHouseholdActivity, writeActivity } from '../../../../lib/services/activity-service.js';
 import { withTransaction } from '../../../../lib/services/transaction.js';
 import { getPetTimeline } from '../../../../lib/services/timeline-service.js';
 import { archiveHousehold, listTrashedHouseholds, restoreHousehold } from '../../../../lib/services/household-service.js';
 import { mutateTask, undoActivity } from '../../../../lib/services/task-service.js';
 import { requireMember, requireOwner } from '../../../../lib/services/access-service.js';
+import { aiEnabled, aiProviderReady, aiHourlyLimit, createPetInsight, getPetAiStatus, getHouseholdAiSettings, updateHouseholdAiSettings, updateAiConsent } from '../../../../lib/services/ai-insight-service.js';
+import { createCareDraft } from '../../../../lib/services/ai-care-draft-service.js';
+import { changeScheduledHealthOutcome, listScheduledHealthEvents } from '../../../../lib/services/scheduled-health-service.js';
 
 export const runtime = 'nodejs';
 
@@ -47,6 +58,12 @@ const validDate = value => {
   const parsed = Date.parse(`${value}T00:00:00Z`);
   return Number.isFinite(parsed) && new Date(parsed).toISOString().slice(0, 10) === value;
 };
+const optionalText = (value, maximum) => value == null || value === '' || (typeof value === 'string' && value.trim().length <= maximum);
+const validPetProfile = body => optionalText(body.breed, 120)
+  && (body.sex == null || body.sex === '' || ['male', 'female', 'unknown'].includes(body.sex))
+  && (body.neuter_status == null || body.neuter_status === '' || ['neutered', 'not_neutered', 'unknown'].includes(body.neuter_status))
+  && (body.baseline_weight_kg == null || body.baseline_weight_kg === '' || (Number.isFinite(Number(body.baseline_weight_kg)) && Number(body.baseline_weight_kg) > 0))
+  && (body.baseline_weight_recorded_on == null || body.baseline_weight_recorded_on === '' || validDate(body.baseline_weight_recorded_on));
 async function validAssignee(householdId, assigneeId) {
   return !assigneeId || (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(assigneeId) && Boolean((await member(householdId, assigneeId))));
 }
@@ -58,6 +75,74 @@ async function expectedTaskVersion(taskId, requested) {
 }
 const ensureDate = (householdId, date) => ensureTasksForDate({ householdId, date });
 const ensureToday = householdId => ensureTodayTasks(householdId);
+async function todayRecordedItems(householdId) {
+  const [careEntries, healthRecords, wellnessLogs] = await Promise.all([
+    pool.query(
+      `SELECT ce.id, 'care_entry'::text AS source_type, TRUE AS read_only,
+              'completed'::text AS status, 'completed'::text AS display_status,
+              ce.occurred_at AS scheduled_at, ce.occurred_at AS original_scheduled_at,
+              ce.created_by AS assigned_user_id, ce.created_by AS completed_by,
+              ce.occurred_at AS completed_at, 0 AS mutation_version,
+              ce.title, ce.activity_type, ce.pet_id, p.name AS pet_name,
+              u.name AS completed_by_name, ce.notes, 'บันทึกการดูแล'::text AS source_label
+       FROM care_entries ce
+       JOIN pets p ON p.id = ce.pet_id
+       JOIN households h ON h.id = ce.household_id
+       JOIN users u ON u.id = ce.created_by
+       WHERE ce.household_id = $1 AND h.archived_at IS NULL AND p.archived_at IS NULL
+         AND ce.archived_at IS NULL
+         AND (ce.occurred_at AT TIME ZONE 'Asia/Bangkok')::date = (NOW() AT TIME ZONE 'Asia/Bangkok')::date`,
+      [householdId],
+    ),
+    pool.query(
+      `SELECT hr.id, 'health_record'::text AS source_type, TRUE AS read_only,
+              'completed'::text AS status, 'completed'::text AS display_status,
+              hr.recorded_at AS scheduled_at, hr.recorded_at AS original_scheduled_at,
+              hr.created_by AS assigned_user_id, hr.created_by AS completed_by,
+              hr.recorded_at AS completed_at, 0 AS mutation_version,
+              hr.title, hr.record_type AS activity_type, hr.pet_id, p.name AS pet_name,
+              u.name AS completed_by_name, hr.details AS notes, 'ข้อมูลสุขภาพ'::text AS source_label
+       FROM pet_health_records hr
+       JOIN pets p ON p.id = hr.pet_id
+       JOIN households h ON h.id = p.household_id
+       JOIN users u ON u.id = hr.created_by
+       WHERE p.household_id = $1 AND h.archived_at IS NULL AND p.archived_at IS NULL
+         AND hr.archived_at IS NULL
+         AND NOT (hr.record_type IN ('vaccination','appointment') AND hr.created_at < hr.recorded_at)
+         AND (hr.recorded_at AT TIME ZONE 'Asia/Bangkok')::date = (NOW() AT TIME ZONE 'Asia/Bangkok')::date`,
+      [householdId],
+    ),
+    pool.query(
+      `SELECT wellness.id, 'wellness_log'::text AS source_type, TRUE AS read_only,
+              'completed'::text AS status, 'completed'::text AS display_status,
+              wellness.recorded_at AS scheduled_at, wellness.recorded_at AS original_scheduled_at,
+              wellness.created_by AS assigned_user_id, wellness.created_by AS completed_by,
+              wellness.recorded_at AS completed_at, 0 AS mutation_version,
+              'เช็กอินสุขภาพวันนี้'::text AS title, 'wellness'::text AS activity_type,
+              wellness.pet_id, p.name AS pet_name, u.name AS completed_by_name,
+              wellness.notes, 'เช็กอินรายวัน'::text AS source_label
+       FROM pet_wellness_logs wellness
+       JOIN pets p ON p.id = wellness.pet_id
+       JOIN households h ON h.id = p.household_id
+       JOIN users u ON u.id = wellness.created_by
+       WHERE p.household_id = $1 AND h.archived_at IS NULL AND p.archived_at IS NULL
+         AND wellness.archived_at IS NULL
+         AND (wellness.recorded_at AT TIME ZONE 'Asia/Bangkok')::date = (NOW() AT TIME ZONE 'Asia/Bangkok')::date`,
+      [householdId],
+    ),
+  ]);
+  return [...careEntries.rows, ...healthRecords.rows, ...wellnessLogs.rows];
+}
+const notificationKey = item => {
+  const marker = item.type === 'task'
+    ? String(new Date(item.scheduled_at).getTime())
+    : item.due_date
+      ? new Date(item.due_date).toISOString().slice(0, 10).replaceAll('-', '')
+      : 'attention';
+  return `${item.type}:${item.id}:${marker}`;
+};
+const validNotificationKey = value => typeof value === 'string'
+  && /^(task|health_due|wellness_alert):[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:(?:\d{8}|\d{13}|attention)$/i.test(value);
 
 export async function GET(request, context) {
   const path = (await context.params).path || [];
@@ -65,13 +150,17 @@ export async function GET(request, context) {
     if (path.join('/') === 'health') { await pool.query('SELECT 1'); return ok({ status: 'ok', database: 'ok' }); }
     const userId = await auth(request);
     if (!userId) return fail(401, 'UNAUTHENTICATED', 'กรุณาเข้าสู่ระบบก่อนใช้งาน');
+    if (path.join('/') === 'ai-insights/status') return ok({ enabled: aiEnabled(), provider_ready: aiProviderReady(), hourly_limit: aiHourlyLimit() });
+    if (path[0] === 'pets' && path[2] === 'ai-insights' && path[3] === 'status' && path.length === 4) return ok(await getPetAiStatus({ petId: path[1], actorId: userId }));
+    if (path[0] === 'households' && path[2] === 'ai-settings' && path.length === 3) return ok({ settings: await getHouseholdAiSettings({ householdId: path[1], actorId: userId }) });
+    if (path[0] === 'households' && path[2] === 'archived-items' && path.length === 3) return ok(await listArchived({ householdId:path[1], actorId:userId }));
     if (path.join('/') === 'auth/me') {
       const result = await pool.query('SELECT id, name, email, created_at FROM users WHERE id = $1', [userId]);
       return result.rowCount ? ok({ user: result.rows[0] }) : fail(404, 'USER_NOT_FOUND', 'ไม่พบผู้ใช้');
     }
     if (path.join('/') === 'auth/settings') {
-      const result = await pool.query('SELECT notifications_enabled, lead_minutes FROM user_settings WHERE user_id = $1', [userId]);
-      return ok({ settings: result.rows[0] || { notifications_enabled: true, lead_minutes: 60 } });
+      const result = await pool.query('SELECT notifications_enabled, lead_minutes, health_reminder_days FROM user_settings WHERE user_id = $1', [userId]);
+      return ok({ settings: result.rows[0] || { notifications_enabled: true, lead_minutes: 60, health_reminder_days: 30 } });
     }
     if (path.join('/') === 'auth/activity') {
       const params = new URL(request.url).searchParams;
@@ -87,10 +176,10 @@ export async function GET(request, context) {
     if (path[0] === 'households' && path.length === 2) {
       const role = await member(path[1], userId);
       if (!role) return fail(403, 'FORBIDDEN', 'ไม่มีสิทธิ์เข้าถึง Household นี้');
-      const result = await pool.query('SELECT id, name, owner_id, invite_code, created_at FROM households WHERE id = $1 AND archived_at IS NULL', [path[1]]);
+      const result = await pool.query('SELECT id, name, owner_id, invite_code, invite_expires_at, created_at FROM households WHERE id = $1 AND archived_at IS NULL', [path[1]]);
       if (!result.rowCount) return fail(404, 'HOUSEHOLD_NOT_FOUND', 'ไม่พบบ้านนี้');
       const household = { ...result.rows[0], role };
-      if (role !== 'owner') delete household.invite_code;
+      if (role !== 'owner') { delete household.invite_code; delete household.invite_expires_at; }
       return ok({ household });
     }
     if (path[0] === 'households' && path[2] === 'members') {
@@ -106,8 +195,13 @@ export async function GET(request, context) {
     if (path[0] === 'households' && path[2] === 'tasks' && path[3] === 'today') {
       if (!(await member(path[1], userId))) return fail(403, 'FORBIDDEN', 'ไม่มีสิทธิ์เข้าถึง Household นี้');
       await ensureToday(path[1]);
-      const result = await pool.query(`SELECT ct.*, r.title, r.activity_type, p.id AS pet_id, p.name AS pet_name, u.name AS completed_by_name, CASE WHEN ct.status = 'pending' AND ct.scheduled_at < NOW() THEN 'overdue' ELSE ct.status END AS display_status FROM care_tasks ct JOIN routines r ON r.id = ct.routine_id JOIN pets p ON p.id = r.pet_id JOIN households h ON h.id = p.household_id LEFT JOIN users u ON u.id = ct.completed_by WHERE p.household_id = $1 AND h.archived_at IS NULL AND (ct.scheduled_at AT TIME ZONE 'Asia/Bangkok')::date = (NOW() AT TIME ZONE 'Asia/Bangkok')::date AND (ct.status <> 'pending' OR (r.active AND r.archived_at IS NULL AND p.archived_at IS NULL)) ORDER BY ct.scheduled_at`, [path[1]]);
-      return ok({ tasks: result.rows });
+      const [result, recordedItems, healthEvents] = await Promise.all([
+        pool.query(`SELECT ct.*, 'task'::text AS source_type, FALSE AS read_only, 'งานตามตาราง'::text AS source_label, r.title, r.activity_type, p.id AS pet_id, p.name AS pet_name, u.name AS completed_by_name, CASE WHEN ct.status = 'pending' AND ct.scheduled_at < NOW() THEN 'overdue' ELSE ct.status END AS display_status FROM care_tasks ct JOIN routines r ON r.id = ct.routine_id JOIN pets p ON p.id = r.pet_id JOIN households h ON h.id = p.household_id LEFT JOIN users u ON u.id = ct.completed_by WHERE p.household_id = $1 AND h.archived_at IS NULL AND (ct.scheduled_at AT TIME ZONE 'Asia/Bangkok')::date = (NOW() AT TIME ZONE 'Asia/Bangkok')::date AND (ct.status <> 'pending' OR (r.active AND r.archived_at IS NULL AND p.archived_at IS NULL))`, [path[1]]),
+        todayRecordedItems(path[1]),
+        listScheduledHealthEvents(path[1], bangkokDate(), bangkokDate()),
+      ]);
+      const tasks = [...result.rows, ...recordedItems, ...healthEvents.map(event => ({ ...event, read_only: true, status: event.status || 'pending', display_status: event.status || 'pending', source_label: event.activity_type === 'vaccination' ? 'กำหนดวัคซีน' : event.activity_type === 'appointment' ? 'นัดหมาย' : 'กำหนดสุขภาพ', assigned_user_id: event.assigned_user_id || null }))].sort((a, b) => new Date(a.scheduled_at) - new Date(b.scheduled_at));
+      return ok({ tasks });
     }
     if (path[0] === 'households' && path[2] === 'calendar' && path.length === 3) {
       if (!(await member(path[1], userId))) return fail(403, 'FORBIDDEN', 'ไม่มีสิทธิ์เข้าถึง Household นี้');
@@ -117,8 +211,9 @@ export async function GET(request, context) {
       catch { return fail(400, 'INVALID_RANGE', 'กรุณาเลือกช่วงวันที่ไม่เกิน 42 วัน'); }
       const [from, to] = [dates[0], dates.at(-1)];
       if (dates.includes(bangkokDate())) await ensureToday(path[1]);
-      const stored = await pool.query(`SELECT ct.*, r.title, r.activity_type, r.assigned_user_id, p.id AS pet_id, p.name AS pet_name FROM care_tasks ct JOIN routines r ON r.id = ct.routine_id JOIN pets p ON p.id = r.pet_id JOIN households h ON h.id = p.household_id WHERE p.household_id = $1 AND h.archived_at IS NULL AND (ct.scheduled_at AT TIME ZONE 'Asia/Bangkok')::date BETWEEN $2::date AND $3::date AND (ct.status <> 'pending' OR (r.active AND r.archived_at IS NULL AND p.archived_at IS NULL)) ORDER BY ct.scheduled_at`, [path[1], from, to]);
-      const events = stored.rows.map(row => ({ id: row.id, routine_id: row.routine_id, pet_id: row.pet_id, pet_name: row.pet_name, title: row.title, activity_type: row.activity_type, assigned_user_id: row.assigned_user_id, date: bangkokDate(new Date(row.scheduled_at)), scheduled_at: row.scheduled_at, status: row.status === 'pending' ? (bangkokDate(new Date(row.scheduled_at)) > bangkokDate() ? 'scheduled' : new Date(row.scheduled_at) < new Date() ? 'overdue' : 'pending') : row.status }));
+      const stored = await pool.query(`SELECT ct.*, r.title, r.activity_type, p.id AS pet_id, p.name AS pet_name FROM care_tasks ct JOIN routines r ON r.id = ct.routine_id JOIN pets p ON p.id = r.pet_id JOIN households h ON h.id = p.household_id WHERE p.household_id = $1 AND h.archived_at IS NULL AND (ct.scheduled_at AT TIME ZONE 'Asia/Bangkok')::date BETWEEN $2::date AND $3::date AND (ct.status <> 'pending' OR (r.active AND r.archived_at IS NULL AND p.archived_at IS NULL)) ORDER BY ct.scheduled_at`, [path[1], from, to]);
+      const events = stored.rows.map(row => ({ id: row.id, mutation_version: row.mutation_version, routine_id: row.routine_id, pet_id: row.pet_id, pet_name: row.pet_name, title: row.title, activity_type: row.activity_type, assigned_user_id: row.assigned_user_id, date: bangkokDate(new Date(row.scheduled_at)), scheduled_at: row.scheduled_at, status: row.status === 'pending' ? (bangkokDate(new Date(row.scheduled_at)) > bangkokDate() ? 'scheduled' : new Date(row.scheduled_at) < new Date() ? 'overdue' : 'pending') : row.status }));
+      events.push(...(await listScheduledHealthEvents(path[1], from, to)).map(event => ({ ...event, status: ['completed', 'skipped'].includes(event.status) ? event.status : 'scheduled' })));
       const routines = await pool.query(`SELECT r.id, r.title, r.activity_type, r.assigned_user_id, r.schedule_value, p.id AS pet_id, p.name AS pet_name FROM routines r JOIN pets p ON p.id = r.pet_id JOIN households h ON h.id = p.household_id WHERE p.household_id = $1 AND h.archived_at IS NULL AND r.active AND r.archived_at IS NULL AND p.archived_at IS NULL`, [path[1]]);
       const today = bangkokDate();
       for (const routine of routines.rows) {
@@ -129,7 +224,7 @@ export async function GET(request, context) {
           events.push({ id: null, routine_id: routine.id, pet_id: routine.pet_id, pet_name: routine.pet_name, title: routine.title, activity_type: routine.activity_type, assigned_user_id: routine.assigned_user_id, date: occurrence.date, scheduled_at: scheduledAt, status: 'scheduled' });
         }
       }
-      events.sort((a, b) => a.scheduled_at.localeCompare(b.scheduled_at));
+      events.sort((a, b) => new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime());
       return ok({ events });
     }
     if (path[0] === 'households' && path[2] === 'activity' && path.length === 3) {
@@ -141,13 +236,22 @@ export async function GET(request, context) {
     }
     if (path[0] === 'households' && path[2] === 'notifications' && path.length === 3) {
       if (!(await member(path[1], userId))) return fail(403, 'FORBIDDEN', 'ไม่มีสิทธิ์เข้าถึง Household นี้');
-      const settings = await pool.query('SELECT notifications_enabled, lead_minutes FROM user_settings WHERE user_id = $1', [userId]);
+      const settings = await pool.query('SELECT notifications_enabled, lead_minutes, health_reminder_days FROM user_settings WHERE user_id = $1', [userId]);
       if (settings.rows[0]?.notifications_enabled === false) return ok({ notifications: [] });
       await ensureToday(path[1]);
       const lead = settings.rows[0]?.lead_minutes ?? 60;
       if (lead > 0) await ensureDate(path[1], bangkokDate(new Date(Date.now() + 86_400_000)));
-      const result = await pool.query(`SELECT ct.id, ct.scheduled_at, r.title, r.activity_type, p.name AS pet_name, CASE WHEN ct.scheduled_at < NOW() THEN 'overdue' ELSE 'upcoming' END AS status FROM care_tasks ct JOIN routines r ON r.id = ct.routine_id JOIN pets p ON p.id = r.pet_id JOIN households h ON h.id = p.household_id WHERE p.household_id = $1 AND h.archived_at IS NULL AND ct.status = 'pending' AND r.active AND r.archived_at IS NULL AND p.archived_at IS NULL AND ct.scheduled_at <= NOW() + ($2::integer * INTERVAL '1 minute') ORDER BY ct.scheduled_at`, [path[1], lead]);
-      return ok({ notifications: result.rows });
+      const [result, wellness] = await Promise.all([
+        pool.query(`SELECT ct.id, 'task'::text AS type, ct.scheduled_at, r.title, r.activity_type, p.id AS pet_id, p.name AS pet_name, CASE WHEN ct.scheduled_at < NOW() THEN 'overdue' ELSE 'upcoming' END AS status FROM care_tasks ct JOIN routines r ON r.id = ct.routine_id JOIN pets p ON p.id = r.pet_id JOIN households h ON h.id = p.household_id WHERE p.household_id = $1 AND h.archived_at IS NULL AND ct.status = 'pending' AND r.active AND r.archived_at IS NULL AND p.archived_at IS NULL AND ct.scheduled_at <= NOW() + ($2::integer * INTERVAL '1 minute') ORDER BY ct.scheduled_at`, [path[1], lead]),
+        listWellnessReminders({ householdId: path[1], actorId: userId, days: settings.rows[0]?.health_reminder_days ?? 30 }),
+      ]);
+      const notifications = [...result.rows, ...wellness].map(item => ({ ...item, notification_key: notificationKey(item) }));
+      const dismissed = await pool.query(
+        'SELECT notification_key FROM notification_dismissals WHERE user_id = $1 AND household_id = $2',
+        [userId, path[1]],
+      );
+      const hidden = new Set(dismissed.rows.map(item => item.notification_key));
+      return ok({ notifications: notifications.filter(item => !hidden.has(item.notification_key)) });
     }
     if (path[0] === 'households' && path[2] === 'history') {
       if (!(await member(path[1], userId))) return fail(403, 'FORBIDDEN', 'ไม่มีสิทธิ์เข้าถึง Household นี้');
@@ -184,11 +288,43 @@ export async function GET(request, context) {
     if (path[0] === 'pets' && path[2] === 'health-records' && path.length === 3) {
       return ok(await listHealthRecords({ petId: path[1], actorId: userId }));
     }
+    if (path[0] === 'pets' && path[2] === 'passport' && path.length === 3) {
+      return ok(await listPassportEntries({ petId: path[1], actorId: userId }));
+    }
+    if (path[0] === 'pets' && path[2] === 'wellness-logs' && path.length === 3) {
+      const params = new URL(request.url).searchParams;
+      return ok(await listWellnessLogs({
+        petId: path[1],
+        actorId: userId,
+        filters: { from: params.get('from'), to: params.get('to'), limit: params.get('limit') },
+      }));
+    }
+    if (path[0] === 'pets' && path[2] === 'wellness-baseline' && path.length === 3) {
+      const params = new URL(request.url).searchParams;
+      return ok(await getWellnessBaseline({ petId: path[1], actorId: userId, asOf: params.get('as_of') }));
+    }
+    if (path[0] === 'pets' && path[2] === 'wellness-alerts' && path.length === 3) {
+      const params = new URL(request.url).searchParams;
+      return ok(await listWellnessAlerts({
+        petId: path[1], actorId: userId,
+        filters: { status: params.get('status'), limit: params.get('limit') },
+      }));
+    }
+    if (path[0] === 'pets' && path[2] === 'wellness-dashboard' && path.length === 3) {
+      const params = new URL(request.url).searchParams;
+      return ok(await getWellnessDashboard({
+        petId: path[1], actorId: userId, range: params.get('range'), asOf: params.get('as_of'),
+      }));
+    }
+    if (path[0] === 'pets' && path[2] === 'vet-report' && path.length === 3) {
+      const params = new URL(request.url).searchParams;
+      return ok(await getVetReport({ petId: path[1], actorId: userId, from: params.get('from'), to: params.get('to') }));
+    }
     if (path[0] === 'pets' && path[2] === 'timeline' && path.length === 3) {
       const params = new URL(request.url).searchParams;
       return ok(await getPetTimeline({
         petId: path[1], actorId: userId, cursor: params.get('cursor'), limit: params.get('limit'),
-        filters: { source_type: params.get('source_type'), from: params.get('from'), to: params.get('to') },
+        filters: { q: params.get('q'), source_type: params.get('source_type'), from: params.get('from'), to: params.get('to') },
       }));
     }
     if (path[0] === 'pets' && path[2] === 'history') {
@@ -223,6 +359,65 @@ export async function POST(request, context) {
       return ok({ user: { id: user.id, name: user.name, email: user.email }, token: issueToken(user.id) });
     }
     const userId = await auth(request); if (!userId) return fail(401, 'UNAUTHENTICATED', 'กรุณาเข้าสู่ระบบก่อนใช้งาน');
+    if (path[0] === 'scheduled-health' && path.length === 4) {
+      return ok(await changeScheduledHealthOutcome({ sourceType: path[1], sourceId: path[2], actorId: userId,
+        action: path[3], skipReason: body.skip_reason }));
+    }
+    if (path[0] === 'households' && path[2] === 'calendar' && path[3] === 'materialize' && path.length === 4) {
+      const routine=await routineAccess(body.routine_id,userId);
+      if (!routine || routine.household_id !== path[1]) return fail(403,'FORBIDDEN','ไม่มีสิทธิ์เข้าถึงรายการนี้');
+      const date=new Date(body.scheduled_at);
+      if (!Number.isFinite(date.getTime())) return fail(400,'INVALID_INPUT','วันเวลาไม่ถูกต้อง');
+      const day=bangkokDate(date);
+      if (!occurrencesInRange(routine.schedule_value,day,day).some(item=>item.scheduledAt.getTime()===date.getTime())) return fail(409,'SCHEDULE_CHANGED','กิจวัตรเปลี่ยนไปแล้ว กรุณาโหลดปฏิทินล่าสุด');
+      await ensureDate(path[1],day);
+      const result=await pool.query('SELECT * FROM care_tasks WHERE routine_id=$1 AND scheduled_at=$2',[routine.id,date]);
+      return result.rowCount ? ok({task:result.rows[0]}) : fail(409,'SCHEDULE_CHANGED','ไม่พบงานตามตารางนี้');
+    }
+    if (path[0] === 'households' && ['rotate-invite','remove-member','transfer-owner'].includes(path[2]) && path.length === 3) return ok(await manageMembers({ householdId:path[1], actorId:userId, action:path[2], targetId:body.user_id }));
+    if (path[0] === 'households' && path[2] === 'archived-items' && path[3] === 'restore' && path.length === 4) return ok(await restoreArchived({ householdId:path[1], actorId:userId, type:body.type, id:body.id }));
+    if (path[0] === 'pets' && path[2] === 'contact-profile' && path.length === 3) {
+      if (!optionalText(body.emergency_contact,500) || !optionalText(body.photo_url,1500000) || (body.photo_url && !/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(body.photo_url))) return fail(400,'INVALID_INPUT','รูปภาพหรือข้อมูลติดต่อไม่ถูกต้อง');
+      const pet = await withTransaction(async client => {
+        const before=await petAccess(path[1],userId,client,true);
+        if (!before) throw new ServiceError('FORBIDDEN','ไม่มีสิทธิ์แก้ไขสัตว์เลี้ยงนี้',403);
+        const result=await client.query('UPDATE pets SET emergency_contact=$2, photo_url=$3 WHERE id=$1 RETURNING *',[path[1],body.emergency_contact?.trim() || null,body.photo_url || null]);
+        await writeActivity(client,{householdId:before.household_id,actorId:userId,action:'update',entityType:'pet',entityId:path[1],beforeData:before,afterData:result.rows[0]});return result.rows[0];
+      }); return ok({pet});
+    }
+    if (path[0] === 'pets' && path[2] === 'ai-insights' && path.length === 3) {
+      return ok({ insight: await createPetInsight({ petId: path[1], actorId: userId, input: body }) });
+    }
+    if (path[0] === 'households' && path[2] === 'ai-insights' && path.length === 3) {
+      return ok({ insight: await createPetInsight({ householdId: path[1], actorId: userId, input: body }) });
+    }
+    if (path[0] === 'households' && path[2] === 'ai-care-draft' && path.length === 3) {
+      return ok(await createCareDraft({ householdId: path[1], actorId: userId, input: body }));
+    }
+    if (path[0] === 'households' && path[2] === 'notifications' && path[3] === 'dismiss-all' && path.length === 4) {
+      if (!(await member(path[1], userId))) return fail(403, 'FORBIDDEN', 'ไม่มีสิทธิ์จัดการการแจ้งเตือนของบ้านนี้');
+      const keys = body.notification_keys;
+      if (!Array.isArray(keys) || !keys.length || keys.length > 1000 || keys.some(key => !validNotificationKey(key))) return fail(400, 'INVALID_NOTIFICATION', 'รายการแจ้งเตือนไม่ถูกต้อง');
+      const uniqueKeys = [...new Set(keys)];
+      await pool.query(
+        `INSERT INTO notification_dismissals (user_id, household_id, notification_key)
+         SELECT $1, $2, listed.notification_key FROM UNNEST($3::text[]) AS listed(notification_key)
+         ON CONFLICT (user_id, household_id, notification_key) DO UPDATE SET dismissed_at = NOW()`,
+        [userId, path[1], uniqueKeys],
+      );
+      return ok({ dismissed: true, count: uniqueKeys.length });
+    }
+    if (path[0] === 'households' && path[2] === 'notifications' && path[3] === 'dismiss' && path.length === 4) {
+      if (!(await member(path[1], userId))) return fail(403, 'FORBIDDEN', 'ไม่มีสิทธิ์จัดการการแจ้งเตือนของบ้านนี้');
+      if (!validNotificationKey(body.notification_key)) return fail(400, 'INVALID_NOTIFICATION', 'ข้อมูลแจ้งเตือนไม่ถูกต้อง');
+      await pool.query(
+        `INSERT INTO notification_dismissals (user_id, household_id, notification_key)
+         VALUES ($1, $2, $3) ON CONFLICT (user_id, household_id, notification_key)
+         DO UPDATE SET dismissed_at = NOW()`,
+        [userId, path[1], body.notification_key],
+      );
+      return ok({ dismissed: true, notification_key: body.notification_key });
+    }
     if (path.join('/') === 'households') {
       if (typeof body.name !== 'string' || body.name.trim().length < 2) return fail(400, 'INVALID_INPUT', 'กรุณาระบุชื่อ Household');
       const code = crypto.randomBytes(6).toString('hex').toUpperCase();
@@ -235,9 +430,9 @@ export async function POST(request, context) {
       return ok({ household }, 201);
     }
     if (path.join('/') === 'households/join') {
-      const result = await pool.query('SELECT id, name FROM households WHERE invite_code = $1 AND archived_at IS NULL', [String(body.invite_code || '').trim().toUpperCase()]); if (!result.rowCount) return fail(404, 'INVITE_NOT_FOUND', 'ไม่พบ Invite Code');
+      const result = await pool.query('SELECT id, name FROM households WHERE invite_code = $1 AND archived_at IS NULL AND invite_expires_at > NOW()', [String(body.invite_code || '').trim().toUpperCase()]); if (!result.rowCount) return fail(404, 'INVITE_NOT_FOUND', 'ไม่พบ Invite Code');
       const joinedHousehold = await withTransaction(async client => {
-        const active = await client.query('SELECT id, name FROM households WHERE id = $1 AND archived_at IS NULL FOR SHARE', [result.rows[0].id]);
+        const active = await client.query('SELECT id, name FROM households WHERE id = $1 AND archived_at IS NULL AND invite_code = $2 AND invite_expires_at > NOW() FOR SHARE', [result.rows[0].id, String(body.invite_code || '').trim().toUpperCase()]);
         if (!active.rowCount) throw new ServiceError('INVITE_NOT_FOUND', 'ไม่พบรหัสเชิญนี้', 404);
         const joined = await client.query('INSERT INTO household_members (household_id, user_id, role) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING RETURNING household_id, user_id, role', [active.rows[0].id, userId, 'member']);
         if (joined.rowCount) await writeActivity(client, { householdId: active.rows[0].id, actorId: userId, action: 'join', entityType: 'household_member', entityId: userId, afterData: joined.rows[0] });
@@ -252,10 +447,17 @@ export async function POST(request, context) {
       return ok(await restoreHousehold({ householdId: path[1], actorId: userId }));
     }
     if (path[0] === 'households' && path[2] === 'pets') {
-      if (!(await member(path[1], userId))) return fail(403, 'FORBIDDEN', 'ไม่มีสิทธิ์เข้าถึง Household นี้'); if (!body.name || !['dog', 'cat'].includes(body.species)) return fail(400, 'INVALID_INPUT', 'ต้องระบุชื่อและประเภท dog หรือ cat');
+      if (!(await member(path[1], userId))) return fail(403, 'FORBIDDEN', 'ไม่มีสิทธิ์เข้าถึง Household นี้'); if (typeof body.name !== 'string' || !body.name.trim() || body.name.trim().length > 120 || !['dog', 'cat'].includes(body.species) || (body.birth_date && !validDate(body.birth_date)) || !validPetProfile(body)) return fail(400, 'INVALID_INPUT', 'ข้อมูลโปรไฟล์สัตว์เลี้ยงไม่ถูกต้อง');
       const pet = await withTransaction(async client => {
         await requireMember(client, path[1], userId);
-        const result = await client.query('INSERT INTO pets (household_id, name, species, birth_date, notes, vet_contact) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [path[1], body.name.trim(), body.species, body.birth_date || null, body.notes || null, body.vet_contact || null]);
+        const result = await client.query(
+          `INSERT INTO pets
+           (household_id, name, species, birth_date, notes, vet_contact, breed, sex, neuter_status, baseline_weight_kg, baseline_weight_recorded_on)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`,
+          [path[1], body.name.trim(), body.species, body.birth_date || null, body.notes || null, body.vet_contact || null,
+            body.breed?.trim() || null, body.sex || null, body.neuter_status || null,
+            body.baseline_weight_kg === '' || body.baseline_weight_kg == null ? null : Number(body.baseline_weight_kg), body.baseline_weight_recorded_on || null],
+        );
         await writeActivity(client, { householdId: path[1], actorId: userId, action: 'create', entityType: 'pet', entityId: result.rows[0].id, afterData: result.rows[0] });
         return result.rows[0];
       });
@@ -267,11 +469,32 @@ export async function POST(request, context) {
     if (path[0] === 'pets' && path[2] === 'health-records' && path.length === 3) {
       return ok(await createHealthRecord({ petId: path[1], actorId: userId, input: body }), 201);
     }
+    if (path[0] === 'pets' && path[2] === 'passport' && path.length === 3) {
+      return ok(await createPassportEntry({ petId: path[1], actorId: userId, input: body }), 201);
+    }
+    if (path[0] === 'pets' && path[2] === 'wellness-logs' && path.length === 3) {
+      return ok(await createWellnessLog({ petId: path[1], actorId: userId, input: body }), 201);
+    }
     if (path[0] === 'care-entries' && path[2] === 'archive') {
       return ok(await archiveCareEntry({ entryId: path[1], actorId: userId }));
     }
     if (path[0] === 'health-records' && path[2] === 'archive') {
       return ok(await archiveHealthRecord({ recordId: path[1], actorId: userId }));
+    }
+    if (path[0] === 'passport' && path[2] === 'archive') {
+      return ok(await archivePassportEntry({ entryId: path[1], actorId: userId }));
+    }
+    if (path[0] === 'wellness-logs' && path[2] === 'archive') {
+      return ok(await archiveWellnessLog({ logId: path[1], actorId: userId }));
+    }
+    if (path[0] === 'wellness-alerts' && path[2] === 'acknowledge' && path.length === 3) {
+      return ok(await acknowledgeWellnessAlert({ alertId: path[1], actorId: userId }));
+    }
+    if (path[0] === 'wellness-alerts' && path[2] === 'monitor' && path.length === 3) {
+      return ok(await monitorWellnessAlert({ alertId: path[1], actorId: userId }));
+    }
+    if (path[0] === 'wellness-alerts' && path[2] === 'follow-up' && path[3] === 'complete' && path.length === 4) {
+      return ok(await completeWellnessAlertFollowUp({ alertId: path[1], actorId: userId, input: body }));
     }
     if (path[0] === 'pets' && path[2] === 'archive') {
       const pet = await petAccess(path[1], userId);
@@ -323,6 +546,8 @@ export async function PATCH(request, context) {
     const userId = await auth(request);
     if (!userId) return fail(401, 'UNAUTHENTICATED', 'กรุณาเข้าสู่ระบบก่อนใช้งาน');
     const body = await request.json().catch(() => ({}));
+    if (path[0] === 'households' && path[2] === 'ai-settings' && path.length === 3) return ok({ settings: await updateHouseholdAiSettings({ householdId: path[1], actorId: userId, enabled: body.enabled }) });
+    if (path[0] === 'households' && path[2] === 'ai-consent' && path.length === 3) return ok(await updateAiConsent({ householdId: path[1], actorId: userId, consented: body.consented }));
     if (path.join('/') === 'auth/me') {
       if (typeof body.name !== 'string' || body.name.trim().length < 2 || body.name.trim().length > 120) return fail(400, 'INVALID_INPUT', 'กรุณาระบุชื่อ 2–120 ตัวอักษร');
       const user = await withTransaction(async client => {
@@ -334,14 +559,15 @@ export async function PATCH(request, context) {
       return ok({ user });
     }
     if (path.join('/') === 'auth/settings') {
-      if (typeof body.notifications_enabled !== 'boolean' || !Number.isInteger(body.lead_minutes) || body.lead_minutes < 0 || body.lead_minutes > 1440) return fail(400, 'INVALID_INPUT', 'การตั้งค่าแจ้งเตือนไม่ถูกต้อง');
+      if (typeof body.notifications_enabled !== 'boolean' || !Number.isInteger(body.lead_minutes) || body.lead_minutes < 0 || body.lead_minutes > 1440 || (body.health_reminder_days !== undefined && ![7, 14, 30, 60, 90].includes(body.health_reminder_days))) return fail(400, 'INVALID_INPUT', 'การตั้งค่าแจ้งเตือนไม่ถูกต้อง');
       const settings = await withTransaction(async client => {
-        const previous = await client.query('SELECT user_id, notifications_enabled, lead_minutes FROM user_settings WHERE user_id = $1', [userId]);
-        const result = await client.query('INSERT INTO user_settings (user_id, notifications_enabled, lead_minutes) VALUES ($1, $2, $3) ON CONFLICT (user_id) DO UPDATE SET notifications_enabled = EXCLUDED.notifications_enabled, lead_minutes = EXCLUDED.lead_minutes, updated_at = NOW() RETURNING user_id, notifications_enabled, lead_minutes', [userId, body.notifications_enabled, body.lead_minutes]);
+        const previous = await client.query('SELECT user_id, notifications_enabled, lead_minutes, health_reminder_days FROM user_settings WHERE user_id = $1', [userId]);
+        const healthReminderDays = body.health_reminder_days ?? previous.rows[0]?.health_reminder_days ?? 30;
+        const result = await client.query('INSERT INTO user_settings (user_id, notifications_enabled, lead_minutes, health_reminder_days) VALUES ($1, $2, $3, $4) ON CONFLICT (user_id) DO UPDATE SET notifications_enabled = EXCLUDED.notifications_enabled, lead_minutes = EXCLUDED.lead_minutes, health_reminder_days = EXCLUDED.health_reminder_days, updated_at = NOW() RETURNING user_id, notifications_enabled, lead_minutes, health_reminder_days', [userId, body.notifications_enabled, body.lead_minutes, healthReminderDays]);
         await writeActivity(client, { actorId: userId, action: 'update', entityType: 'user_settings', entityId: userId, beforeData: previous.rows[0], afterData: result.rows[0] });
         return result.rows[0];
       });
-      return ok({ settings: { notifications_enabled: settings.notifications_enabled, lead_minutes: settings.lead_minutes } });
+      return ok({ settings: { notifications_enabled: settings.notifications_enabled, lead_minutes: settings.lead_minutes, health_reminder_days: settings.health_reminder_days } });
     }
     if (path[0] === 'households' && path.length === 2) {
       if ((await member(path[1], userId)) !== 'owner') return fail(403, 'FORBIDDEN', 'เฉพาะเจ้าของบ้านที่แก้ไขชื่อบ้านได้');
@@ -359,11 +585,24 @@ export async function PATCH(request, context) {
       const pet = await petAccess(path[1], userId);
       if (!pet) return fail(403, 'FORBIDDEN', 'ไม่มีสิทธิ์แก้ไขสัตว์เลี้ยงนี้');
       const name = body.name ?? pet.name; const species = body.species ?? pet.species;
-      if (typeof name !== 'string' || !name.trim() || name.length > 120 || !['dog', 'cat'].includes(species) || (body.birth_date && !validDate(body.birth_date))) return fail(400, 'INVALID_INPUT', 'ข้อมูลสัตว์เลี้ยงไม่ถูกต้อง');
+      if (typeof name !== 'string' || !name.trim() || name.length > 120 || !['dog', 'cat'].includes(species) || (body.birth_date && !validDate(body.birth_date)) || !validPetProfile(body)) return fail(400, 'INVALID_INPUT', 'ข้อมูลสัตว์เลี้ยงไม่ถูกต้อง');
       const updatedPet = await withTransaction(async client => {
         const lockedPet = await petAccess(path[1], userId, client, true);
         if (!lockedPet) throw new ServiceError('FORBIDDEN', 'ไม่มีสิทธิ์แก้ไขสัตว์เลี้ยงนี้', 403);
-        const result = await client.query('UPDATE pets SET name = $1, species = $2, birth_date = $3, notes = $4, vet_contact = $5 WHERE id = $6 AND archived_at IS NULL RETURNING *', [name.trim(), species, body.birth_date === undefined ? pet.birth_date : body.birth_date || null, body.notes === undefined ? pet.notes : body.notes || null, body.vet_contact === undefined ? pet.vet_contact : body.vet_contact || null, path[1]]);
+        const result = await client.query(
+          `UPDATE pets SET name = $1, species = $2, birth_date = $3, notes = $4, vet_contact = $5,
+           breed = $6, sex = $7, neuter_status = $8, baseline_weight_kg = $9,
+           baseline_weight_recorded_on = $10
+           WHERE id = $11 AND archived_at IS NULL RETURNING *`,
+          [name.trim(), species, body.birth_date === undefined ? pet.birth_date : body.birth_date || null,
+            body.notes === undefined ? pet.notes : body.notes || null, body.vet_contact === undefined ? pet.vet_contact : body.vet_contact || null,
+            body.breed === undefined ? pet.breed : body.breed?.trim() || null,
+            body.sex === undefined ? pet.sex : body.sex || null,
+            body.neuter_status === undefined ? pet.neuter_status : body.neuter_status || null,
+            body.baseline_weight_kg === undefined ? pet.baseline_weight_kg : body.baseline_weight_kg === '' || body.baseline_weight_kg == null ? null : Number(body.baseline_weight_kg),
+            body.baseline_weight_recorded_on === undefined ? pet.baseline_weight_recorded_on : body.baseline_weight_recorded_on || null,
+            path[1]],
+        );
         await writeActivity(client, { householdId: pet.household_id, actorId: userId, action: 'update', entityType: 'pet', entityId: path[1], beforeData: pet, afterData: result.rows[0] });
         return result.rows[0];
       });
@@ -384,6 +623,15 @@ export async function PATCH(request, context) {
     }
     if (path[0] === 'health-records' && path.length === 2) {
       return ok(await updateHealthRecord({ recordId: path[1], actorId: userId, input: body }));
+    }
+    if (path[0] === 'passport' && path.length === 2) {
+      return ok(await updatePassportEntry({ entryId: path[1], actorId: userId, input: body }));
+    }
+    if (path[0] === 'wellness-logs' && path.length === 2) {
+      return ok(await updateWellnessLog({ logId: path[1], actorId: userId, input: body }));
+    }
+    if (path[0] === 'wellness-alerts' && path[2] === 'follow-up' && path.length === 3) {
+      return ok(await updateWellnessAlertFollowUp({ alertId: path[1], actorId: userId, input: body }));
     }
     if (path[0] === 'routines' && path.length === 2) {
       return ok(await updateRoutine({ routineId: path[1], actorId: userId, input: body }));

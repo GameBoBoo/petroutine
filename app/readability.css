@@ -1,0 +1,101 @@
+/* Reading hierarchy and spacing only. Keep print layouts independent. */
+@media screen {
+  .app-shell:has(.modal-backdrop) .ai-chat-root { visibility:hidden; pointer-events:none; }
+  .app-shell .select-field-option > .select-option-copy { display:grid; gap:3px; min-width:0; color:var(--ink); }
+  .app-shell .select-option-copy > span { font-size:14px; line-height:1.6; }
+  .app-shell .select-option-copy > small { color:var(--muted); font-size:12px; line-height:1.6; font-weight:400; }
+  .app-shell .select-field-option[aria-selected=true] .select-option-copy > span { color:var(--teal-deep); font-weight:600; }
+  .app-shell { --muted:#687383; }
+  .app-shell :is(h1,h2,h3,h4,h5,h6) { line-height:1.45; overflow-wrap:anywhere; font-weight:600; }
+  .app-shell p { font-size:15px; line-height:1.8; overflow-wrap:anywhere; text-wrap:pretty; }
+  .app-shell small { font-size:13px; line-height:1.7; }
+  .app-shell :is(.section-header,.subview-head,.today-heading,.pet-routine-heading,.health-hub-heading,.dashboard-heading) p { max-width:68ch; margin-top:8px; }
+  .app-shell :is(.section-header,.subview-head,.today-heading,.pet-routine-heading,.dashboard-heading) { align-items:flex-start; gap:16px; flex-wrap:wrap; }
+  .app-shell :is(.section-header,.subview-head,.dashboard-heading) h2 { font-size:24px; }
+  .app-shell :is(.subview-head,.health-hub-heading,.pet-routine-heading) h3 { font-size:21px; }
+  .app-shell .section-kicker { font-size:12px; letter-spacing:.08em; margin-bottom:6px; }
+  .app-shell .button { font-size:14px; font-weight:600; min-height:44px; line-height:1.5; }
+  .app-shell :is(.status,.role-badge,.passport-type,.baseline-status,.metric-status,.alert-status,.pet-routine-state) { font-size:12px; line-height:1.6; }
+  .app-shell .today-workflow { container-type:inline-size; }
+  .app-shell :is(.page-main,.task-details,.routine-body,.calendar-event > div,.member-row > div,.record-list article,.timeline-item-content) { min-width:0; }
+  .app-shell :is(.content-card,.rail-card) { overflow-wrap:anywhere; }
+  .app-shell :is(.form-stack,.advanced-fields,.passport-form) { gap:20px; }
+  .app-shell :is(.form-stack,.history-filters,.timeline-filters,.wellness-filters,.report-controls,.today-filters) label { gap:8px; font-size:14px; font-weight:500; line-height:1.6; min-width:0; }
+  .app-shell :is(.form-stack,.task-option-notes,.task-correction-form) :is(input:not([type=checkbox]):not([type=radio]):not([type=hidden]),textarea) { font-size:16px; line-height:1.6; }
+  .app-shell .select-field-trigger { font-size:14px; line-height:1.6; }
+  .app-shell :is(.select-field-option,.date-picker-trigger) { font-size:14px; }
+  .app-shell .select-field-option { min-height:44px; }
+  .app-shell :is(.form-error,.settings-success,.wellness-disclaimer,.baseline-note,.report-disclaimer) { font-size:14px; line-height:1.8; }
+  .app-shell :is(.form-grid,.follow-up-fields,.profile-weight,.passport-dates) { gap:16px; }
+  .app-shell .passport-dates { grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr)); }
+  .app-shell .pet-profile-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr)); gap:14px; }
+  .app-shell :is(.pet-profile-grid,.pet-routine-meta,.alert-follow-up-summary) dt { font-size:13px; font-weight:500; line-height:1.6; }
+  .app-shell :is(.pet-profile-grid,.pet-routine-meta,.alert-follow-up-summary) dd { margin-top:6px; font-size:15px; line-height:1.7; font-weight:500; }
+  .app-shell :is(.task-details h3,.routine-body h3,.history-item h3,.timeline-item-content > strong,.record-list strong) { font-size:17px; line-height:1.6; }
+  .app-shell :is(.routine-meta,.task-pet-label,.task-time,.calendar-event-time) { font-size:14px; line-height:1.6; }
+  .app-shell .task-outcome-note { color:var(--ink-soft); white-space:pre-wrap; }
+  .app-shell :is(.record-list,.timeline-list,.activity-list,.routine-list,.pet-routine-list) { gap:16px; }
+  .app-shell :is(.record-list article,.timeline-list article,.activity-list article) { padding:18px; }
+  .app-shell :is(.timeline-item-content p,.history-note,.routine-instruction,.pet-overview-note) { white-space:pre-wrap; }
+  .app-shell :is(.member-row strong,.rail-pet strong) { font-size:15px; }
+  .app-shell :is(.member-role,.rail-pet small,.pet-routine-category,.notification-type,.chart-legend,.baseline-progress-text,.sync-summary) { font-size:13px; line-height:1.7; }
+  .app-shell :is(.quick-add-group,.passport-group) + :is(.quick-add-group,.passport-group) { margin-top:8px; }
+  .app-shell .quick-add-list strong { font-size:16px; line-height:1.6; }
+  .app-shell .quick-add-list span { font-size:14px; line-height:1.7; margin-top:4px; }
+  .app-shell :is(.baseline-card,.dashboard-metric-card) { padding:18px; gap:12px; }
+  .app-shell :is(.baseline-card h5,.dashboard-metric-card h4) { font-size:16px; }
+  .app-shell .baseline-card > header { flex-wrap:wrap; gap:8px; }
+  .app-shell .baseline-card > header span { font-size:13px; text-align:left; }
+  .app-shell .baseline-grid { gap:16px; }
+  .app-shell :is(.alert-comparison small,.baseline-total span,.chart-summary) { font-size:13px; line-height:1.7; }
+  .app-shell .wellness-alert-card { padding:20px; }
+  .app-shell .wellness-alert-card > label { display:grid; gap:8px; margin-top:16px; font-size:14px; font-weight:500; }
+  .app-shell .wellness-alert-card > label textarea { width:100%; min-height:96px; padding:12px 14px; border:1px solid var(--border); border-radius:11px; background:var(--paper); color:var(--ink); font:inherit; font-size:16px; line-height:1.7; resize:vertical; }
+  .app-shell .wellness-alert-card > label textarea:focus { border-color:var(--teal); outline:2px solid var(--teal-pale); }
+  .app-shell .tab-list { gap:8px; margin-block:22px; }
+  .app-shell .tab-list button { font-size:14px; font-weight:600; }
+  .app-shell .ai-chat-message p { font-size:15px; line-height:1.85; }
+  .app-shell :is(.ai-chat-speaker,.ai-chat-notice,.ai-chat-consent) { font-size:13px; line-height:1.7; }
+  .app-shell .ai-chat-form textarea { font-size:16px; line-height:1.6; }
+  .app-shell .modal-top p { font-size:15px; max-width:62ch; line-height:1.8; }
+  .app-shell .modal-top h2 { font-size:24px; }
+  .app-shell .modal { padding:28px; }
+  .app-shell .form-actions { gap:12px; flex-wrap:wrap; padding-top:8px; }
+  .app-shell .report-table { font-size:14px; line-height:1.75; }
+  .app-shell .report-table :is(th,td) { padding:12px; vertical-align:top; overflow-wrap:anywhere; }
+  .app-shell .report-profile { gap:16px 20px; }
+  .app-shell .report-controls label { flex:1 1 200px; }
+  .app-shell .empty-state p { max-width:48ch; }
+  .app-shell .bottom-item { font-size:12px; }
+
+  @container (max-width:760px) {
+    .today-filters { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; align-items:start; }
+    .today-filters > div { grid-column:1/-1; flex-wrap:wrap; }
+    .today-filters > label { display:grid; align-items:start; }
+    .today-filters > label .select-field { width:100%; min-width:0; }
+    .task-card { grid-template-columns:52px minmax(0,1fr); align-items:start; }
+    .task-card .task-actions { grid-column:1/-1; justify-content:flex-start; flex-wrap:wrap; }
+  }
+  @media(min-width:601px) and (max-width:1400px) {
+    .app-shell :is(.settings-grid,.baseline-grid,.dashboard-metric-grid) { grid-template-columns:minmax(0,1fr); }
+    .app-shell :is(.baseline-head,.wellness-state,.dashboard-heading,.alert-section-head) { flex-wrap:wrap; gap:16px; }
+    .app-shell .baseline-total { text-align:left; }
+  }
+  @media(max-width:600px) {
+    .app-shell .content-card { padding:20px 16px; }
+    .app-shell :is(.section-header,.subview-head,.today-heading,.pet-routine-heading) h2 { font-size:22px; }
+    .app-shell :is(.subview-head,.health-hub-heading,.pet-routine-heading) h3 { font-size:20px; }
+    .app-shell .modal { padding:22px 18px; }
+    .app-shell :is(.history-filters,.timeline-filters,.follow-up-fields,.form-grid,.profile-weight,.passport-dates,.report-profile,.today-filters) { grid-template-columns:minmax(0,1fr); }
+    .app-shell .today-filters > div { grid-column:1; }
+    .app-shell :is(.subview-head,.pet-workspace-head) { align-items:stretch; flex-direction:column; }
+    .app-shell .pet-workspace-head .select-field { width:100%; }
+    .app-shell :is(.record-list article,.timeline-list article,.activity-list article,.wellness-alert-card) { padding:16px; }
+    .app-shell .tab-list button { padding-inline:12px; }
+    .app-shell .report-cover { grid-template-columns:minmax(0,1fr); gap:16px; }
+    .app-shell .report-cover dl { min-width:0; }
+    .app-shell .report-profile div { grid-template-columns:minmax(0,1fr); gap:4px; }
+    .app-shell .vet-report-paper { padding:20px 16px; }
+    .app-shell .form-actions > .button { flex:1 1 140px; }
+  }
+}

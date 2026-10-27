@@ -1,7 +1,7 @@
+import { applyMigrations } from '../db/migrations.mjs';
 import 'dotenv/config';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
-import { readFile } from 'node:fs/promises';
 import { after, before, test } from 'node:test';
 import pg from 'pg';
 
@@ -35,9 +35,7 @@ before(async () => {
     options: `-c search_path=${schema},public`,
   });
   await setup.connect();
-  for (const filename of ['001_initial.sql', '002_phase4.sql', '003_ci_calendar_settings.sql', '004_product_refinement.sql', '005_household_trash.sql']) {
-    await setup.query(await readFile(new URL(`../db/migrations/${filename}`, import.meta.url), 'utf8'));
-  }
+    await applyMigrations(setup);
 
   const createUser = async name => (await setup.query(
     `INSERT INTO users (name, email, password_hash)
@@ -106,6 +104,17 @@ async function createTask() {
     [routine.id, `${bangkokDate()}T12:${minute}:00+07:00`, owner.id],
   )).rows[0];
 }
+
+test('reopening a mistaken completion requires reason, version, and actor or owner permission', async () => {
+  const original=await createTask();
+  const completed=await mutateTask({taskId:original.id,actorId:owner.id,expectedVersion:0,action:'complete',payload:{notes:'original note'}});
+  await assert.rejects(mutateTask({taskId:original.id,actorId:member.id,expectedVersion:completed.task.mutation_version,action:'reopen',payload:{reason:'wrong tap'}}),e=>e.code==='FORBIDDEN');
+  await assert.rejects(mutateTask({taskId:original.id,actorId:owner.id,expectedVersion:completed.task.mutation_version,action:'reopen',payload:{}}),e=>e.code==='INVALID_INPUT');
+  await assert.rejects(mutateTask({taskId:original.id,actorId:owner.id,expectedVersion:0,action:'reopen',payload:{reason:'wrong tap'}}),e=>e.code==='STALE_TASK');
+  const reopened=await mutateTask({taskId:original.id,actorId:owner.id,expectedVersion:completed.task.mutation_version,action:'reopen',payload:{reason:'wrong tap'}});
+  assert.equal(reopened.task.status,'pending');assert.equal(reopened.task.completed_by,null);assert.equal(reopened.task.mutation_reason,'wrong tap');
+  assert.equal((await setup.query("SELECT COUNT(*)::int AS total FROM activity_logs WHERE entity_id=$1 AND action IN ('complete','reopen')",[original.id])).rows[0].total,2);
+});
 
 test('activity snapshots allowlist task fields and never retain credentials', async () => {
   assert.equal(typeof sanitizeActivitySnapshot, 'function');

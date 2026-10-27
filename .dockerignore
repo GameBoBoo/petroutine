@@ -15,3 +15,8 @@ docs
 tests
 .git
 *.log
+.delivery.env
+.delivery-build
+artifacts
+*.dump
+*.dump.sha256

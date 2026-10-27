@@ -1,0 +1,94 @@
+/* Today: a quick overview first, full task controls immediately below. */
+.app-shell.view-today .page-grid { grid-template-columns:minmax(0,1fr); }
+.app-shell.view-today .page-main,.app-shell.view-today .context-rail { width:100%; max-width:1200px; margin-inline:auto; }
+.app-shell.view-today .context-rail { grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+.app-shell.view-today .rail-card { min-height:100%; }
+.app-shell.view-today .today-dashboard { gap:20px; }
+.app-shell.view-today .today-dashboard-top { display:grid; grid-template-columns:minmax(0,1.6fr) minmax(300px,1fr); gap:18px; align-items:stretch; }
+.app-shell.view-today .today-welcome { position:relative; display:flex; align-items:center; min-width:0; min-height:290px; overflow:hidden; padding:clamp(26px,3vw,40px); border-radius:23px; background:#F59E0B; color:#1F2937; isolation:isolate; }
+.app-shell.view-today .today-welcome::before { content:""; position:absolute; z-index:-1; width:410px; height:410px; top:-290px; right:-70px; border:20px solid rgba(169,83,0,.08); border-radius:48% 52% 44% 56%; transform:rotate(-14deg); }
+.app-shell.view-today .today-welcome::after { content:""; position:absolute; z-index:-1; width:350px; height:260px; right:-115px; bottom:-190px; border:1px solid rgba(137,72,0,.22); border-radius:57% 43% 58% 42%; transform:rotate(12deg); }
+.app-shell.view-today .today-welcome-copy { position:relative; z-index:1; width:min(72%,500px); }
+.app-shell.view-today .today-welcome-kicker { display:block; margin-bottom:17px; color:#614000; font-size:11px; font-weight:700; letter-spacing:.17em; }
+.app-shell.view-today .today-welcome h2 { max-width:13ch; margin:0 0 10px; font-size:clamp(27px,2.5vw,37px); line-height:1.35; letter-spacing:-.04em; }
+.app-shell.view-today .today-welcome p { max-width:35ch; margin:0; color:#49360F; font-size:14px; line-height:1.7; }
+.app-shell.view-today .today-welcome-actions { display:flex; align-items:center; flex-wrap:wrap; gap:12px 16px; margin-top:22px; color:#4D370B; font-size:12px; }
+.app-shell.view-today .today-welcome-actions strong { margin-right:4px; color:#1F2937; font-size:17px; }
+.app-shell.view-today .today-welcome-link { display:inline-flex; align-items:center; gap:10px; min-height:44px; padding:10px 16px; border-radius:11px; color:#fff; background:#1F2937; font-size:13px; font-weight:700; text-decoration:none; }
+.app-shell.view-today .today-welcome-link:hover { background:#344154; }
+.app-shell.view-today .today-care-doodle { position:absolute; right:14px; bottom:0; width:min(40%,250px); height:auto; filter:drop-shadow(0 8px 6px rgba(125,69,0,.06)); }
+.app-shell.view-today .today-next-card { min-width:0; padding:25px 26px; border:1px solid var(--border); border-radius:21px; background:#fff; box-shadow:var(--shadow); }
+.app-shell.view-today .today-card-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.app-shell.view-today .today-card-head h2 { margin:3px 0 3px; font-size:20px; }
+.app-shell.view-today .today-card-head p { margin:0; color:var(--muted); font-size:13px; }
+.app-shell.view-today .today-card-head a { flex:none; margin-top:24px; color:#8A4300; font-size:12px; font-weight:700; text-decoration:none; white-space:nowrap; }
+.app-shell.view-today .today-card-head a:hover { text-decoration:underline; text-underline-offset:3px; }
+.app-shell.view-today .today-next-list { display:grid; gap:0; margin:15px 0 0; padding:0; list-style:none; }
+.app-shell.view-today .today-next-list li { display:grid; grid-template-columns:62px minmax(0,1fr); align-items:start; gap:12px; min-width:0; padding:12px 0; border-top:1px solid #F2ECE5; }
+.app-shell.view-today .today-next-list time { color:#986013; font-size:12px; font-weight:700; font-variant-numeric:tabular-nums; }
+.app-shell.view-today .today-next-list strong,.app-shell.view-today .today-next-list small { display:block; overflow-wrap:anywhere; }
+.app-shell.view-today .today-next-list strong { font-size:13px; line-height:1.55; }
+.app-shell.view-today .today-next-list small { color:var(--muted); font-size:12px; }
+.app-shell.view-today .today-next-empty { margin:28px 0 0; padding:18px; border-radius:13px; color:var(--muted); background:#FFFAF4; font-size:13px; }
+.app-shell.view-today .today-brand-summary { margin:0; padding:0; border-radius:20px; box-shadow:var(--shadow); }
+.app-shell.view-today .today-brand-summary > div { gap:2px; padding:19px 26px; }
+.app-shell.view-today .today-brand-summary span { color:#6B7280; font-size:13px; }
+.app-shell.view-today .today-brand-summary strong { font-size:29px; }
+.app-shell.view-today .today-brand-summary > div:nth-child(2) strong { color:#A95300; }
+.app-shell.view-today .today-task-area { display:grid; gap:16px; min-width:0; padding-top:11px; scroll-margin-top:24px; }
+.app-shell.view-today .today-heading { align-items:center; margin-bottom:0; }
+.app-shell.view-today .today-heading h2 { margin:3px 0; font-size:27px; font-weight:700; }
+.app-shell.view-today .today-heading p { margin:3px 0 0; font-size:14px; }
+.app-shell.view-today .today-task-area > .sync-summary { margin:0; }
+.app-shell.view-today .today-task-area > .today-filters { margin:0; padding:13px 17px; border-radius:16px; }
+.app-shell.view-today .today-filters > label { flex:0 1 230px; min-width:180px; white-space:nowrap; }
+.app-shell.view-today .today-filters > label .select-field { flex:1; min-width:0; }
+.app-shell.view-today .today-section { padding:22px; }
+.app-shell.view-today .today-section > h2 { font-size:18px; }
+.app-shell.view-today .task-card { border-radius:14px; background:#FFFEFC; }
+.app-shell.view-today .task-health { grid-template-columns:64px minmax(0,1fr); }
+.app-shell.view-today .task-health .task-actions { grid-column:2; display:flex; flex-wrap:wrap; justify-content:flex-start; }
+.app-shell.view-today .task-health .skip-reason { min-width:190px; }
+.app-shell.view-today .task-health .skip-other-reason { width:100%; }
+@media (max-width:640px) {
+  .app-shell.view-today .task-health { grid-template-columns:1fr; }
+  .app-shell.view-today .task-health .task-actions { grid-column:1; }
+  .app-shell.view-today .task-health .skip-reason { flex:1 1 180px; }
+}
+.app-shell.view-today .today-completed { border-radius:17px; }
+
+@media(max-width:1050px) {
+  .app-shell.view-today .today-dashboard-top { grid-template-columns:minmax(0,1fr); }
+  .app-shell.view-today .today-welcome { min-height:270px; }
+  .app-shell.view-today .today-next-card { padding:21px 24px; }
+  .app-shell.view-today .today-next-list { grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+  .app-shell.view-today .today-next-list li { grid-template-columns:1fr; gap:3px; border-top:1px solid #F2ECE5; }
+}
+@media(max-width:700px) {
+  .app-shell.view-today .today-filters > label { min-width:0; white-space:normal; }
+  .app-shell.view-today .context-rail { grid-template-columns:minmax(0,1fr); }
+  .app-shell.view-today .today-dashboard { gap:16px; }
+  .app-shell.view-today .today-welcome { min-height:250px; padding:26px 23px; }
+  .app-shell.view-today .today-welcome-copy { width:75%; }
+  .app-shell.view-today .today-care-doodle { right:-15px; width:42%; }
+  .app-shell.view-today .today-next-list { grid-template-columns:minmax(0,1fr); gap:0; }
+  .app-shell.view-today .today-next-list li { grid-template-columns:60px minmax(0,1fr); gap:10px; }
+  .app-shell.view-today .today-brand-summary > div { padding:15px 12px; }
+  .app-shell.view-today .today-brand-summary strong { font-size:25px; }
+  .app-shell.view-today .today-section { padding:17px 13px; }
+  .app-shell.view-today .ai-chat-toggle[aria-expanded="false"] { width:52px; height:52px; padding:0; }
+  .app-shell.view-today .ai-chat-toggle[aria-expanded="false"] span { display:none; }
+}
+@media(max-width:480px) {
+  .app-shell.view-today .today-welcome { min-height:285px; align-items:flex-start; }
+  .app-shell.view-today .today-welcome-copy { width:100%; }
+  .app-shell.view-today .today-welcome h2 { max-width:12ch; font-size:27px; }
+  .app-shell.view-today .today-welcome p { max-width:26ch; font-size:13px; }
+  .app-shell.view-today .today-care-doodle { right:-15px; bottom:-8px; width:145px; opacity:.94; }
+  .app-shell.view-today .today-welcome-actions { margin-top:17px; }
+  .app-shell.view-today .today-brand-summary > div { padding:14px 9px; }
+  .app-shell.view-today .today-brand-summary span { font-size:11px; line-height:1.4; }
+  .app-shell.view-today .today-brand-summary strong { font-size:23px; }
+  .app-shell.view-today .today-brand-summary small { font-size:10px; }
+  .app-shell.view-today .today-heading .button { width:100%; }
+}

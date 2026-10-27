@@ -1,0 +1,25 @@
+# Run only INSIDE the privileged Course Container. Socket access is to its nested daemon.
+services:
+  registry:
+    image: registry:2
+    ports:
+      - "127.0.0.1:5000:5000"
+    volumes:
+      - registry-data:/var/lib/registry
+    restart: unless-stopped
+  jenkins:
+    build:
+      context: .
+      dockerfile: ci/Dockerfile.jenkins
+    user: root
+    network_mode: host
+    environment:
+      JENKINS_HOME: /workspace/jenkins-home
+      JENKINS_ADMIN_PASSWORD: ${JENKINS_ADMIN_PASSWORD:?Set a private admin password}
+      JAVA_OPTS: -Djenkins.install.runSetupWizard=false -Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true
+    volumes:
+      - /workspace:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+volumes:
+  registry-data:

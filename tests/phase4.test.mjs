@@ -1,7 +1,7 @@
+import { applyMigrations } from '../db/migrations.mjs';
 import 'dotenv/config';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
-import { readFile } from 'node:fs/promises';
 import { after, before, test } from 'node:test';
 import pg from 'pg';
 
@@ -20,10 +20,7 @@ before(async () => {
   const setup = new pg.Client({ connectionString: process.env.DATABASE_URL, options: `-c search_path=${schema},public` });
   await setup.connect();
   try {
-    for (const filename of ['001_initial.sql', '002_phase4.sql', '003_ci_calendar_settings.sql', '004_product_refinement.sql', '005_household_trash.sql']) {
-      const sql = await readFile(new URL(`../db/migrations/${filename}`, import.meta.url), 'utf8');
-      await setup.query(sql);
-    }
+    await applyMigrations(setup);
   } finally { await setup.end(); }
   process.env.PGOPTIONS = `-c search_path=${schema},public`;
   handlers = await import('../app/api/v1/[...path]/route.js');

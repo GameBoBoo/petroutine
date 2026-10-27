@@ -1,7 +1,7 @@
+import { applyMigrations } from '../db/migrations.mjs';
 import 'dotenv/config';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
-import { readFile } from 'node:fs/promises';
 import { before, after, test } from 'node:test';
 import pg from 'pg';
 
@@ -18,9 +18,7 @@ before(async () => {
   const setup = new pg.Client({ connectionString: process.env.DATABASE_URL, options: `-c search_path=${schema},public` });
   await setup.connect();
   try {
-    for (const filename of ['001_initial.sql', '002_phase4.sql', '003_ci_calendar_settings.sql', '004_product_refinement.sql', '005_household_trash.sql']) {
-      await setup.query(await readFile(new URL(`../db/migrations/${filename}`, import.meta.url), 'utf8'));
-    }
+    await applyMigrations(setup);
   } finally { await setup.end(); }
   process.env.PGOPTIONS = `-c search_path=${schema},public`;
   handlers = await import('../app/api/v1/[...path]/route.js');
@@ -110,4 +108,34 @@ test('health records accept every text type, validate weight, and enforce permis
   assert.equal((await call('GET', `pets/${pet.id}/health-records`, creator.body.token)).body.items.length, 5);
   const logs = await pool.query("SELECT action FROM activity_logs WHERE entity_type = 'health_record' AND entity_id = $1 ORDER BY created_at", [ids[0]]);
   assert.deepEqual(logs.rows.map(row => row.action), ['create', 'update', 'archive']);
+});
+
+test('Today includes every item added for the Bangkok calendar day', async () => {
+  const { owner, creator, home, pet } = await fixture();
+  const dateResult = await pool.query("SELECT (NOW() AT TIME ZONE 'Asia/Bangkok')::date::text AS today");
+  const today = dateResult.rows[0].today;
+  const yesterday = new Date(Date.parse(`${today}T00:00:00.000Z`) - 86_400_000).toISOString().slice(0, 10);
+  const weekday = new Date(`${today}T12:00:00+07:00`).getUTCDay();
+
+  await call('POST', `pets/${pet.id}/routines`, owner.body.token, {
+    title: 'อาหารวันนี้', activity_type: 'feeding', time: '23:55', days: [weekday],
+  });
+  await call('POST', `households/${home.id}/care-entries`, creator.body.token, {
+    pet_id: pet.id, title: 'เช็ดหูวันนี้', activity_type: 'grooming', occurred_at: `${today}T08:00:00+07:00`,
+  });
+  await call('POST', `pets/${pet.id}/health-records`, creator.body.token, {
+    record_type: 'observation', title: 'สังเกตอาการวันนี้', recorded_at: `${today}T09:00:00+07:00`, details: 'ปกติ',
+  });
+  await call('POST', `pets/${pet.id}/wellness-logs`, creator.body.token, {
+    recorded_at: new Date(Date.now() - 60_000).toISOString(), mood: 'bright',
+  });
+  await call('POST', `households/${home.id}/care-entries`, creator.body.token, {
+    pet_id: pet.id, title: 'รายการเมื่อวาน', activity_type: 'other', occurred_at: `${yesterday}T23:59:00+07:00`,
+  });
+
+  const response = await call('GET', `households/${home.id}/tasks/today`, creator.body.token);
+  assert.equal(response.status, 200);
+  assert.deepEqual(response.body.tasks.map(item => item.source_type).sort(), ['care_entry', 'health_record', 'task', 'wellness_log']);
+  assert.equal(response.body.tasks.some(item => item.title === 'รายการเมื่อวาน'), false);
+  assert.equal(response.body.tasks.filter(item => item.source_type !== 'task').every(item => item.read_only && item.display_status === 'completed'), true);
 });

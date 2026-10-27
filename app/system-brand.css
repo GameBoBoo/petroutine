@@ -1,0 +1,110 @@
+/* The private workspace continues the orange, cream, and ink visual language. */
+.app-shell {
+  --ink:#1F2937;
+  --ink-soft:#4B5563;
+  --muted:#687383;
+  --cream:#FBF8F6;
+  --paper:#fff;
+  --border:#EBE4DC;
+  --teal:#A95300;
+  --teal-deep:#8A4300;
+  --teal-pale:#FEF3E7;
+  --shadow:0 8px 30px rgba(66,44,24,.045);
+  color:var(--ink);
+  background:radial-gradient(ellipse 48% 20% at 85% 0%,#FFF2E1 0%,transparent 75%),#FBF8F6;
+}
+.app-shell .sidebar { flex-basis:256px; padding:24px 18px 18px; background:#FFFEFC; border-right-color:var(--border); }
+.app-shell .sidebar > .brand { margin:0 8px 29px; }
+.app-shell .brand img { width:214px; }
+.app-shell .sidebar-label { color:#877E77; font-size:10px; font-weight:700; letter-spacing:.14em; }
+.app-shell .household-picker { padding:13px; border:1px solid #F0E5D7; border-radius:16px; background:#FFFAF4; }
+.app-shell .household-picker label { color:#74685E; font-size:11px; }
+.app-shell .sidebar-add { min-height:46px; margin:13px 0 21px; }
+.app-shell .nav-label { margin-top:10px; }
+.app-shell .side-nav { gap:5px; }
+.app-shell .nav-item { min-height:46px; border-radius:13px; color:#59616B; font-weight:600; }
+.app-shell .nav-item svg { color:#78808A; }
+.app-shell .nav-item:hover { color:#8A4300; background:#FFF5E9; }
+.app-shell .nav-item.active { color:#884300; background:#FEF0DB; box-shadow:inset 0 0 0 1px #F2D6B0; }
+.app-shell .nav-item.active svg { color:#A95300; }
+.app-shell .nav-count { color:#8A4300; background:#FFDCA8; border-radius:8px; }
+.app-shell .sidebar-tip { position:relative; overflow:hidden; border:1px solid #F5E6D6; border-radius:17px; background:#FFFAF4; }
+.app-shell .sidebar-tip::after { content:""; position:absolute; width:65px; height:65px; right:-23px; bottom:-28px; border:3px solid #F59E0B; border-left-color:transparent; border-radius:52% 46% 56% 40%; transform:rotate(-20deg); opacity:.6; pointer-events:none; }
+.app-shell .sidebar-tip p,.app-shell .sidebar-tip svg { position:relative; z-index:1; }
+.app-shell .main-content { max-width:1440px; padding:28px clamp(20px,2.7vw,42px) 80px; }
+.app-shell .topbar { min-height:70px; margin-bottom:25px; }
+.app-shell .topbar h1 { font-size:clamp(26px,2.4vw,34px); font-weight:700; letter-spacing:-.035em; }
+.app-shell .topbar .eyebrow { color:#776E68; font-size:12px; }
+.app-shell .header-house { max-width:190px; padding:8px 12px; border:1px solid #F0E5D7; border-radius:999px; background:#FFFAF4; font-weight:600; }
+.app-shell .user-avatar { border:1px solid #F2DEBD; border-radius:50%; color:#8A4300; background:#FFF0D9; }
+.app-shell .page-grid { gap:20px; }
+.app-shell .content-card,.app-shell .rail-card,.app-shell .today-section { border-color:var(--border); border-radius:21px; box-shadow:var(--shadow); }
+.app-shell .content-card { padding:clamp(18px,2.3vw,30px); }
+.app-shell .section-kicker { color:#A95300; font-weight:700; letter-spacing:.12em; }
+.app-shell .section-header { align-items:center; }
+.app-shell .section-header h2 { font-size:clamp(20px,2vw,26px); letter-spacing:-.025em; }
+.app-shell .section-header p { font-size:14px; line-height:1.6; }
+.app-shell .button.primary { border-radius:12px; background:#A95300; box-shadow:0 5px 14px rgba(169,83,0,.14); }
+.app-shell .button.primary:hover:not(:disabled) { background:#8A4300; }
+.app-shell .button.secondary { border-radius:12px; color:#8A4300; background:#FEF3E7; }
+.app-shell .button.secondary:hover:not(:disabled) { background:#FFE7C4; }
+.app-shell .filter-chip { border-radius:11px; }
+.app-shell .filter-chip.active { color:#8A4300; border-color:#F4D9B4; background:#FEF0DB; }
+.app-shell .rail-card { padding:22px; }
+.app-shell .rail-title button { border-radius:11px; color:#8A4300; background:#FEF0DB; }
+.app-shell .rail-pets { gap:0; }
+.app-shell .rail-pet { min-height:63px; padding:8px 0; border-bottom:1px solid #F1EBE4; }
+.app-shell .rail-pet:last-child { border-bottom:0; }
+.app-shell .rail-pet strong { color:var(--ink); font-size:14px; }
+.app-shell .calm-card { position:relative; overflow:hidden; border-color:#F2E3CF; background:#FFF7EC; }
+.app-shell .calm-card::before { content:""; display:block; position:absolute; width:88px; height:34px; top:-18px; right:20px; border:3px solid #F59E0B; border-bottom:0; border-radius:60% 55% 0 0; transform:rotate(-14deg); opacity:.48; pointer-events:none; }
+.app-shell .calm-card h2,.app-shell .calm-card p { position:relative; }
+.app-shell .pet-avatar { width:46px; height:46px; overflow:hidden; border:1px solid #F3E2CC; border-radius:50%; background:#FEF3E7; }
+.app-shell .pet-avatar.large { width:72px; height:72px; border-radius:50%; }
+.app-shell .pet-avatar img { display:block; width:100%; height:100%; object-fit:cover; }
+.app-shell .pet-workspace-identity { display:flex; align-items:center; gap:16px; min-width:0; }
+.app-shell .pet-workspace-identity h2 { overflow-wrap:anywhere; }
+.app-shell .pet-workspace-identity .section-kicker { margin-bottom:3px; }
+.app-shell .pet-workspace-head { gap:18px; }
+.app-shell .pet-workspace > .tab-list { background:#FBF5EC; }
+.app-shell .pet-workspace > .tab-list button[aria-selected=true] { color:#8A4300; background:white; box-shadow:0 2px 8px rgba(87,55,26,.09); }
+.app-shell .pet-info-panel,.app-shell .pet-routine-shortcut,.app-shell .pet-routine-item,.app-shell .settings-card,.app-shell .routine-card,.app-shell .pet-card { border-color:var(--border); border-radius:17px; }
+.app-shell .pet-weight-panel,.app-shell .pet-notes-panel { background:#FFF8EF; }
+.app-shell .pet-shortcut-icon,.app-shell .routine-icon,.app-shell .history-symbol,.app-shell .empty-icon { color:#A95300; background:#FEF0DB; }
+.app-shell .settings-card { background:#FFFAF4; }
+.app-shell .calendar-day { border-radius:12px; }
+.app-shell .calendar-day.today { border-color:#F59E0B; background:#FFF9ED; }
+.app-shell .calendar-day.selected { border-color:#A95300; background:#A95300; }
+.app-shell .notification-panel { border-color:var(--border); border-radius:18px; }
+.app-shell .onboarding { border-color:#F0DFCB; background:#FFFAF4; }
+.app-shell .onboarding-icon { color:#A95300; background:#FEF0DB; }
+.app-shell .bottom-nav { border-top-color:var(--border); background:#FFFEFC; }
+.app-shell .bottom-item.active { color:#8A4300; }
+.app-shell :focus-visible { outline-color:#F59E0B; }
+
+/* Dialogs are portals outside the shell. Keep their surfaces aligned too. */
+.modal { border:1px solid #F0E5D7; background:#FFFEFC; }
+.modal .section-kicker { color:#A95300; }
+
+@media(max-width:1100px) {
+  .app-shell .sidebar { flex-basis:224px; }
+  .app-shell .brand img { width:190px; }
+}
+@media(max-width:850px) {
+  .app-shell .main-content { padding:22px 18px 100px; }
+  .app-shell .topbar { margin-bottom:18px; }
+  .app-shell .header-house { display:none; }
+}
+@media(max-width:700px) {
+  .app-shell .content-card { padding:18px 16px; }
+  .app-shell .pet-workspace { padding:18px 16px; }
+  .app-shell .pet-workspace-head > .select-field { width:100%; max-width:none; }
+  .app-shell .pet-workspace-identity .pet-avatar.large { width:62px; height:62px; }
+  .app-shell .section-header { align-items:flex-start; }
+}
+@media(max-width:510px) {
+  .app-shell .main-content { padding:18px 14px 100px; }
+  .app-shell .topbar h1 { font-size:26px; }
+  .app-shell .pet-workspace-identity { gap:11px; }
+  .app-shell .pet-workspace-identity h2 { font-size:23px; }
+}

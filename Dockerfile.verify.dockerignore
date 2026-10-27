@@ -1,0 +1,17 @@
+node_modules
+.next
+.git
+.env
+.env.*
+!.env.example
+.delivery.env
+.delivery-build
+artifacts
+test-results
+playwright-report
+*.dump
+*.log
+.codex
+.superpowers
+legacy
+PawRoutine-Codex-Starter

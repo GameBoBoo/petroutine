@@ -5,7 +5,7 @@ export default defineConfig({
   fullyParallel: false,
   workers: 1,
   retries: 0,
-  reporter: 'line',
+  reporter: process.env.CI ? [['line'], ['json', { outputFile: 'artifacts/playwright.json' }]] : 'line',
   use: { baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:3105', trace: 'retain-on-failure' },
   webServer: process.env.PLAYWRIGHT_MANAGED_SERVER ? undefined : {
     command: 'npm run dev -- -p 3105',

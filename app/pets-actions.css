@@ -1,0 +1,33 @@
+/* Pet management lives in Pets; the former right rail is gone. */
+.app-shell .page-grid { grid-template-columns:minmax(0,1fr); }
+.app-shell .page-main { width:100%; max-width:1200px; margin-inline:auto; }
+.app-shell .pet-workspace > .pet-workspace-head { align-items:center; justify-content:space-between; gap:20px; padding-bottom:18px; }
+.app-shell .pet-workspace-identity p { margin:5px 0 0; color:#6D7379; font-size:13px; line-height:1.5; }
+.app-shell .pet-workspace-add { flex:none; min-height:44px; white-space:nowrap; }
+.app-shell .pet-switcher { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; margin:0 0 23px; padding:0 0 22px; border-bottom:1px solid #EEE8DF; }
+.app-shell .pet-switcher-item { display:flex; align-items:center; gap:10px; min-width:0; min-height:66px; padding:10px; border:1px solid #E9E5DC; border-radius:14px; color:#1F2937; background:#FFFEFC; text-align:left; cursor:pointer; transition:border-color .16s ease,background .16s ease; }
+.app-shell .pet-switcher-item:hover { border-color:#E5A64A; background:#FFF9EF; }
+.app-shell .pet-switcher-item.active { border:2px solid #D77708; padding:9px; background:#FFF0D9; }
+.app-shell .pet-switcher-item .pet-avatar { width:42px; height:42px; }
+.app-shell .pet-switcher-item > span { display:grid; gap:1px; min-width:0; }
+.app-shell .pet-switcher-item strong { overflow:hidden; font-size:14px; text-overflow:ellipsis; white-space:nowrap; }
+.app-shell .pet-switcher-item small { color:#6D7379; font-size:12px; }
+.app-shell .pet-switcher-item > svg:last-child { flex:none; margin-left:auto; color:#A95300; }
+.app-shell .pet-switcher-item:focus-visible,.app-shell .pet-workspace-add:focus-visible { outline:3px solid #A95300; outline-offset:2px; }
+.app-shell .pet-workspace-empty .empty-state { padding-block:35px; }
+.app-shell .pet-workspace-empty .empty-state h2 { margin:4px 0 0; color:#1F2937; font-size:23px; }
+.app-shell .pet-workspace-empty .empty-state p { max-width:40ch; margin-inline:auto; }
+@media (max-width:700px) {
+  .app-shell .pet-workspace > .pet-workspace-head { align-items:stretch; flex-direction:column; gap:16px; }
+  .app-shell .pet-workspace-add { width:100%; }
+  .app-shell .pet-switcher { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media (max-width:420px) {
+  .app-shell .pet-switcher-item { gap:7px; padding:8px; }
+  .app-shell .pet-switcher-item.active { padding:7px; }
+  .app-shell .pet-switcher-item .pet-avatar { width:35px; height:35px; }
+  .app-shell .pet-switcher-item > svg:last-child { display:none; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .app-shell .pet-switcher-item { transition:none; }
+}

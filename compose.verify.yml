@@ -1,0 +1,34 @@
+services:
+  testdb:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: verification
+      POSTGRES_PASSWORD: verification-only
+      POSTGRES_DB: verification
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U verification -d verification"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+  verify:
+    build:
+      context: .
+      dockerfile: Dockerfile.verify
+    environment:
+      DATABASE_URL: postgres://verification:verification-only@testdb:5432/verification
+      JWT_SECRET: isolated-verification-secret-not-for-production
+      # E2E exercises consent/settings only; it never submits a completion.
+      PAWROUTINE_AI_ENABLED: "true"
+      AI_API_KEY: synthetic-e2e-placeholder
+      AI_MODEL: synthetic-never-call-provider
+      AI_BASE_URL: https://example.invalid/v1
+      CI: "1"
+      DELIVERY_REVISION: ${DELIVERY_REVISION:-working-tree}
+    volumes:
+      - ./artifacts/verification:/app/artifacts
+      - ./artifacts/verification/test-results:/app/test-results
+    depends_on:
+      testdb:
+        condition: service_healthy

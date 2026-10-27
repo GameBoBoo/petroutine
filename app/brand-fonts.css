@@ -1,0 +1,29 @@
+:is(.landing.brand-public,.app-shell.brand-workspace,.auth-layout.brand-auth) {
+  --font-brand-ui:'Google Sans',sans-serif;
+  --font-brand-note:'Google Sans',sans-serif;
+  --icon-ink:#1F2937;
+  --icon-accent:#C76C00;
+  font-synthesis:none;
+}
+/* Google Sans serves Thai and Latin from local subsets. */
+:is(.landing.brand-public,.app-shell.brand-workspace,.auth-layout.brand-auth) .brand-icon { color:var(--icon-ink); stroke-width:2.25; }
+:is(.landing.brand-public,.app-shell.brand-workspace,.auth-layout.brand-auth) .button.primary .brand-icon { color:inherit; }
+.brand-workspace :is(.nav-item.active,.bottom-item.active) .brand-icon,
+.brand-public .public-feature-top .brand-icon,
+.brand-public .public-preview-clock .brand-icon { color:var(--icon-accent); }
+.brand-workspace .button.complete .brand-icon,
+.brand-public :is(.public-preview-check,.public-scene-note) > .brand-icon { color:#47734E; }
+.brand-workspace :is(.task-time-overdue,.task-overdue-badge) .brand-icon { color:var(--icon-accent); }
+.brand-public .public-scene-note { font-family:var(--font-brand-note); font-weight:500; }
+.brand-public .public-scene-note strong { font-weight:700; }
+.brand-public .public-preview-title h2 { font-family:var(--font-brand-note); font-weight:700; }
+.brand-workspace .sidebar-tip p { font-family:var(--font-brand-note); font-weight:500; }
+.brand-workspace .sidebar-tip strong { font-weight:700; }
+
+.brand-logo { display:inline-flex; align-items:center; gap:8px; width:220px; max-width:100%; color:#1F2937; text-decoration:none; }
+.brand-logo-symbol { display:block; flex:0 0 64px; width:64px; height:56px; }
+.brand-logo-type { display:grid; min-width:0; gap:4px; }
+.brand-logo-name { font:700 25px/1 'Google Sans',sans-serif; letter-spacing:-1px; white-space:nowrap; }
+.brand-logo-name > span { color:#C76C00; }
+.brand-logo-tagline { font:600 7px/1.5 'Google Sans',sans-serif; letter-spacing:2px; color:#687383; white-space:nowrap; }
+@media(max-width:380px) { .brand-public .brand-logo-symbol { flex-basis:44px; width:44px; height:44px; } .brand-public .brand-logo-name { font-size:19px; } .brand-public .brand-logo-tagline { font-size:6px; letter-spacing:1.5px; } .brand-public .brand-logo { gap:4px; } }

@@ -3,17 +3,24 @@
 ## Functional requirements
 
 1. ผู้ใช้สมัคร/เข้าสู่ระบบ แก้ชื่อ และตั้งค่าการแจ้งเตือนในเว็บได้
-2. ผู้ใช้สร้างหรือเข้าร่วมบ้าน และ Owner เปลี่ยนชื่อ เชิญสมาชิก ย้ายบ้านไปถังขยะ และกู้คืนพร้อมข้อมูลเดิมได้
+2. ผู้ใช้สร้างหรือเข้าร่วมบ้าน และ Owner เปลี่ยนชื่อ เชิญสมาชิก หรือลบบ้านด้วยการยืนยันชื่อได้ โดยบ้านที่ลบต้องไม่แสดงใน UI
 3. สมาชิกเพิ่ม/แก้สัตว์เลี้ยงได้; Owner soft archive ได้โดยประวัติยังอยู่
-4. Owner สร้าง/แก้/พัก/เก็บกิจวัตรแบบ weekly, interval หรือ once รองรับหลายเวลา วันเริ่ม/สิ้นสุด ช่วงพัก และผู้รับผิดชอบ
-5. Today แสดงงานตาม `Asia/Bangkok` แยก overdue, pending, completed/skipped และกรองผู้รับผิดชอบ สัตว์ และสถานะ
-6. สมาชิก Complete ได้ทันทีหรือพร้อมหมายเหตุ, Skip พร้อมเหตุผล, reschedule/reassign เฉพาะ occurrence และ Undo ภายใน 8 วินาที
-7. Quick Add มี 5 ทางเลือก: กิจวัตร, เทมเพลต, นัดหมาย, care entry นอกตาราง และ health record
+4. Owner สร้าง/แก้/ลบกิจวัตรแบบ weekly, interval หรือ once รองรับหลายเวลา วันเริ่ม/สิ้นสุด ช่วงพัก และผู้รับผิดชอบ UI ไม่มีปุ่มปิดกิจวัตรชั่วคราว หน้าหลักค้นหา/กรองสัตว์และแบ่ง 10 รายการ
+5. Today แสดงข้อมูลตาม `Asia/Bangkok` โดยรวมงานตามตารางและ Quick Add ของวันนี้ แยก overdue, pending, บันทึกวันนี้ และ completed/skipped พร้อมกรองผู้รับผิดชอบ สัตว์ และสถานะ
+6. สมาชิก Complete พร้อมหมายเหตุ optional, Skip พร้อมเหตุผล, reschedule/reassign เฉพาะ occurrence และ Undo ภายใน 8 วินาที โดยต้องยืนยันก่อนเปลี่ยนข้อมูล รวมถึง Reopen พร้อมเหตุผล
+7. Quick Add มีเช็กอินสุขภาพรายวัน กิจวัตร งานครั้งเดียว care entry นอกตาราง และ health record ไม่มีลิงก์เลือกแม่แบบใน UI
 8. Health record เป็นข้อความ/ตัวเลขที่ผู้ใช้กรอกเอง ไม่มีไฟล์ รูป การวินิจฉัย หรือการคำนวณยา
-9. Pet Timeline รวม task, care entry, health record และการเปลี่ยนแปลงที่เกี่ยวข้อง แม้แหล่งข้อมูลถูก archive
+9. Pet Timeline รวม task, care entry, health record, Daily Wellness Log และการเปลี่ยนแปลงที่เกี่ยวข้อง แม้แหล่งข้อมูลถูก archive
 10. ทุก mutation ของข้อมูลผลิตภัณฑ์เขียน Activity Log แบบ immutable ใน transaction เดียวกัน พร้อม snapshot ที่ผ่าน allowlist
-11. “ประวัติการเปลี่ยนแปลง” แยก household log จาก account log และค้นตามสมาชิก สัตว์ การกระทำ และวันที่ได้
-12. บ้านในถังขยะไม่แสดงในรายการปกติและไม่มีใครเข้าถึงข้อมูลได้; เฉพาะ Owner เห็นถังขยะและกู้คืนได้
+11. ระบบเก็บ Activity Log ภายในเพื่อ audit/Undo แต่ไม่มีหน้า “ประวัติการเปลี่ยนแปลง” ใน navigation หรือ UI
+12. บ้านที่ลบไม่แสดงในรายการปกติหรือหน้า “บ้านของเรา” และสมาชิกทุกคนเข้าถึงข้อมูลบ้านนั้นไม่ได้
+13. โปรไฟล์สัตว์เก็บสายพันธุ์ เพศ สถานะทำหมัน น้ำหนักตั้งต้น/วันที่ชั่งแบบ optional และ Health Passport เก็บการแพ้ ภาวะประจำตัว ยาประจำ วัคซีน นัดหมาย วันที่เริ่ม/สิ้นสุด/ครั้งถัดไป พร้อมสิทธิ์และ Activity Log
+14. Daily Wellness Log เลือกกรอกอาหาร น้ำ กิจกรรม การนอน ขับถ่าย อารมณ์ น้ำหนัก หรือข้อสังเกตย้อนหลังได้ รองรับหลายบันทึกต่อวัน ผู้สร้างหรือ Owner แก้/archive ได้ และช่องว่างไม่ถูกตีความเป็นศูนย์
+15. Learning Mode คำนวณ baseline แยกสัตว์/metric จาก 14 วันตามเวลา Bangkok นับหนึ่งค่าต่อ metric ต่อวัน แสดง progress/ความพร้อม/ข้อมูลไม่เพียงพอ และคำนวณใหม่แบบ deterministic เมื่อข้อมูลต้นทางเปลี่ยน
+16. Change Detection ตรวจ relative metric เปลี่ยนทิศเดียวกัน 3 วัน, stool/mood เป็นค่าใหม่เดียวกัน 3 วัน และน้ำหนักเปลี่ยนอย่างน้อย 10% 3 วัน โดยวันขาดข้อมูลตัดลำดับ
+17. Wellness Alert ต้องแสดง baseline, ค่าที่พบ, ช่วงเวลา, กฎและ source รองรับรับทราบ/ติดตาม/resolve และต้องระบุว่าไม่ใช่การวินิจฉัย
+18. Wellness Dashboard ต้องแสดงสถานะ Learning/Stable/Changes Detected/Insufficient Data และกราฟ 7/14/30/90 วันพร้อม baseline band, active alerts และตารางข้อมูล โดยไม่สร้างค่าทดแทนวันที่ไม่มีข้อมูล
+19. In-app reminder ต้องรวมงาน วัคซีน/นัดหมาย และ Wellness follow-up จากวันจริง ลบ/ซ่อนแบบถาวรแยกต่อผู้ใช้ได้; shared monitoring ต้องกำหนดผู้ติดตาม/วัน/หมายเหตุได้; Vet Report ต้องเลือกช่วงไม่เกิน 366 วันและพิมพ์หรือ Save as PDF จาก browser ได้โดยไม่พึ่ง AI
 
 ## Non-functional requirements
 
@@ -26,16 +33,15 @@
 
 ## Out of scope ของรุ่นปัจจุบัน
 
-ไฟล์/รูปแนบ, email/push notification, AI/LLM, คำแนะนำทางการแพทย์, การวินิจฉัย, dose calculation, invite expiry/rotation และ Jenkins/Course Container
+ไฟล์แนบ, email/push notification, server-generated binary PDF, คำแนะนำทางการแพทย์, การวินิจฉัย และ dose calculation ยังคงนอกขอบเขต ส่วน Jenkins/Course Container เป็นข้อกำหนดของ delivery track ตามรายวิชา ไม่ใช่ข้อยกเว้นจากการส่งงาน ดู [Delivery runbook](delivery/README.md)
 
-## Planned product requirements (Phase 5–11; ยังไม่ implement)
+## AI Phase 11 (implement แล้วในขอบเขตอ่านอย่างเดียว)
 
-1. ขยายโปรไฟล์สัตว์และ Health Passport ให้เก็บสายพันธุ์ เพศ ทำหมัน น้ำหนักตั้งต้น แพ้ยา โรคประจำตัว ยาประจำ วัคซีน และวันนัดครั้งถัดไปแบบข้อความ/ตัวเลข
-2. Daily Wellness Log ต้องเลือกกรอกอาหาร น้ำ กิจกรรม การนอน ขับถ่าย อารมณ์ น้ำหนัก และข้อสังเกตย้อนหลังได้ โดยช่องว่างไม่เท่ากับศูนย์
-3. Learning Mode และ baseline ต้องแยกตามสัตว์/metric ใช้หน้าต่าง 14 วัน และแสดงข้อมูลไม่เพียงพอแทนการคาดเดา
-4. Rule-based detection ต้องสร้าง Alert จากการเบี่ยงเบนต่อเนื่องแบบ deterministic พร้อมหลักฐานและ lifecycle โดยไม่วินิจฉัยโรค
-5. Wellness Dashboard ต้องแสดงสถานะ Learning/Stable/Changes Detected/Insufficient Data และกราฟ 7/14/30/90 วันโดยไม่สร้างค่าทดแทนวันที่ไม่มีข้อมูล
-6. Reminders, shared monitoring และ Vet Report ต้องทำงานจากข้อมูลจริงและไม่พึ่ง AI
-7. AI เป็น optional Phase สุดท้าย ใช้เฉพาะ context/ผลคำนวณที่ระบบเตรียมให้ มี logging/guardrail/fallback และปิดได้โดย core Wellness ยังทำงานครบ
+1. AI เป็น optional chatbot สำหรับถามค้นและสรุปข้อมูลที่มีสิทธิ์เข้าถึงพร้อมอ้างอิง ใช้ context/ผลคำนวณที่ระบบเตรียมให้ มี metadata logging/guardrail/fallback และปิดได้โดย core Wellness ยังทำงานครบ
+2. โค้ดปัจจุบันมี Care Brief/สรุปและแบบร่างจากข้อความ ผู้ใช้ต้องตรวจและยืนยันผ่าน API ปกติก่อนบันทึก AI ไม่เขียนข้อมูลเอง ข้อผูกพันและผลตรวจของความสามารถนี้ต้องระบุแยกจาก chatbot ใน AC-20–23 และ traceability
 
-ขอบเขตไฟล์/รูปแนบ, email/push, การวินิจฉัย, dose calculation และ Behavior Coach ยังคง deferred แม้เริ่ม Phase 5–10
+## UX ที่ต้องรักษา (23 ตุลาคม 2026)
+
+ใช้คำว่า “ลบ” ใน UI แต่คง soft archive และประวัติ ต้องยืนยันก่อนลบและบันทึก/เปลี่ยนสถานะสำคัญ ลบบ้านต้องพิมพ์ชื่อ Owner จัดการรหัสเชิญอายุ 7 วัน นำสมาชิกออก และโอนเจ้าของได้แล้ว Dropdown ใช้ตัวเลือกและคำอธิบายของระบบ ดู [Popup fields](popup-fields.md)
+
+ขอบเขตไฟล์/รูปแนบ, email/push, server-generated PDF, การวินิจฉัย, dose calculation และ Behavior Coach ยังคง deferred

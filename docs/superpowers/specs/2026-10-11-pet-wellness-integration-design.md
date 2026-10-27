@@ -1,6 +1,6 @@
 # PawRoutine Pet Wellness Integration Design
 
-สถานะ: Product design ที่ผู้ใช้อนุมัติเมื่อ 11 ตุลาคม 2026; ยังไม่ได้ implement ฟีเจอร์ใน Phase 5–11
+สถานะ: Product design ที่ผู้ใช้อนุมัติเมื่อ 11 ตุลาคม 2026; Phase 5–10 implement, deploy และผ่าน test gate แล้ว ส่วน Phase 11 ยังเป็น optional plan
 
 ## เป้าหมาย
 
@@ -29,27 +29,39 @@
 
 ขยายโปรไฟล์สัตว์และ Health Passport แบบข้อความ/ตัวเลข เพิ่มข้อมูลแพ้ยา โรคประจำตัว ยาประจำ วัคซีน วันที่เริ่ม/สิ้นสุด และวันนัดครั้งถัดไป โดยข้อมูลเดิมต้องยังอ่านได้ ไม่มีไฟล์แนบ และทุกการเปลี่ยนแปลงต้องมี Activity Log
 
+สถานะ: เสร็จแล้วด้วย migration 006, `pet_passport_entries`, API/UI สมุดสุขภาพ, Activity/Timeline และ automated tests
+
 ## Phase 6 — Daily Wellness Log & Quick Check-in
 
 เพิ่ม Quick Check-in แบบเลือกกรอกสำหรับอาหาร น้ำ กิจกรรม การนอน ขับถ่าย อารมณ์ น้ำหนัก และข้อสังเกต รองรับการกรอกย้อนหลัง หลายบันทึกต่อวัน ผู้บันทึก การแก้ไข และ soft archive รายการต้องปรากฏใน Pet Timeline โดยช่องว่างห้ามถูกตีความเป็นศูนย์
+
+สถานะ: เสร็จแล้วด้วย migration 007, `pet_wellness_logs`, API/UI Quick Check-in, แท็บเช็กอินรายวัน, Activity/Timeline และ automated tests
 
 ## Phase 7 — Personal Baseline & Learning Mode
 
 สร้าง baseline รายสัตว์/ราย metric จากหน้าต่างข้อมูลย้อนหลัง 14 วัน แสดงจำนวนวันที่เก็บแล้ว วันที่เหลือ และความพร้อมของแต่ละ metric หากจำนวนตัวอย่างไม่พอต้องแสดง “ข้อมูลยังไม่เพียงพอ” การแก้ข้อมูลย้อนหลังต้องทำให้ baseline คำนวณใหม่ได้อย่าง deterministic
 
+สถานะ: เสร็จแล้วด้วย derived Baseline Engine, read-only API, source traceability, Learning Mode UI และ automated tests โดยไม่มี snapshot table ที่อาจค้าง
+
 ## Phase 8 — Change Detection & Wellness Alerts
 
 เทียบข้อมูลล่าสุดกับ baseline ด้วยกฎแบบเปอร์เซ็นต์/จำนวนวันต่อเนื่อง รองรับสถานะใหม่ รับทราบ กำลังติดตาม และกลับสู่ปกติ Alert ต้องแสดง metric, ค่าปกติ, ค่าที่พบ, ช่วงเวลา และกฎที่ทำงาน พร้อมคำแนะนำให้ติดตามหรือปรึกษาสัตวแพทย์โดยไม่ระบุโรค
+
+สถานะ: เสร็จแล้วด้วย deterministic Detection Engine, `wellness_alerts`, lifecycle API/UI, Activity/Timeline และ automated tests
 
 ## Phase 9 — Wellness Dashboard
 
 เพิ่มแท็บ Wellness ใน Pet Workspace แสดง Learning, Stable, Changes Detected หรือ Insufficient Data พร้อมกราฟ 7/14/30/90 วัน ช่วง baseline การ์ดสรุปราย metric และ Alert ที่กำลังติดตาม กราฟต้องไม่เชื่อมวันที่ไม่มีข้อมูลเป็นค่าที่สร้างขึ้น
 
-โครงแท็บเป้าหมาย: ภาพรวม → กิจวัตร → Wellness → Health Passport → Timeline
+สถานะ: เสร็จแล้วด้วย read-only Dashboard Aggregation Engine/API, กราฟและตารางข้อมูล 7 metrics, active alerts, responsive/accessibility states และ automated tests โดยไม่มี snapshot table เพิ่ม
+
+โครงแท็บปัจจุบัน: ภาพรวม → กิจวัตร → Wellness → เช็กอินรายวัน → สุขภาพ → สมุดสุขภาพ → Timeline → รายงาน
 
 ## Phase 10 — Reminders, Shared Monitoring & Vet Report
 
 เพิ่มการเตือนวัคซีน/นัดหมายตามวันจริง การแจ้ง Alert แก่สมาชิก การมอบหมายผู้ติดตาม และการอัปเดตสถานะร่วมกันโดยอัตโนมัติ เพิ่มรายงานตามช่วงวันที่สำหรับพิมพ์/PDF ซึ่งรวมข้อมูลสัตว์ แพ้ยา โรค ยา วัคซีน น้ำหนัก Daily Wellness, Alert และ Timeline รายงานต้องเป็นข้อเท็จจริงและใช้งานได้โดยไม่พึ่ง AI
+
+สถานะ: เสร็จแล้วด้วย migration 009, in-app health/follow-up reminders, shared Alert follow-up พร้อม Activity และ Vet Report ช่วงไม่เกิน 366 วัน; ปุ่มดาวน์โหลดสร้าง PDF ฝั่ง browser โดยตรง ไม่เปิดหน้าต่าง Print; deploy ที่ `localhost:3000`
 
 ## Phase 11 — AI Insight Layer (Optional)
 

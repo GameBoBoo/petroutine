@@ -17,3 +17,11 @@ Thumbs.db
 .vscode/
 .codex/
 .superpowers/
+
+# Local delivery secrets, generated evidence, and database exports
+.delivery.env
+.delivery-build/
+artifacts/
+*.dump
+*.dump.sha256
+.docker-auth/
