@@ -37,7 +37,7 @@ Today → กรองงานของฉัน/ทุกคน สัตว�
 
 ## Navigation
 
-Desktop Sidebar และ mobile navigation ใช้ชื่ออังกฤษ: Today, Calendar, Add, Pets และ More โดย More รวม Routines, History, Household และ Settings; หน้า Change History ไม่แสดงใน navigation
+Desktop Sidebar และ mobile navigation ใช้ชื่อไทย: วันนี้ ปฏิทิน เพิ่ม สัตว์เลี้ยง และเพิ่มเติม โดยเพิ่มเติมรวมกิจวัตร ประวัติ บ้านและสมาชิก และตั้งค่า ไม่มีหน้า Change History ใน navigation
 
 ## การลบบ้าน
 

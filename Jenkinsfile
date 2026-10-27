@@ -1,6 +1,7 @@
 pipeline {
   agent { label 'pawroutine-course' }
   options { timestamps(); disableConcurrentBuilds(); timeout(time: 60, unit: 'MINUTES') }
+  triggers { pollSCM('H/5 * * * *') }
   parameters {
     string(name: 'REGISTRY_HOST', defaultValue: '127.0.0.1:5000', description: 'Local Course registry or an authenticated external registry')
     string(name: 'IMAGE_REPOSITORY', defaultValue: 'pawroutine', description: 'Registry repository, e.g. team/pawroutine')

@@ -2,6 +2,16 @@
 
 ใช้ฐานข้อมูล delivery synthetic ที่ port 3300 เท่านั้น ไม่แสดง password/API key หรือข้อมูลผู้ใช้จริง เปิด Jenkins console และ traceability เตรียมไว้ก่อนเริ่ม ระบุ commit และ build number ที่ใช้จริง
 
+หลัง Course delivery deploy ผ่านแล้ว เตรียมข้อมูลจาก host PowerShell โดยชี้ port 3300 ของ Course:
+
+```powershell
+$env:DEMO_BASE_URL='http://127.0.0.1:3300'
+$env:DEMO_CONFIRM_SYNTHETIC='yes'
+node scripts/seed-delivery-demo.mjs
+```
+
+บัญชี Owner/Member และรหัสสุ่มอยู่ใน `artifacts/demo-access.json` ซึ่งถูก ignore ห้ามแชร์ไฟล์นี้ใน Git/Jenkins archive สคริปต์สร้างบ้านใหม่ทุกครั้ง ไม่ใช้ข้อมูลผู้ใช้จริง และ AI ยังปิดอยู่
+
 ## เรื่องหลัก: บ้านที่มีผู้ดูแลสองคน
 
 1. Owner สมัคร/สร้างบ้าน เพิ่มสัตว์ “โมจิ” และเชิญผู้ดูแลร่วม เปิดสมาชิกอีกคนใน browser profile หรือ incognito แยก session

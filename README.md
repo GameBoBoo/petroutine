@@ -39,7 +39,7 @@ PawRoutine คือระบบภาษาไทยสำหรับจัด
 
 PawRoutine จะรักษาความสามารถด้าน Shared Care เดิมและเพิ่มระบบติดตามสุขภาวะตามลำดับ: ขยาย Pet/Health Passport → Daily Wellness Log → Learning Mode และ baseline 14 วัน → ตรวจจับความเปลี่ยนแปลงด้วยกฎ → Wellness Dashboard → reminders/shared monitoring/Vet Report → AI แบบ optional เป็น Phase สุดท้าย
 
-Phase 5–10 ตั้งแต่ Pet & Wellness Data Foundation ถึง Reminders, Shared Monitoring และ Vet Report พร้อมใช้งานแล้ว Phase 11 มี AI Chatbot แบบอ่านอย่างเดียว ถามข้อมูลสัตว์เลี้ยงรายตัวหรือทุกตัวในบ้าน พร้อมลิงก์บันทึกต้นทาง เจ้าของบ้านเปิดใช้ AI ใน Settings และสมาชิกยินยอมครั้งแรกต่อบ้านก่อนส่งข้อมูลให้ Provider รายละเอียดอยู่ใน [AI Phase 11](docs/ai-phase-11.md) และ [Roadmap](docs/roadmap.md)
+Phase 5–10 ตั้งแต่ Pet & Wellness Data Foundation ถึง Reminders, Shared Monitoring และ Vet Report พร้อมใช้งานแล้ว Phase 11 มี AI Chatbot สำหรับอ่าน/สรุปข้อมูล และ care draft ที่ผู้ใช้ต้องตรวจยืนยันผ่าน API ปกติก่อนบันทึก ถามข้อมูลสัตว์เลี้ยงรายตัวหรือทุกตัวในบ้าน พร้อมลิงก์บันทึกต้นทาง เจ้าของบ้านเปิดใช้ AI ใน Settings และสมาชิกยินยอมครั้งแรกต่อบ้านก่อนส่งข้อมูลให้ Provider รายละเอียดอยู่ใน [AI Phase 11](docs/ai-phase-11.md) และ [Roadmap](docs/roadmap.md)
 
 หลังเปิด AI สำหรับบ้านแล้ว ปุ่ม **ถาม AI** มุมขวาล่างใช้พิมพ์คำถามเกี่ยวกับสัตว์เลี้ยงที่เลือกได้จากทุกหน้า โดยเลือกดูบันทึกย้อนหลัง 7, 30 หรือ 365 วัน ประวัติแชตอยู่เฉพาะในหน้าเว็บที่เปิดอยู่
 
@@ -99,7 +99,7 @@ npm test
 
 ## Migration และการทดสอบ
 
-Migration 001–010 เป็นแบบ additive และรันซ้ำได้ โดย 004 เพิ่ม flexible schedules, task versions, Activity Log, care entries, health records และ idempotency records; 005 เพิ่มการ archive บ้าน; 006 เพิ่มโปรไฟล์ Wellness และ Health Passport; 007 เพิ่ม Daily Wellness Log; 008 เพิ่ม Wellness Alerts; 009 เพิ่มระยะเตือนสุขภาพและ shared follow-up; 010 เพิ่มการซ่อนแจ้งเตือนรายผู้ใช้ โดยไม่ลบข้อมูลเดิม
+Migration 001–018 ใช้ผ่าน `db/migrations.mjs` ชุดเดียวกันใน runtime และ full-schema tests โดยรันตามลำดับชื่อไฟล์ ครอบคลุม core care, wellness, AI consent/context, follow-up outcomes และ care draft; migration-specific tests แยกตรวจการอัปเกรดและการรันซ้ำ
 
 ```powershell
 npm run db:migrate

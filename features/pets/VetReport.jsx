@@ -42,7 +42,8 @@ export default function VetReport({ petId, api }) {
     setDownloading(true);
     setError('');
     const previousTitle = document.title;
-    const safePetName = (pet?.name || 'pet').trim().replace(/[\\/:*?"<>|]+/g, '-');
+    // Chromium on Linux can discard non-ASCII Blob download filenames.
+    const safePetName = (pet?.name || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '') || `pet-${petId.slice(0, 8)}`;
     try {
       const module = await import('html2pdf.js');
       const html2pdf = module.default || module;

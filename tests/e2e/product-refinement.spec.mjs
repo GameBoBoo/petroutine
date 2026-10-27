@@ -163,7 +163,7 @@ test('wellness dashboard and alert lifecycle work on desktop and mobile', async 
   await expect(page.locator('.wellness-alert-card').first().getByText('กำลังติดตาม')).toBeVisible();
 });
 
-test('Phase 10 reminders, shared monitoring and Vet Report work on desktop and mobile', async ({ page, request }) => {
+test('Phase 10 reminders, shared monitoring and Vet Report work on desktop and mobile', async ({ page, request }, testInfo) => {
   test.setTimeout(90_000);
   const fixture = await setup(request);
   const today = bangkokToday();
@@ -200,17 +200,20 @@ test('Phase 10 reminders, shared monitoring and Vet Report work on desktop and m
   await page.getByRole('alertdialog', { name: 'บันทึกแผนติดตาม?' }).getByRole('button', { name: 'ยืนยันบันทึก' }).click();
   await expect(alert.locator('.alert-follow-up-summary dd').first()).toHaveText('สมาชิก');
   await expect(alert.locator('.alert-follow-up-summary')).toContainText('สังเกตกิจกรรมหลังอาหารเย็น');
+  await page.screenshot({ path: testInfo.outputPath('shared-follow-up.png'), fullPage: true });
   await page.getByRole('tab', { name: 'รายงานสัตวแพทย์' }).click();
   await expect(page.getByRole('heading', { name: 'รายงานสำหรับสัตวแพทย์' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'ดาวน์โหลด PDF' })).toBeEnabled();
   await expect(page.locator('.vet-report-paper').getByText('วัคซีนพิษสุนัขบ้า')).toBeVisible();
   await expect(page.locator('.vet-report-paper').getByText('สังเกตกิจกรรมหลังอาหารเย็น')).toBeVisible();
+  await page.screenshot({ path: testInfo.outputPath('vet-report.png'), fullPage: true });
   const downloadPromise = page.waitForEvent('download', { timeout: 45_000 });
   await page.getByRole('button', { name: 'ดาวน์โหลด PDF' }).click();
   const download = await downloadPromise;
   expect(download.suggestedFilename()).toMatch(/^PetRoutine-.*-Vet-Report-.*\.pdf$/);
   const pdf = await readFile(await download.path());
   expect(pdf.subarray(0, 5).toString()).toBe('%PDF-');
+  await download.saveAs(testInfo.outputPath('vet-report.pdf'));
   await page.evaluate(() => document.body.classList.add('printing-vet-report'));
   await page.emulateMedia({ media: 'print' });
   await expect(page.locator('.vet-report-paper')).toBeVisible();

@@ -14,6 +14,8 @@ Pending — จะบันทึกจาก verification.json, Jenkins build r
 
 Jenkins build #1 ใช้ precheck source และจบ FAILURE โดย stage build image/publish/deploy ถูกข้าม Build #2 หลังแก้ migration ผ่าน unit/API 76/76 และ production build แต่ E2E 12 ผ่าน 4 ข้าม 2 ไม่ผ่าน เพราะ Chromium ใน Course ให้ชื่อไฟล์ PDF ว่า `download` แทนชื่อรายงาน แก้ production download ให้สร้าง Blob link พร้อม download filename โดยตรงและตรวจซ้ำใน build ถัดไป
 
+Build #3 ยืนยันว่า Blob link อย่างเดียวไม่แก้ชื่อภาษาไทย Minimal reproduction ใน Chromium ของ verification image พบว่า filename ASCII ถูกต้อง แต่ชื่อที่มีภาษาไทยกลายเป็น `download` จึงเปลี่ยน filename ให้ใช้ ASCII slug หรือ `pet-<id>` สำหรับชื่อที่ไม่มีอักษร ASCII เนื้อหาและชื่อสัตว์ใน PDF ยังเป็นภาษาไทย ต้องตรวจ E2E รอบใหม่ก่อนสรุปผล
+
 ## AI provider evaluation (host, synthetic only)
 
 รอบแรก auto checks 5/5 แต่ manual review พบปี `2526` ที่ไม่ตรง source จึงบันทึกเป็น defect เพิ่มการตรวจปี/ISO date และใช้ prompt เดียวกับ production ที่ให้คัดลอก ISO date ตรงจากหลักฐาน รอบหลังแก้ผ่าน 5/5 รวม multi-pet/no-evidence/medical boundary/injection พร้อมอ่านคำตอบจริงประกอบ

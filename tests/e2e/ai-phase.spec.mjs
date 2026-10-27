@@ -30,4 +30,5 @@ test('owner can enable AI and open the household chatbot', async ({ page, reques
   await chat.getByLabel('พิมพ์คำถาม').fill('วันนี้ทำอะไรไปแล้วบ้าง');
   await expect(chat.getByRole('button', { name: 'ส่งคำถาม' })).toBeEnabled();
   await expect(chat.getByLabel('พิมพ์คำถาม')).toBeEnabled();
+  await page.screenshot({ path: testInfo.outputPath('ai-consent.png'), fullPage: true });
 });
