@@ -2,7 +2,7 @@
 
 - ผลวิจัยผู้ใช้/ตัวชี้วัดผลกระทบ/รายชื่อทีม/ต้นทุนจริงยังไม่มีข้อมูล ห้ามติดป้ายว่าเสร็จ
 - Live provider synthetic evaluation ใช้ heuristic checks ไม่ใช่การรับรองความถูกต้องทางการแพทย์หรือความเข้าใจทุกคำตอบ ต้องอ่านผลและตรวจกรณีหลายตัว/ข้อมูลไม่พอเพิ่มเติม
-- AI draft มี parser/API tests แต่ยังไม่มี live-provider quality evaluation ครบทุกชนิดบันทึก
+- AI draft มี parser/API tests และ live-provider synthetic evaluation 3 กรณี (ให้อาหาร/น้ำหนัก/ข้อสังเกต) ยังไม่ครอบคลุมทุกชนิดบันทึกหรือข้อความซับซ้อน
 - การสร้าง draft กับการบันทึกเป็นคนละคำขอ ผู้ใช้ต้องตรวจและยืนยันข้อมูล ไม่ให้ AI สร้างคำวินิจฉัยหรือขนาดยา
 - Course snapshot ระหว่างพัฒนาและ remote release เป็นคนละรุ่น ต้องตรวจ checkout/tag ที่ส่งจริงซ้ำ
 - Local Jenkins/registry พิสูจน์ delivery ภายใน Course ยังไม่ยืนยัน webhook/credentials/registry ภายนอกของทีม

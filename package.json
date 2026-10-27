@@ -10,6 +10,7 @@
     "db:migrate": "node scripts/migrate.mjs",
     "ai:check": "node scripts/check-ai-provider.mjs",
     "ai:evaluate": "node scripts/evaluate-ai-synthetic.mjs",
+    "ai:evaluate:draft": "node scripts/evaluate-ai-draft.mjs",
     "test": "node --test --test-concurrency=1 tests/*.test.mjs",
     "test:e2e": "node scripts/run-e2e.mjs"
   },

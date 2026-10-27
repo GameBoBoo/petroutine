@@ -12,7 +12,7 @@ Notes: ใช้ชื่อ repository PawRoutine; UI ปัจจุบัน�
 
 ข้อมูลกระจายในแชต/ความจำทำให้ตรวจสถานะงานยาก สมมติฐานคือเกิดการลืมและทำงานซ้ำ
 
-Notes: ยังไม่มีผลสัมภาษณ์จริง ห้ามบอกความชุก/เปอร์เซ็นต์ ใช้ protocol ใน user-validation.md และแทนที่ Pending ด้วยหลักฐานพร้อมแหล่งที่มาเมื่อเก็บแล้ว
+Notes: มีงานภายนอก Odom et al. 2024 พบ noncompliance 71/151 ใน sample คลินิกนิวซีแลนด์ ตัวเลขนี้รวมหลายสาเหตุ ไม่ใช่อัตราลืมของผู้ใช้เรา ดู https://pubmed.ncbi.nlm.nih.gov/39272342/ และ problem-evidence.md ยังไม่มีผลสัมภาษณ์จริง ใช้ protocol ใน user-validation.md
 
 ## 3 — กลไกของ Solution
 

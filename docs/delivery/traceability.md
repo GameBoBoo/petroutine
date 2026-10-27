@@ -26,7 +26,7 @@
 | AC-20 AI access/consent | ai-insight service/settings | `ai-insight-api.test.mjs`, ai-phase E2E | Mocked API และ consent E2E ผ่าน |
 | AC-21 source/JSON/empty data | AI parser/context | `ai-insight-unit.test.mjs`, `ai:evaluate` | Synthetic provider eval แยกจาก mocked tests |
 | AC-22 AI error/privacy/rate | provider adapter/audit | ai-insight API tests, synthetic eval | Error paths มี tests; ไม่อ้างว่า provider uptime ผ่าน SLA |
-| AC-23 AI care draft confirmation | ai-care-draft service/QuickAdd | `ai-care-draft-unit.test.mjs`, care-experience API | Draft ไม่บันทึกเอง ต้องผู้ใช้ตรวจยืนยัน; live-provider draft quality ยังไม่มีผลยืนยัน |
+| AC-23 AI care draft confirmation | ai-care-draft service/QuickAdd | `ai-care-draft-unit.test.mjs`, care-experience API, `evaluate-ai-draft.mjs` | Draft ไม่บันทึกเอง ต้องผู้ใช้ตรวจยืนยัน; live synthetic 3/3 ผ่านในกรณีที่เลือก ไม่ครอบคลุมทุกข้อความ |
 | DEL-01 Course environment | compose.verify/delivery + scripts | `artifacts/verification/*`, `course-results.md` | ใช้ผลที่บันทึกจริงเท่านั้น |
 | DEL-02 Jenkins publish/deploy | Jenkinsfile, compose.ci | Jenkins build number/console + image revision | ต้องมี build result จริงก่อน Accepted |
 | DEL-03 backup/recovery | delivery.sh | `artifacts/recovery.txt` | Drill ใช้ DB แยก; ไม่ทดแทน full disaster-recovery plan |

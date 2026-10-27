@@ -12,7 +12,10 @@ if (action === 'build') {
   if (!response.ok) throw new Error(`Crumb request HTTP ${response.status}`);
   const crumb = await response.json();
   const cookie = response.headers.get('set-cookie')?.split(';')[0];
-  const build = await fetch(`${base}/job/PawRoutine-delivery/build`, { method: 'POST', headers: { authorization, [crumb.crumbRequestField]: crumb.crumb, ...(cookie ? { cookie } : {}) } });
+  const headers = { authorization, [crumb.crumbRequestField]: crumb.crumb, ...(cookie ? { cookie } : {}) };
+  let build = await fetch(`${base}/job/PawRoutine-delivery/buildWithParameters`, { method: 'POST', headers });
+  // Before its first run, a Pipeline from SCM has not registered Jenkinsfile parameters.
+  if (build.status === 400) build = await fetch(`${base}/job/PawRoutine-delivery/build`, { method: 'POST', headers });
   if (!build.ok) throw new Error(`Build request HTTP ${build.status}`);
   console.log(JSON.stringify({ queued: true, location: build.headers.get('location') }));
 } else if (action === 'status' || action === 'console') {

@@ -46,7 +46,8 @@ export default function VetReport({ petId, api }) {
     try {
       const module = await import('html2pdf.js');
       const html2pdf = module.default || module;
-      await html2pdf().set({
+      const filename = `PetRoutine-${safePetName}-Vet-Report-${filters.from}-to-${filters.to}.pdf`;
+      const blob = await html2pdf().set({
         filename: `PetRoutine-${safePetName}-Vet-Report-${filters.from}-to-${filters.to}.pdf`,
         margin: [10, 10, 12, 10],
         image: { type: 'jpeg', quality: 0.96 },
@@ -59,7 +60,17 @@ export default function VetReport({ petId, api }) {
         },
         pagebreak: { mode: ['css', 'legacy'], avoid: ['.report-table tr', '.report-profile div'] },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      }).from(reportRef.current).save();
+      }).from(reportRef.current).outputPdf('blob');
+      // Use the browser download API explicitly so the report name is preserved
+      // across FileSaver/browser implementations (including headless Linux).
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 60_000);
     } catch (problem) {
       setError(`สร้าง PDF ไม่สำเร็จ: ${problem.message || 'กรุณาลองอีกครั้ง'}`);
     } finally {
