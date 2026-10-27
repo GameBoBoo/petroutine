@@ -8,5 +8,6 @@
 - Local Jenkins/registry พิสูจน์ delivery ภายใน Course ยังไม่ยืนยัน webhook/credentials/registry ภายนอกของทีม
 - Backup drill ตรวจ checksum, restore และ core row counts ไม่ตรวจ full disaster recovery/SLA
 - ยังไม่มี load test, production uptime measurement หรือ independent penetration test
+- PDF เป็น raster จาก browser จึงไม่ใช่ tagged/searchable PDF และอาจมีพื้นที่ว่างเมื่อกัน section ข้ามหน้า มี HTML report/table สำหรับอ่านข้อมูลต้นทาง
 - ไม่รวม email/push, file attachment service, server-side PDF หรือคำแนะนำรักษาโรค
 - เอกสารเก่าใน `docs/superpowers/plans` เป็นประวัติแนวคิด ให้อ่านสถานะล่าสุดและ traceability ประกอบ

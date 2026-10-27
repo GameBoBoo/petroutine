@@ -26,6 +26,14 @@ Care draft ใช้ production prompt/parser ตรวจ feeding, weight 4.2 k
 
 ## Provenance
 
+## Dependency security
+
+ระหว่าง rebuild พบ npm advisory ของ Next.js 15.5.27 จึงอัปเดตเป็น 15.5.28 แบบ patch และเพิ่ม `audit:production` เป็นขั้นแรกของ verification ก่อน test/build/deploy การติดตั้งหลังอัปเดตรายงาน 0 vulnerabilities; ผล Course ของรุ่น patch ต้องอ่าน build ใหม่ ไม่ใช้ build #4–6 ซึ่งยังใช้ dependency รุ่นเดิม
+
+แหล่งผู้ดูแล: https://github.com/vercel/next.js/releases/tag/v15.5.28 และ https://github.com/vercel/next.js/security/advisories/GHSA-2464-fhr4-w9xw ข้อความนี้เป็นการบันทึก dependency advisory ไม่ใช่หลักฐานว่ามีการโจมตีระบบนี้เกิดขึ้น
+
+## Provenance ของ precheck
+
 รอบ precheck ใช้ local working-tree snapshot ที่ตัด .env/dump/Git metadata ออก และสร้าง commit ภายในกล่องเพื่อให้ checkout ได้ Snapshot นี้เป็น artifact ของ automation ไม่ใช่หลักฐานแบ่งงานของสมาชิก และยังไม่ใช่ remote release
 
 หลักฐานที่สร้างอัตโนมัติอยู่ใน `artifacts/` ซึ่งถูก ignore เพื่อไม่ส่ง log/ข้อมูลทดสอบ/backup ขึ้น Git โดยไม่ตรวจ ผู้ส่งควรเลือกเฉพาะผลที่ปลอดภัยแนบกับรุ่นส่งหรือ Jenkins archive

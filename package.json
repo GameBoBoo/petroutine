@@ -12,6 +12,7 @@
     "ai:evaluate": "node scripts/evaluate-ai-synthetic.mjs",
     "ai:evaluate:draft": "node scripts/evaluate-ai-draft.mjs",
     "test": "node --test --test-concurrency=1 tests/*.test.mjs",
+    "audit:production": "npm audit --omit=dev --audit-level=high",
     "test:e2e": "node scripts/run-e2e.mjs"
   },
   "dependencies": {
@@ -19,7 +20,7 @@
     "dotenv": "^16.6.1",
     "html2pdf.js": "^0.14.0",
     "jsonwebtoken": "^9.0.2",
-    "next": "^15.5.6",
+    "next": "15.5.28",
     "pg": "^8.16.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"

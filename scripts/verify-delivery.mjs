@@ -4,7 +4,7 @@ import { createWriteStream } from 'node:fs';
 
 await mkdir('artifacts', { recursive: true });
 const report = { started_at: new Date().toISOString(), revision: process.env.DELIVERY_REVISION || 'working-tree', node: process.version, checks: [] };
-for (const name of ['test', 'build', 'test:e2e']) {
+for (const name of ['audit:production', 'test', 'build', 'test:e2e']) {
   const started = Date.now();
   const logfile = `artifacts/${name.replaceAll(':', '-')}.log`;
   const log = createWriteStream(logfile);

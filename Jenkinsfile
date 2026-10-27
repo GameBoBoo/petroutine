@@ -30,7 +30,7 @@ pipeline {
         sh 'bash scripts/delivery.sh init'
       }
     }
-    stage('Unit, API, production build and E2E') {
+    stage('Dependency audit, unit, API, production build and E2E') {
       steps { sh 'bash scripts/delivery.sh verify' }
     }
     stage('Build release image') {
