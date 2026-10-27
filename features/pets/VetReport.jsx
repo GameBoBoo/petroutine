@@ -54,12 +54,13 @@ export default function VetReport({ petId, api }) {
         image: { type: 'jpeg', quality: 0.96 },
         html2canvas: {
           scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollY: 0,
+          windowWidth: 1280,
           onclone: clonedDocument => {
             clonedDocument.querySelectorAll('.report-table-wrap').forEach(element => { element.style.overflow = 'visible'; });
             clonedDocument.querySelectorAll('.report-table').forEach(element => { element.style.minWidth = '0'; element.style.width = '100%'; });
           },
         },
-        pagebreak: { mode: ['css', 'legacy'], avoid: ['.report-table tr', '.report-profile div'] },
+        pagebreak: { mode: ['css', 'legacy'], avoid: ['.report-section', '.report-table tr', '.report-profile div', '.report-note', '.report-footer'] },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
       }).from(reportRef.current).outputPdf('blob');
       // Use the browser download API explicitly so the report name is preserved
