@@ -13,5 +13,6 @@ playwright-report
 *.log
 .codex
 .superpowers
+.docker-auth
 legacy
 PawRoutine-Codex-Starter
