@@ -55,8 +55,8 @@ PDF ถูก render และดูจริงทั้ง desktop/mobile อ�
 
 ผลข้างต้นเป็น baseline ที่บันทึกไว้ก่อน commit เอกสารชุดส่ง ผลตรวจ source สุดท้ายและหมายเลข Jenkins อยู่ใน `manifest.json` และ `evidence/release-verification.json` ของ ZIP เพื่อไม่ต้องแก้ source หลังทดสอบ
 
-## Source และการทำซ้ำ
+## Source ของหลักฐานย้อนหลังและการทำซ้ำ
 
-Branch local: `delivery/course-verification-20261028` ตรวจ runtime ที่ `fde294f` เอกสาร/ภาพหลักฐานอาจถูกบันทึกเป็น commit ถัดไปโดยไม่มีการเปลี่ยน runtime; ใช้ revision ใน Jenkins artifact เพื่อเลือก checkout ที่ตรงกับผลตรวจ
+หลักฐาน build #8 ใช้ branch `delivery/course-verification-20261028` และ runtime ที่ `fde294f` เอกสาร/ภาพหลักฐานอาจถูกบันทึกเป็น commit ถัดไปโดยไม่มีการเปลี่ยน runtime ใช้ revision ใน Jenkins artifact เพื่อเลือก checkout ที่ตรงกับผลตรวจ ปัจจุบันงานหลัง cleanup รวมเข้า `main` แล้วในเครื่อง; ดู [คู่มือ main ปัจจุบัน](../../README.md) และผลหลัง cleanup ใน Maintenance
 
 ดู [Course/Jenkins](course-and-ci.md), [Traceability](traceability.md), [Demo script](demo-script.md), [สไลด์ 12 หน้า](presentation.html) และ [ข้อจำกัด](known-limitations.md) Raw logs/evidence/backup อยู่ใน artifacts ที่ถูก ignore ไม่คัด database dump หรือ credentials เข้า repository

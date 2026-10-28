@@ -8,9 +8,36 @@ Course Container จำเป็นต้องใช้ privileged ตามค
 
 อ้างอิง: https://github.com/Tuchsanai/DevTools/blob/main/00_Tool/00_Reference/readme.md
 
-## เริ่มจากเครื่องผู้ตรวจ
+## ตรวจ main ที่เผยแพร่บน GitHub
 
-ผู้ใช้เลือกเก็บ commits ในเครื่อง จึงส่ง Git bundle พร้อมประวัติและ tag ใน ZIP โดยไม่ push GitHub แตก ZIP และเปิด terminal ที่โฟลเดอร์ซึ่งมี pawroutine-delivery.bundle ตรวจ manifest.json เพื่อดู commit และผล CI รุ่นส่ง
+ใช้วิธีนี้เมื่อต้องการตรวจ source ปัจจุบันหลังผู้ดูแล push main แล้ว สำหรับการลองใช้ local ทั่วไปให้เริ่ม [README หลัก](../../README.md)
+
+สร้าง Course ใหม่จาก host ถ้ามีกล่องชื่อนี้แล้วให้ใช้ของเดิมหรือเลือกชื่อและ port ใหม่:
+
+```bash
+docker run -dit --name pawroutine-course --privileged -p 127.0.0.1:3300:3000 -p 127.0.0.1:38080:8080 tuchsanai/devtools:2569_1
+docker exec pawroutine-course mkdir -p /workspace
+docker exec -it pawroutine-course bash
+```
+
+ตรวจ `docker info` ภายใน Course ให้สำเร็จ หาก daemon ยังไม่เริ่มให้ใช้คำสั่งเปิด nested daemon ในหัวข้อ “หยุดและเปิดใหม่” ด้านล่าง จากนั้นภายใน Course ที่ยังไม่มี checkout:
+
+```bash
+git clone --branch main https://github.com/GameBoBoo/pawroutine.git /workspace/pawroutine-source
+cd /workspace/pawroutine-source
+git rev-parse HEAD
+export DELIVERY_BIND_ADDRESS=0.0.0.0
+bash scripts/delivery.sh init
+bash scripts/delivery.sh verify
+bash scripts/delivery.sh build
+bash scripts/delivery.sh deploy
+```
+
+บันทึก revision และผลตรวจของรอบนี้แยกจาก build #10/ผล cleanup ในอดีต ถ้ามี checkout อยู่แล้วให้ตรวจงานค้างก่อนเปลี่ยนรุ่น และใช้ main/commit ที่ต้องการตรวจจริง
+
+## ตรวจ snapshot จาก ZIP/bundle เดิม
+
+ZIP ชุด submission-20261028 จัดไว้ก่อน cleanup และก่อนรวม main ภายในมี Git bundle พร้อมประวัติและ tag ของ snapshot นั้น ใช้วิธีด้านล่างเมื่อต้องการตรวจรุ่นเก่าให้ตรง manifest เท่านั้น ไม่ใช่ขั้นตอนดึง main ปัจจุบัน แตก ZIP และเปิด terminal ที่โฟลเดอร์ซึ่งมี pawroutine-delivery.bundle
 
 บน host สร้าง Course ใหม่ (ถ้ามีชื่อเดียวกันอยู่แล้วให้ใช้ของเดิมหรือเลือกชื่อใหม่ ไม่ลบกล่องเดิม):
 

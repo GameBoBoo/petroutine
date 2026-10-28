@@ -4,6 +4,16 @@
 
 ## ก่อนทดสอบ
 
+ครั้งแรกให้ทำ setup ตาม README ก่อน ถ้ามี checkout อยู่แล้วให้ตรวจว่าบันทึกงานของตนเรียบร้อย แล้วอัปเดตรุ่นทดสอบ:
+
+```bash
+git switch main
+git pull --ff-only
+node scripts/setup-local.mjs
+```
+
+ถ้ากำลังพัฒนาบน branch งาน ให้ทดสอบและรายงานชื่อ branch/commit ของงานนั้นด้วย ไม่สลับ branch โดยทิ้งงานที่ยังไม่บันทึก ดู [Contributing](../CONTRIBUTING.md)
+
 1. หลัง pull ให้รัน `docker compose up -d --build --wait --wait-timeout 180`
 2. ตรวจ `docker compose ps` ให้ web/db healthy และเปิด `/api/v1/health` ได้ `ok/ok`
 3. จด `git rev-parse --short HEAD`, browser, ขนาดหน้าจอ และโหมด Docker/dev

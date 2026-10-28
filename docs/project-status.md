@@ -6,7 +6,11 @@ PawRoutine (UI: PetRoutine) มีระบบ Auth/Household/Pets/Routines, Tod
 
 อ่าน [README](../README.md) เพื่อ clone/setup/run และ [Team testing](team-testing.md) สำหรับ checklist/ข้อมูลสังเคราะห์/รายงานปัญหา ฐานข้อมูลและ .env ของแต่ละเครื่องแยกกัน AI ปิดเป็นค่าเริ่มต้น
 
+งาน cleanup ถูกรวมเข้า `main` แล้วในเครื่อง ใช้ main สำหรับแจกให้ทีมทดสอบหลังผู้ดูแล push ดู [Configuration](configuration.md) เมื่อต้องเปลี่ยนพอร์ตหรือเปิด AI และ [Contributing](../CONTRIBUTING.md) เมื่อต้องแก้โค้ด
+
 ## หลักฐานการตรวจ
+
+หลัง cleanup: audit/build ผ่าน, unit/API **76/76**, E2E **14 ผ่าน / 4 platform skips / 0 ล้มเหลว**, fresh Compose startup/health/API smoke และ stop/start persistence ผ่านใน project ใหม่ภายใน Course ดู [ผลและ source hashes](delivery/evidence/team-cleanup-verification.json) เป็นการตรวจ working-tree snapshot ไม่ใช่ Jenkins run ใหม่
 
 Baseline ก่อน cleanup คือ Jenkins #10 ที่ commit 9d6ef80: Next.js 15.5.28, audit/build ผ่าน, unit/API 76/76 และ E2E 14 ผ่าน/4 platform skips ภายใน tuchsanai/devtools:2569_1 พร้อม image push-pull/deploy/health/smoke/restore ผลหลัง cleanup ดู [Maintenance](maintenance.md) ไม่ใช้ผลเก่ามาติดป้ายว่ารุ่นใหม่ผ่าน
 

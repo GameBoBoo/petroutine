@@ -21,6 +21,6 @@
 - [x] บทสัมภาษณ์ใน interview-rehearsal.md ระบุว่าเป็นบทซ้อมสมมติ
 - [ ] สมาชิกตรวจ source/demo ด้วยตนเองและยืนยันส่วนที่ทำจริงก่อนตอบผู้สอน
 - [ ] ถ้าจะอ้างผลสัมภาษณ์/impact จริง ต้องเก็บ consent และข้อมูลจริงก่อน
-- [ ] หากผู้สอนกำหนด URL GitHub รุ่นล่าสุด ต้องเผยแพร่เองภายหลัง: ผู้ใช้เลือกเก็บ commit ในเครื่อง จึงยังไม่ push
+- [ ] เผยแพร่ `main` รุ่นล่าสุดและยืนยัน GitHub change → Jenkins จากรุ่นที่ส่งจริง; การรวม main ในเครื่องหรือการมี ZIP ยังไม่ใช่หลักฐานว่า remote/pipeline อัปเดตแล้ว
 
 แพ็กเกจแนบ source และ Git bundle สำหรับตรวจแบบ offline; ดู START-HERE.md และ manifest.json ใน ZIP สำหรับ revision และผล CI สุดท้าย ไม่รวม credentials, .env หรือ database dump

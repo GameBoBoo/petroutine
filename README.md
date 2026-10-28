@@ -2,6 +2,16 @@
 
 เว็บภาษาไทยสำหรับจัดกิจวัตรและบันทึกการดูแลสุนัข/แมวร่วมกันในบ้าน ใช้ Next.js 15, React 19 และ PostgreSQL 16 ชื่อใน UI คือ **PetRoutine** ระบบไม่วินิจฉัยโรคหรือแนะนำขนาดยา
 
+## ความสามารถหลัก
+
+- จัดการบ้าน สมาชิก สัตว์เลี้ยง และกิจวัตรร่วมกัน
+- Today/Calendar พร้อมยืนยันการเปลี่ยนข้อมูลและ Undo งานภายใน 8 วินาที
+- บันทึก Wellness, baseline, แนวโน้ม และ Alert ที่เปิดดูข้อมูลต้นทางได้
+- Health Passport, shared follow-up, Timeline และ Vet Report PDF
+- AI แบบ optional สำหรับถาม/สรุปและเตรียม draft ที่ต้องให้ผู้ใช้ตรวจยืนยันก่อนบันทึก
+
+เริ่มใช้ครั้งแรกที่หัวข้อด้านล่าง ดู [ดัชนีเอกสาร](docs/README.md), [การตั้งค่า](docs/configuration.md) และ [แนวทางร่วมพัฒนา](CONTRIBUTING.md) เมื่อต้องการรายละเอียดเพิ่มเติม
+
 ## ให้สมาชิกทีมเริ่มใช้งาน
 
 ต้องมี **Git, Docker Desktop พร้อม Docker Compose และ Node.js 22** เปิด Docker Desktop ก่อนเริ่ม Node ใช้เตรียม config; การรันเว็บด้วย Docker ไม่ต้องติดตั้ง npm dependencies บนเครื่อง
@@ -26,6 +36,17 @@ docker compose up -d --build --wait --wait-timeout 180
 
 แต่ละคนรันบนเครื่องตนเองจะได้ฐานข้อมูลคนละชุด การทดสอบร่วมบ้านสองคนบนเครื่องเดียวใช้ browser profile หรือ incognito แยกกัน ค่าเริ่มต้นรับเฉพาะเครื่องตัวเอง ยังไม่เปิดเว็บให้เครื่องอื่นใน LAN
 
+## เลือกโหมดรัน
+
+| โหมด | เว็บ | ฐานข้อมูล/การตั้งค่า |
+|---|---|---|
+| Docker สำหรับลองใช้งาน | `127.0.0.1:3000` | DB ภายใน Docker; ใช้ `.env` |
+| พัฒนา Next.js บน host | `127.0.0.1:3001` | dev override เปิด DB ที่ `127.0.0.1:55430`; ใช้ `.env` |
+| Automated verification | E2E จัด server ให้เอง | `compose.verify.yml` ใช้ test DB แยกแบบ tmpfs |
+| Course/Jenkins | host `127.0.0.1:3300` ตาม runbook | nested Docker และ `.delivery.env` แยกจาก local app |
+
+พอร์ตในตารางเป็นค่าเริ่มต้น ดู [Configuration](docs/configuration.md) ก่อนเปลี่ยนพอร์ตหรือเปิด AI
+
 ## คำสั่งดูแลเว็บและข้อมูล
 
 ```bash
@@ -42,6 +63,7 @@ docker compose down
 อัปเดตรุ่นหลังผู้ดูแล push แล้ว:
 
 ```bash
+git switch main
 git pull --ff-only
 node scripts/setup-local.mjs
 docker compose up -d --build --wait --wait-timeout 180
@@ -99,9 +121,24 @@ npm run test:e2e
 
 ## เอกสารสำหรับทีม
 
+โครงสร้างหลักของ repository:
+
+```text
+app/          Next.js pages, API routes และ styles
+features/     หน้าจอและ flow แยกตามงาน
+components/   UI ที่ใช้ร่วมกัน
+lib/          business rules, services และ database access
+db/           migrations และตัวโหลด migration
+scripts/      setup, migration, demo และ delivery/verification
+tests/        unit/API และ Playwright E2E
+docs/         ขอบเขต ออกแบบ คู่มือ และหลักฐาน
+ci/           Jenkins bootstrap; Jenkinsfile อยู่ที่ root
+```
+
 ผู้ดูแลตรวจ `git status` ให้ไม่มีงานค้าง จากนั้นใช้ `git push origin main` ก่อนให้ทีม clone ส่งผล `git rev-parse --short HEAD` ให้ทีมตรวจว่าได้รุ่นเดียวกัน ใช้ source จาก `main` สำหรับทดสอบหลัง cleanup ส่วน ZIP/tag รุ่นส่งเก่าเก็บเป็นหลักฐานของ snapshot เดิม
 
 - [ทดสอบระบบและรายงานปัญหา](docs/team-testing.md)
+- [ตั้งค่า environment และพอร์ต](docs/configuration.md) · [ร่วมพัฒนาและส่งการแก้ไข](CONTRIBUTING.md)
 - [สรุปการจัดระเบียบไฟล์](docs/maintenance.md)
 - [Requirements](docs/requirements.md) · [Acceptance Criteria](docs/acceptance-criteria.md)
 - [Architecture](docs/architecture.md) · [API](docs/api-design.md) · [Database](docs/database-design.md)
