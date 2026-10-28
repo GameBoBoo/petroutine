@@ -2,9 +2,11 @@
 
 ## Delivery track — 28 ตุลาคม 2026
 
-งานเทคนิค delivery มีผลตรวจจริงแล้ว: Jenkins #7 ผ่าน audit, unit/API 76/76, build, E2E 14 ผ่าน/4 ข้าม, registry, Course deploy, health/API smoke และ backup/recovery หลัง patch Next.js 15.5.28 พร้อม traceability, demo และสไลด์ ดู [Runbook](delivery/README.md) และ [ผลตรวจจริง](delivery/course-results.md) ได้รับรายชื่อสมาชิกและจัดแผนหน้าที่ 4 คนแล้ว ยังรอผลผู้ใช้จริง หลักฐานร่วมงาน และต้นทุนเพื่อปิดหลักฐานด้านคน/ผลกระทบ สถานะเก่าด้านล่างเป็นประวัติก่อน delivery รอบนี้
+งานเทคนิค delivery มีผลตรวจจริงแล้ว: Jenkins baseline #8 ผ่าน audit, unit/API 76/76, build, E2E 14 ผ่าน/4 ข้าม, registry, Course deploy, health/API smoke และ backup/recovery หลัง patch Next.js 15.5.28 พร้อม traceability, demo และสไลด์ ดู [Runbook](delivery/README.md) และ [ผลตรวจจริง](delivery/course-results.md) ได้รับรายชื่อสมาชิกและจัดแผนหน้าที่ 4 คนแล้ว มีงบวางแผนพร้อมราคาอ้างอิงและสูตรแล้ว ยังรอผลผู้ใช้จริง หลักฐานร่วมงานและค่าใช้จ่ายจริงเพื่อปิดหลักฐานด้านคน/ผลกระทบ สถานะเก่าด้านล่างเป็นประวัติก่อน delivery รอบนี้
 
 โค้ดปัจจุบันมี AI Care Brief และ care draft ที่ต้องผู้ใช้ตรวจยืนยันก่อนบันทึก รายการนี้ต้องแยกผลตรวจจาก read-only chatbot และไม่ถือว่า live quality ผ่านจนมีหลักฐาน ดู AC-20–23
+
+รุ่นส่งสุดท้ายให้ดู revision และผล CI ใน `manifest.json` กับ `evidence/release-verification.json` ของ ZIP เอกสารใน source เก็บ baseline ก่อนจัดแพ็กเกจ ดู [รายงานหลัก](delivery/submission-report.md) และ [Checklist](delivery/submission-checklist.md)
 
 ## ขอบเขตเพิ่มเติมที่ผู้ใช้อนุมัติ (23 ตุลาคม 2026)
 
