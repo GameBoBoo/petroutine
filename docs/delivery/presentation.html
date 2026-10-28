@@ -15,10 +15,10 @@
 <main>
 <section class="slide active" aria-label="1 PawRoutine">
 <img class="cover-logo" src="../../public/assets/brand/petroutine-logo.svg" alt="PetRoutine">
-<p class="chapter">PetTech × DevTools</p><h1>PawRoutine</h1><p class="lead">ดูแลงานประจำวันและสุขภาวะ<br>สัตว์เลี้ยงร่วมกันในบ้าน</p><p class="small muted">ชื่อบน UI: PetRoutine · ข้อมูลทีม: รอกรอกจากสมาชิกจริง</p>
+<p class="chapter">PetTech × DevTools</p><h1>PawRoutine</h1><p class="lead">ดูแลงานประจำวันและสุขภาวะ<br>สัตว์เลี้ยงร่วมกันในบ้าน</p><p class="small muted">ทีม: ฐิติภัทร · ภาษณฑ์ · วศิน · ชวเลิศ · ชื่อบน UI: PetRoutine</p>
 </section>
 <section class="slide" aria-label="2 Problem Statement">
-<p class="chapter">01 · Problem Statement</p><h2>งานดูแลที่กระจายในแชตและความจำ</h2><p class="lead">ผู้ดูแลหลายคนต้องตอบให้ได้ว่า<br>“งานนี้ใครทำแล้ว และทำเมื่อไร”</p><p>สมมติฐาน: ข้อมูลที่กระจัดกระจายทำให้ลืมงาน<br>ทำงานซ้ำ และตรวจประวัติได้ยาก</p><p class="small muted">ยังไม่มีผลสัมภาษณ์ยืนยัน · เตรียม protocol และแบบบันทึกแล้ว<br>ต้องเติมผลจริง พร้อมวิธีเก็บและข้อจำกัดก่อนอ้างผล</p>
+<p class="chapter">01 · Problem Statement</p><h2>งานดูแลที่กระจายในแชตและความจำ</h2><p class="lead">ผู้ดูแลหลายคนต้องตอบให้ได้ว่า<br>“งานนี้ใครทำแล้ว และทำเมื่อไร”</p><p>สมมติฐาน: ข้อมูลที่กระจัดกระจายทำให้ลืมงาน<br>ทำงานซ้ำ และตรวจประวัติได้ยาก</p><p class="small muted">งานภายนอก Odom et al. (2024): noncompliance 71/151 ในคลินิกนิวซีแลนด์<br>ไม่ใช่อัตราลืมของผู้ใช้เรา · ยังไม่มีผลสัมภาษณ์จริง · ดู problem-evidence.md</p>
 </section>
 <section class="slide" aria-label="3 Solution">
 <p class="chapter">02 · Solution</p><h2>สถานะร่วมกันและข้อมูลที่ตรวจย้อนกลับได้</h2><table><tr><th>กลไก</th><th>สิ่งที่ผู้ใช้ทำได้</th></tr><tr><td>Shared Today</td><td>เห็นงาน ผู้รับผิดชอบ และสถานะล่าสุด</td></tr><tr><td>Audit และ Undo</td><td>ตรวจประวัติและแก้การกดผิด</td></tr><tr><td>Wellness และ source</td><td>ดูแนวโน้มพร้อมบันทึกต้นทาง</td></tr></table><p class="small muted">การลดการลืมงานยังต้องวัดจากผู้ใช้จริง</p>
@@ -27,13 +27,13 @@
 <p class="chapter">03 · Target Users</p><h2>บ้านที่มีผู้ดูแลสัตว์ร่วมกัน</h2><table><tr><th>บทบาท</th><th>ขอบเขต</th></tr><tr><td>Owner</td><td>จัดการบ้าน สมาชิก และกิจวัตร</td></tr><tr><td>สมาชิก</td><td>บันทึกงานและติดตามสัตว์ในบ้านของตน</td></tr><tr><td>ผู้รับรายงาน</td><td>ใช้ข้อมูลประกอบการคุยกับสัตวแพทย์</td></tr></table><p class="small muted">ยังไม่มีหลักฐานตลาดหรือพันธมิตรคลินิก · ไม่อ้างจำนวนผู้ใช้จริง</p>
 </section>
 <section class="slide" aria-label="5 Social Impact">
-<p class="chapter">04 · Social Impact & Assessment</p><h2>วัดการเปลี่ยนแปลงในงานดูแล</h2><ul><li>อัตรางานที่ลืมและการทำซ้ำโดยไม่ตั้งใจ</li><li>เวลาที่ใช้ตรวจว่าใครทำงานแล้ว</li><li>ความเข้าใจว่า Alert <strong>ไม่ใช่คำวินิจฉัย</strong></li></ul><p class="small muted">ข้อเสนอ: เก็บ baseline 7 วัน แล้วทดลอง 7 วันกับบ้านเดิม<br>ยังไม่ได้เก็บผล · จำนวนบันทึกไม่ใช่ผลลัพธ์ทางสุขภาพ</p>
+<p class="chapter">04 · Social Impact & Assessment</p><h2>วัดการเปลี่ยนแปลงในงานดูแล</h2><ul><li>อัตรางานที่ลืมและการทำซ้ำโดยไม่ตั้งใจ</li><li>เวลาที่ใช้ตรวจว่าใครทำงานแล้ว</li><li>ความเข้าใจว่า Alert <strong>ไม่ใช่คำวินิจฉัย</strong></li></ul><p class="small muted">ข้อเสนอ 10 บ้าน: baseline 7 วัน + ทดลอง 7 วัน; ลดงานพลาด 20% แบบ relative<br>ยังไม่ได้เก็บผล · จำนวนบันทึกไม่ใช่ผลลัพธ์ทางสุขภาพ</p>
 </section>
 <section class="slide" aria-label="6 Team">
-<p class="chapter">05 · Team & Network</p><h2>หน้าที่ต้องเชื่อมกับหลักฐานจริง</h2><p class="lead">ชื่อสมาชิก → งานที่รับผิดชอบ<br>→ Issue / PR / ผลทดสอบ / ผลวิจัย</p><p>สมาชิกแต่ละคนต้องอธิบาย data flow<br>และวินิจฉัย failure ในส่วนของตนได้</p><p class="small muted">รอข้อมูลสมาชิก · Automation snapshot ไม่ใช้แทนหลักฐานแบ่งงาน<br>ใช้ Codex ช่วยวิเคราะห์ พัฒนา ทดสอบ และเตรียมเอกสาร</p>
+<p class="chapter">05 · Team & Network</p><h2>หน้าที่ของสมาชิก</h2><table><tr><th>สมาชิก</th><th>ส่วนที่รับผิดชอบ</th></tr><tr><td>ฐิติภัทร ไร่พันพ่าย</td><td>Frontend และ UX/UI</td></tr><tr><td>ภาษณฑ์ ศิวธนเณศ</td><td>Backend และ Database</td></tr><tr><td>วศิน จันทร์ก้อน</td><td>QA และ User Research</td></tr><tr><td>ชวเลิศ สาวิตรตระกูล</td><td>DevOps และ AI Integration</td></tr></table><p class="small muted">แผนรับผิดชอบสำหรับตรวจทานและนำเสนอ · เติมหลักฐานผลงานตามจริง<br>ใช้ Codex ช่วยวิเคราะห์ พัฒนา ทดสอบ และเตรียมเอกสาร</p>
 </section>
 <section class="slide" aria-label="7 Sustainability">
-<p class="chapter">06 · Sustainability & Unfair Advantage</p><h2>ควบคุมต้นทุนและการพึ่งบริการภายนอก</h2><p class="flow">Compute / DB + Backup<br>+ AI usage + Maintenance</p><p>AI เป็น optional ปิดได้โดยงานดูแลหลักยังทำงาน<br>จุดต่าง: shared care และประวัติที่ย้อน source ได้</p><p class="small muted">ยังไม่มีต้นทุนจริง รายได้ หรือ unfair advantage ที่พิสูจน์แล้ว<br>ต้องใช้ราคาจริงและผล pilot ประกอบการตัดสินใจ</p>
+<p class="chapter">06 · Sustainability & Unfair Advantage</p><h2>ควบคุมต้นทุนและการพึ่งบริการภายนอก</h2><table><tr><th>แผน 10 บ้าน · รวมงบ AI</th><th>เงินสด/เดือน</th><th>รวมมูลค่าแรง</th></tr><tr><td>เครื่องเดิม</td><td>421.08 บาท</td><td>1,621.08 บาท</td></tr><tr><td>Cloud app/DB + local CI</td><td>1,529.88 บาท</td><td>2,729.88 บาท</td></tr></table><p class="small muted">ตัวเลขวางแผน ไม่ใช่รายจ่ายจริง: DigitalOcean 24 USD + weekly backup 20%<br>สมมติ 35 บาท/USD · งบ AI 300 บาท · เผื่อเงินสด 10% · แรงรวม 8 ชม. × 150 บาท<br>AI ปิดได้ · ยังไม่มีรายได้หรือ unfair advantage ที่พิสูจน์แล้ว · ดู impact-and-sustainability.md</p>
 </section>
 <section class="slide" aria-label="8 Architecture">
 <p class="chapter">07 · Demo, DevTools & System Design</p><h2>เส้นทางข้อมูลในระบบจริง</h2><p class="flow">Browser → Next.js API<br>→ สิทธิ์ / Service / Transaction<br>→ PostgreSQL</p><p>AI optional: consent → context → provider<br>→ ตรวจ output/source → คำตอบหรือแบบร่าง</p><p class="small muted">แบบร่างต้องให้ผู้ใช้ตรวจและยืนยันก่อนบันทึก<br>ดู sequence diagram และ failure path ใน architecture.md</p>
@@ -42,13 +42,13 @@
 <p class="chapter">Live Demo</p><h2>ผู้ดูแลสองคน สถานะงานเดียวกัน</h2><ol><li>สร้างงาน → ยืนยันเสร็จ → ดู Timeline → Undo</li><li>เช็กอิน → Alert → เปิด source → นัดติดตาม</li><li>ดาวน์โหลด Vet Report และตรวจ PDF จริง</li></ol><p class="small muted">Failure cases: ไม่มีสิทธิ์ · ข้อมูลชนกัน · ยกเลิก confirmation<br>ใช้ข้อมูล synthetic และเปิดดูผลก่อน–หลัง</p>
 </section>
 <section class="slide" aria-label="10 Delivery">
-<p class="chapter">Course Container · tuchsanai/devtools:2569_1</p><h2>กระบวนการส่งมอบที่ตรวจซ้ำได้</h2><p class="flow">Git checkout → Jenkins<br>→ Tests / Build / E2E → Image / Registry<br>→ Compose → Health / Smoke → Recovery</p><p class="small muted">เปิด Jenkins #7 และ commit 1bf3dc6 จาก course-results.md<br>หาก verification ไม่ผ่าน ต้องหยุด publish/deploy</p>
+<p class="chapter">Course Container · tuchsanai/devtools:2569_1</p><h2>กระบวนการส่งมอบที่ตรวจซ้ำได้</h2><p class="flow">Git checkout → Jenkins<br>→ Tests / Build / E2E → Image / Registry<br>→ Compose → Health / Smoke → Recovery</p><p class="small muted">เปิด Jenkins #8 และ commit fde294f จาก course-results.md<br>หาก verification ไม่ผ่าน ต้องหยุด publish/deploy</p>
 </section>
 <section class="slide" aria-label="11 Verification">
-<p class="chapter">Verification evidence</p><h2>แยกผลตรวจตาม environment</h2><table><tr><th>ผลตรวจ · Course และ synthetic AI</th><th>ผลที่บันทึก</th></tr><tr><td>Unit / API</td><td>76 / 76 ผ่าน</td></tr><tr><td>E2E</td><td>14 ผ่าน · 4 skip ตามแพลตฟอร์ม</td></tr><tr><td>Live AI synthetic</td><td>Chat 5 / 5 · Draft 3 / 3</td></tr></table><p class="small muted">Course: Jenkins #7 ผ่าน · Next.js 15.5.28 · dependency audit ผ่าน<br>Mocked tests ไม่ยืนยันคุณภาพคำตอบ provider ทุกกรณี</p>
+<p class="chapter">Verification evidence</p><h2>แยกผลตรวจตาม environment</h2><table><tr><th>ผลตรวจ · Course และ synthetic AI</th><th>ผลที่บันทึก</th></tr><tr><td>Unit / API</td><td>76 / 76 ผ่าน</td></tr><tr><td>E2E</td><td>14 ผ่าน · 4 skip ตามแพลตฟอร์ม</td></tr><tr><td>Live AI synthetic</td><td>Chat 5 / 5 · Draft 3 / 3</td></tr></table><p class="small muted">Course: Jenkins #8 ผ่าน · Next.js 15.5.28 · dependency audit ผ่าน<br>Mocked tests ไม่ยืนยันคุณภาพคำตอบ provider ทุกกรณี</p>
 </section>
 <section class="slide" aria-label="12 Remaining evidence">
-<p class="chapter">หลักฐานก่อนส่งรุ่นจริง</p><h2>สิ่งที่ยังต้องยืนยัน</h2><ul><li>ผลผู้ใช้จริง ผลกระทบ ข้อมูลทีม และต้นทุน</li><li>commit รุ่นส่งตรงกับผล Course และ Jenkins</li><li>ข้อจำกัด AI และ recovery เปิดเผยตามจริง</li></ul><p class="small muted">ข้อกำหนด: github.com/Tuchsanai/DevTools<br>Mini_Project/project-details · Traceability และ runbook อยู่ใน docs/delivery</p>
+<p class="chapter">ขอบเขตหลักฐานและแผนต่อ</p><h2>ส่งระบบที่ตรวจซ้ำได้ พร้อมแผน pilot</h2><ul><li>รายงาน 7 มิติ งบประมาณ และคู่มือ demo/กู้คืน</li><li>revision และ CI รุ่นส่งดู manifest.json ใน ZIP</li><li>ผู้ใช้จริง/impact และการยืนยันผลงานสมาชิกยังรอตรวจ</li></ul><p class="small muted">ข้อกำหนด: github.com/Tuchsanai/DevTools<br>Mini_Project/project-details · Traceability และ runbook อยู่ใน docs/delivery</p>
 </section>
 </main>
 <nav class="controls" aria-label="ควบคุมสไลด์"><button id="prev" aria-label="สไลด์ก่อนหน้า">←</button> <span id="count" aria-live="polite"></span> <button id="next" aria-label="สไลด์ถัดไป">→</button></nav>

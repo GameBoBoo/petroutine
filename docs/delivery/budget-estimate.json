@@ -1,0 +1,61 @@
+{
+  "as_of": "2026-10-28",
+  "classification": "planning scenario, not actual spending or a quotation",
+  "source": "budget-assumptions.json",
+  "local_electricity": 52.8,
+  "cloud_vm_and_weekly_backup_usd": 28.8,
+  "scenarios": [
+    {
+      "name": "Local + optional AI allocation",
+      "currency": "THB/month",
+      "cash_before_contingency": 382.8,
+      "contingency": 38.28,
+      "cash_budget": 421.08,
+      "maintenance_value": 1200,
+      "economic_cost": 1621.08,
+      "cash_per_household": 42.11,
+      "illustrative_revenue": 490,
+      "cash_break_even_households": 9,
+      "economic_break_even_households": 34
+    },
+    {
+      "name": "Cloud app/database + local Course CI + optional AI allocation",
+      "currency": "THB/month",
+      "cash_before_contingency": 1390.8,
+      "contingency": 139.08,
+      "cash_budget": 1529.88,
+      "maintenance_value": 1200,
+      "economic_cost": 2729.88,
+      "cash_per_household": 152.99,
+      "illustrative_revenue": 490,
+      "cash_break_even_households": 32,
+      "economic_break_even_households": 56
+    },
+    {
+      "name": "Local, AI disabled",
+      "currency": "THB/month",
+      "cash_before_contingency": 82.8,
+      "contingency": 8.28,
+      "cash_budget": 91.08,
+      "maintenance_value": 1200,
+      "economic_cost": 1291.08,
+      "cash_per_household": 9.11,
+      "illustrative_revenue": 490,
+      "cash_break_even_households": 2,
+      "economic_break_even_households": 27
+    },
+    {
+      "name": "Cloud app/database + local Course CI, AI disabled",
+      "currency": "THB/month",
+      "cash_before_contingency": 1090.8,
+      "contingency": 109.08,
+      "cash_budget": 1199.88,
+      "maintenance_value": 1200,
+      "economic_cost": 2399.88,
+      "cash_per_household": 119.99,
+      "illustrative_revenue": 490,
+      "cash_break_even_households": 25,
+      "economic_break_even_households": 49
+    }
+  ]
+}

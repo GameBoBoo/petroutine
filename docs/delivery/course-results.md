@@ -1,6 +1,6 @@
 # ผลส่งมอบและตรวจ Course — 28 ตุลาคม 2026
 
-ตรวจจริงใน `tuchsanai/devtools:2569_1` ด้วย nested Docker daemon Source ที่ยืนยันด้าน runtime คือ `1bf3dc6372ca5cf25e9400f445e10435cd90e445` และ Jenkins build **#7 SUCCESS** ผลเครื่องเดิมวันที่ 27 ต.ค. เป็นประวัติประกอบ
+ตรวจจริงใน `tuchsanai/devtools:2569_1` ด้วย nested Docker daemon Source ที่ยืนยันด้าน runtime คือ `fde294f8e1eace2fe4d19e4ea9c0b947ffedfa92` และ Jenkins build **#8 SUCCESS** ผลเครื่องเดิมวันที่ 27 ต.ค. เป็นประวัติประกอบ
 
 ## ผลที่ยืนยันแล้ว
 
@@ -10,14 +10,14 @@
 | Unit/API | 76/76 ผ่าน, 0 ล้มเหลว บน clean testdb |
 | Production build | ผ่าน |
 | E2E | 14 ผ่าน, 4 ข้ามตาม desktop/mobile, 0 ล้มเหลว |
-| Jenkins/registry | Build #7 ผ่าน; image tag ตาม full commit; publish ไป registry ภายใน Course |
+| Jenkins/registry | Build #8 ผ่าน; image tag ตาม full commit; push และ pull จาก registry ภายใน Course |
 | Deploy/health/API smoke | ผ่าน health/database, ปฏิเสธ unauthenticated access, landing, register, สร้างบ้าน/สัตว์ และอ่านสัตว์ |
-| Backup/recovery | PASS backup checksum, pg_restore, core row counts=6|5|5|1; restored database=recovery_20261027180943 |
+| Backup/recovery | PASS backup checksum, pg_restore, core row counts=7|6|6|1 (Jenkins #8) |
 | Live AI chatbot | synthetic 5/5 พร้อมตรวจ source/date และอ่านคำตอบจริง |
 | Live AI draft | synthetic 3/3; ไม่บันทึก record |
 | Host entry point | ตรวจจาก host ที่ port 3300 ได้ หลังแก้ nested bind address |
 
-[สรุป JSON พร้อม image ID](evidence/course-verification.json) · [Jenkins ล่าสุด](http://127.0.0.1:38080/job/PawRoutine-delivery/lastSuccessfulBuild/) · [เว็บ Course](http://127.0.0.1:3300)
+[สรุป JSON พร้อม image ID](evidence/course-build-8.json) · [Jenkins ล่าสุด](http://127.0.0.1:38080/job/PawRoutine-delivery/lastSuccessfulBuild/) · [เว็บ Course](http://127.0.0.1:3300)
 
 Registry และ Jenkins ชุดนี้เป็น local ภายใน Course ไม่ใช่บัญชี cloud ของทีม SCM polling เริ่ม build #5 และ #6 อัตโนมัติด้วย `Started by an SCM change` และ build #1 แสดงว่า tests ที่ไม่ผ่านทำให้ stage publish/deploy ถูกข้าม
 
@@ -29,7 +29,7 @@ Registry และ Jenkins ชุดนี้เป็น local ภายใน 
 
 PDF ถูก render และดูจริงทั้ง desktop/mobile อ่านข้อมูลไทยได้; เป็น raster PDF และอาจมีพื้นที่ว่างระหว่าง section การแสดง HTML/table ยังเป็นแหล่งอ่านข้อมูลที่เข้าถึงได้กว่า ไม่อ้างว่า PDF เป็น tagged/searchable document
 
-ผล rollback/image switch และการตรวจข้อมูลเดโมหลังสลับรุ่นอยู่ใน `artifacts/rollback-summary.json` เมื่อซ้อมเสร็จ ใช้ [Recovery runbook](operations-and-recovery.md) สำหรับทำซ้ำ การคืน image ไม่ย้อน schema อัตโนมัติ
+ซ้อม rollback ไป patched image #7 แล้ว roll-forward #8 ผ่านจริง: สัตว์เดโมและ wellness 17 records ยังอยู่ทั้งสองรอบ หลังจากนั้น restore ลง DB ใหม่ผ่าน core row counts=9|8|8|1 ผลอยู่ใน `artifacts/rollback-summary.json` และแนบใน ZIP รุ่นส่ง ใช้ [Recovery runbook](operations-and-recovery.md) สำหรับทำซ้ำ การคืน image ไม่ย้อน schema อัตโนมัติ
 
 ## Defect และการแก้
 
@@ -43,12 +43,14 @@ PDF ถูก render และดูจริงทั้ง desktop/mobile อ�
 ## สิ่งที่ยังต้องมาจากข้อมูลจริง
 
 - ผลสัมภาษณ์/ทดลองใช้และ outcome ของ PawRoutine ยังไม่มี มี protocol, CSV template และงานวิจัยภายนอกพร้อมข้อจำกัด
-- รายชื่อสมาชิก หน้าที่ และหลักฐานร่วมงานยังรอผู้ใช้ ไม่มีการสร้างข้อมูลแทน
-- ต้นทุน/ผู้จ่าย/partnership ยังเป็นแบบวางแผน ไม่อ้างว่ามีรายได้หรือพันธมิตรจริง
+- ได้รับรายชื่อสมาชิก 4 คนและจัดแผนหน้าที่แล้ว ดู team-and-ai-disclosure.md; หลักฐานร่วมงานในช่วงที่ผ่านมายังต้องเติมตามจริง
+- มีงบวางแผนพร้อมราคาอ้างอิงและสูตรแล้ว ผู้จ่าย/รายได้/partnership ยังไม่มีการยืนยัน
 - เก็บ Git commits ในเครื่องตามคำขอ ยังไม่ push branch ไป remote
+
+ผลข้างต้นเป็น baseline ที่บันทึกไว้ก่อน commit เอกสารชุดส่ง ผลตรวจ source สุดท้ายและหมายเลข Jenkins อยู่ใน `manifest.json` และ `evidence/release-verification.json` ของ ZIP เพื่อไม่ต้องแก้ source หลังทดสอบ
 
 ## Source และการทำซ้ำ
 
-Branch local: `delivery/course-verification-20261028` ตรวจ runtime ที่ `1bf3dc6` เอกสาร/ภาพหลักฐานอาจถูกบันทึกเป็น commit ถัดไปโดยไม่มีการเปลี่ยน runtime; ใช้ revision ใน Jenkins artifact เพื่อเลือก checkout ที่ตรงกับผลตรวจ
+Branch local: `delivery/course-verification-20261028` ตรวจ runtime ที่ `fde294f` เอกสาร/ภาพหลักฐานอาจถูกบันทึกเป็น commit ถัดไปโดยไม่มีการเปลี่ยน runtime; ใช้ revision ใน Jenkins artifact เพื่อเลือก checkout ที่ตรงกับผลตรวจ
 
 ดู [Course/Jenkins](course-and-ci.md), [Traceability](traceability.md), [Demo script](demo-script.md), [สไลด์ 12 หน้า](presentation.html) และ [ข้อจำกัด](known-limitations.md) Raw logs/evidence/backup อยู่ใน artifacts ที่ถูก ignore ไม่คัด database dump หรือ credentials เข้า repository

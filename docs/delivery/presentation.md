@@ -30,19 +30,19 @@ Notes: ไม่อ้างว่ามีคลินิกเป็น partne
 
 วัดอัตรางานลืม งานซ้ำ และเวลาตรวจประวัติก่อน/หลังทดลอง แยกจำนวนบันทึกออกจากผลลัพธ์ต่อผู้ใช้
 
-Notes: แผน 7+7 วันและ sample 5–8 คนเป็นข้อเสนอ ยังไม่มีผลทดลอง ไม่ใช่ clinical outcome
+Notes: แผน 7+7 วันกับ 10 ครัวเรือนเป็นข้อเสนอ; เป้าหมายลดงานพลาด 20% relative, ทำงานสำเร็จ 80%, หาประวัติเร็วขึ้น 30%, เข้าใจ Alert 80% ยังไม่ใช่ผลที่วัดได้ ยังไม่มีผลทดลอง ไม่ใช่ clinical outcome
 
 ## 6 — ทีมและการมีส่วนร่วม
 
-แสดงหน้าที่จริงพร้อม Issue/PR/ผลทดสอบหรือหลักฐานวิจัย สมาชิกอธิบาย flow ที่ตนรับผิดชอบได้
+ฐิติภัทร ไร่พันพ่าย — Frontend/UX; ภาษณฑ์ ศิวธนเณศ — Backend/Database; วศิน จันทร์ก้อน — QA/User Research; ชวเลิศ สาวิตรตระกูล — DevOps/AI Integration
 
-Notes: ข้อมูลทีมยังรอผู้ใช้ ไม่ใช้ automation snapshot เป็นหลักฐานแบ่งงาน
+Notes: รายชื่อได้รับจากผู้ใช้ หน้าที่เป็นแผนที่จัดสำหรับการตรวจทาน/ส่งมอบ/นำเสนอ หลักฐานการมีส่วนร่วมในงานเดิมต้องเติมตามจริง มีบทสัมภาษณ์จำลองสำหรับซ้อมใน interview-rehearsal.md แยกจากผลผู้ใช้จริง
 
 ## 7 — ต้นทุนและการดำเนินงานต่อ
 
 Compute/DB + backup + AI usage + maintenance; AI optional ช่วยจำกัด vendor dependency
 
-Notes: ยังไม่มีราคาจริงหรือโมเดลรายได้ที่พิสูจน์แล้ว Shared-care/source traceability เป็นจุดต่าง ยังไม่ยืนยัน unfair advantage
+Notes: งบวางแผน local 421.08 บาท/เดือน หรือ cloud app/DB + local CI 1,529.88 บาท รวมเผื่อ 10% และ AI 300 บาท; รวมมูลค่าแรงเป็น 1,621.08/2,729.88 บาท ราคา DigitalOcean 24 USD + weekly backup 20% ส่วน FX 35 บาท/USD และค่าอื่นเป็นสมมติฐาน ดู budget-assumptions.json ไม่ใช่รายจ่ายหรือรายได้จริง Shared-care/source traceability เป็นจุดต่าง ยังไม่ยืนยัน unfair advantage
 
 ## 8 — Architecture ของระบบจริง
 
@@ -64,13 +64,13 @@ Notes: เปิด Jenkins build จริงและ course-results.md ไม
 
 ## 11 — หลักฐานและข้อจำกัด
 
-Course Jenkins #7: audit ผ่าน, unit/API 76/76, E2E 14 ผ่าน 4 skip; AI live synthetic Chat 5/5 และ Draft 3/3 ดู revision 1bf3dc6 กับผลจริงใน course-results.md
+Course Jenkins #8: audit ผ่าน, unit/API 76/76, E2E 14 ผ่าน 4 skip; AI live synthetic Chat 5/5 และ Draft 3/3 ดู revision fde294f กับผลจริงใน course-results.md
 
 Notes: ผล local 27 ต.ค. 2026 ไม่ใช่ผล Course ใหม่ ห้ามสรุป AI quality ผ่านครบจาก mocked tests
 
 ## 12 — งานที่ต้องยืนยันก่อนส่ง
 
-ผู้ใช้จริง/ผลกระทบ ทีม/ต้นทุน และ checkout รุ่นส่งต้องมีหลักฐาน ข้อจำกัด AI และงานที่ deferred เปิดเผยตามจริง
+มีรายงาน 7 มิติ งบวางแผน และแพ็กเกจ source/หลักฐาน; revision สุดท้ายดู manifest ใน ZIP ผลผู้ใช้จริงและการยืนยันผลงานสมาชิกยังรอตรวจ ข้อจำกัด AI และงานที่ deferred เปิดเผยตามจริง
 
 Notes: ถ้ารอบใหม่ผ่านให้ปรับจากผลจริงพร้อมวันที่/commit ไม่ลบ defect โดยไม่มีหลักฐานแก้
 

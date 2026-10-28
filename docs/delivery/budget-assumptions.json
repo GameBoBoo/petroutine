@@ -1,0 +1,29 @@
+{
+  "as_of": "2026-10-28",
+  "classification": "planning scenario, not actual spending or a quotation",
+  "active_households": 10,
+  "planning_thb_per_usd": 35,
+  "local_host_watts": 80,
+  "local_host_hours_per_day": 6,
+  "local_host_days_per_month": 22,
+  "assumed_thb_per_kwh": 5,
+  "backup_storage_allowance_thb": 30,
+  "ai_monthly_allocation_thb": 300,
+  "maintenance_hours_total_per_month": 8,
+  "assumed_maintenance_thb_per_hour": 150,
+  "cash_contingency_fraction": 0.1,
+  "illustrative_household_price_thb": 49,
+  "cloud_app_vm_usd_per_month": 24,
+  "cloud_weekly_vm_backup_fraction": 0.2,
+  "source_urls": [
+    "https://www.digitalocean.com/pricing/droplets",
+    "https://docs.digitalocean.com/products/backups/details/pricing/"
+  ],
+  "exclusions": [
+    "purchase and depreciation of existing team hardware",
+    "taxes, payment processing and currency conversion spread",
+    "domain registration and public TLS deployment work",
+    "paid cloud CI agent; both scenarios use the existing local Course agent",
+    "24/7 staffing and SLA"
+  ]
+}

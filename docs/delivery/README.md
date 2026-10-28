@@ -4,10 +4,13 @@
 
 ข้อกำหนดอ้างอิง: https://github.com/Tuchsanai/DevTools/blob/main/Mini_Project/project-details/README.md
 
+เริ่มอ่าน [รายงานหลัก 7 มิติ](submission-report.md), [Checklist ตามเกณฑ์](submission-checklist.md), [แนวซ้อมสมาชิก](team-review-and-qa.md) และ [งบพร้อมสูตร](impact-and-sustainability.md) หากเปิด ZIP ให้เริ่ม START-HERE.md ซึ่งระบุ revision และ CI รุ่นส่ง
+
 ## 1. ตรวจขอบเขตและข้อมูลจริง
 
 - อ่าน [Traceability](traceability.md) และ [ข้อจำกัด](known-limitations.md)
 - เติมผลจริงใน [User validation](user-validation.md), [Impact](impact-and-sustainability.md) และ [Team](team-and-ai-disclosure.md)
+- ซ้อมด้วย [บทสัมภาษณ์จำลอง 4 บทบาท](interview-rehearsal.md) ก่อนเก็บผลจริง
 - เก็บข้อมูลส่วนบุคคลนอก Git ใช้รหัส P01… แทนชื่อผู้ให้สัมภาษณ์
 
 ## 2. เตรียม Course Container
@@ -44,4 +47,4 @@ bash scripts/delivery.sh recovery-check
 
 ## รายการที่ต้องมีคนหรือบัญชีภายนอก
 
-ผลสัมภาษณ์/ทดลองใช้จริง รายชื่อและหน้าที่สมาชิก ความเข้าใจระบบของสมาชิก การยอมรับการเปลี่ยนขอบเขต และสิทธิ์ push/registry ของทีม ไม่สามารถแทนที่ด้วยข้อมูลสมมติได้ Jenkins/registry ใน Course เป็นสภาพแวดล้อมพิสูจน์กระบวนการภายในเครื่อง
+ผลสัมภาษณ์/ทดลองใช้จริง การยืนยันหน้าที่และผลงานของสมาชิก ความเข้าใจระบบของสมาชิก การยอมรับการเปลี่ยนขอบเขต และสิทธิ์ push/registry ของทีม ไม่สามารถแทนที่ด้วยข้อมูลสมมติได้ Jenkins/registry ใน Course เป็นสภาพแวดล้อมพิสูจน์กระบวนการภายในเครื่อง
