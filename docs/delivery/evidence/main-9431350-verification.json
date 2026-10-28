@@ -1,0 +1,87 @@
+{
+  "recorded_at": "2026-10-28T07:15:37.395Z",
+  "source_revision": "94313500fd5a9012a9d911f1722db90b1d1f9f26",
+  "environment": "tuchsanai/devtools:2569_1; isolated nested Docker projects and synthetic databases",
+  "tooling": "Reused intact verification dependency image after disk-full interruption; package and lockfile compared semantically before execution. Actual source extracted from this revision Git archive into /qa.",
+  "production_image": {
+    "tag": "pawroutine-qa:9431350",
+    "id": "sha256:e8ecc6781af7080db857a1bb9bc3b70527cb7ae1fcfe4bc7ccb3a466268d6602"
+  },
+  "audit": "> pawroutine@0.2.0 audit:production\n> npm audit --omit=dev --audit-level=high\n\nfound 0 vulnerabilities",
+  "unit_api": {
+    "tests": 76,
+    "passed": 76,
+    "failed": 0
+  },
+  "dev_e2e": {
+    "passed": 14,
+    "skipped": 4,
+    "failed": 0
+  },
+  "production_core_e2e": {
+    "passed": 12,
+    "skipped": 4,
+    "failed": 0
+  },
+  "production_smoke": {
+    "status": "passed",
+    "checks": [
+      "health/database",
+      "unauthenticated access denied",
+      "landing",
+      "register",
+      "create household",
+      "create/read pet"
+    ],
+    "data": "synthetic only"
+  },
+  "persistence": "PASS production stop/start rows=2|2|2",
+  "recovery": "PASS backup checksum, pg_restore, core row counts=38|26|26|20; restored database=recovery_20261028070549",
+  "ai_stub": {
+    "success": {
+      "status": "passed",
+      "scope": "Course production UI → API → controlled internal provider stub → parser/source validation → UI; synthetic data only",
+      "chat": {
+        "http_status": 200,
+        "answer": "จากเช็กอินที่ใช้ทดสอบ โมจิมีอาหารระดับปกติ (usual) และอารมณ์แจ่มใส ข้อมูลนี้เป็นข้อมูลสังเคราะห์",
+        "source_count": 1
+      },
+      "draft": {
+        "mode": "health",
+        "record_type": "weight",
+        "numeric_value": "4.2",
+        "no_record_saved": true
+      }
+    },
+    "failure": {
+      "status": "passed",
+      "scope": "production adapter with controlled HTTP 503 stub response and synthetic key; no real credential used",
+      "http_status": 502,
+      "error_code": "AI_PROVIDER_ERROR",
+      "ui_fallback_visible": true,
+      "core_read_still_available": true
+    }
+  },
+  "source_review": {
+    "javascript_syntax_files": 83,
+    "syntax_failures": 0,
+    "markdown_files": 48,
+    "broken_local_links": 0,
+    "unknown_documented_npm_scripts": 0,
+    "reachable_git_blobs_secret_scan": 430,
+    "flagged_secret_paths": 0,
+    "unused_import_modules": 0,
+    "setup_fresh_and_preserve_existing_env": "passed"
+  },
+  "real_provider": {
+    "status": "not_run",
+    "reason": "User authorized API-key testing; automatic review still rejected credential egress. No new live-provider result is claimed."
+  },
+  "limitations": [
+    "No statement of 100% line/path coverage",
+    "Chromium desktop/mobile emulation, not physical device or cross-browser certification",
+    "No load test, penetration test, real user study or clinical validation",
+    "No new Jenkins/GitHub-trigger test in this run",
+    "Live provider results from earlier runs do not substitute for a new run on this source"
+  ]
+}

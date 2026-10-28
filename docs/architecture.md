@@ -11,7 +11,7 @@ Route ทำหน้าที่ auth, parse HTTP และ map error ส่ว
 - `app/page.jsx`: session/workspace orchestration และ legacy screen composition
 - `components/`: Icon, Modal, shell contract, UndoBar
 - `features/today`: Today workflow และ task controls
-- `features/quick-add`, `features/routines`, `features/pets`, `features/activity`, `features/household`: feature views
+- `features/quick-add`, `features/routines`, `features/pets`, `features/calendar`, `features/household`: feature views; Activity audit อยู่ใน backend ไม่มีหน้า Activity แยกในรุ่นปัจจุบัน
 
 ## Consistency and safety
 

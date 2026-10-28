@@ -10,6 +10,8 @@ PawRoutine (UI: PetRoutine) มีระบบ Auth/Household/Pets/Routines, Tod
 
 ## หลักฐานการตรวจ
 
+การตรวจ main commit `9431350` ยืนยัน audit/build, unit/API 76/76, E2E 14 ผ่าน/4 platform skips และ browser tests บน production image 12 ผ่าน/4 platform skips พร้อม restart/restore และ AI network stub ดู [สรุปผลทดสอบ](testing.md) รอบนี้ยังไม่ยืนยัน provider จริง
+
 หลัง cleanup: audit/build ผ่าน, unit/API **76/76**, E2E **14 ผ่าน / 4 platform skips / 0 ล้มเหลว**, fresh Compose startup/health/API smoke และ stop/start persistence ผ่านใน project ใหม่ภายใน Course ดู [ผลและ source hashes](delivery/evidence/team-cleanup-verification.json) เป็นการตรวจ working-tree snapshot ไม่ใช่ Jenkins run ใหม่
 
 Baseline ก่อน cleanup คือ Jenkins #10 ที่ commit 9d6ef80: Next.js 15.5.28, audit/build ผ่าน, unit/API 76/76 และ E2E 14 ผ่าน/4 platform skips ภายใน tuchsanai/devtools:2569_1 พร้อม image push-pull/deploy/health/smoke/restore ผลหลัง cleanup ดู [Maintenance](maintenance.md) ไม่ใช้ผลเก่ามาติดป้ายว่ารุ่นใหม่ผ่าน

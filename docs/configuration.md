@@ -22,6 +22,8 @@ Compose ปกติกำหนด `DATABASE_URL` ภายใน web เป็
 
 ## เปลี่ยน port
 
+สำหรับ browser ใช้ `localhost` หรือ `127.0.0.1` ตาม README การตรวจ production พบว่า HTTP ผ่าน hostname ภายในอย่าง `web` ไม่เป็น secure context และไม่มี `crypto.randomUUID` ซึ่ง mutation flow ใช้ หากเปิดใช้นอก loopback ต้องจัด HTTPS/secure context ดู [ผลทดสอบ](testing.md)
+
 ถ้าเว็บ port 3000 ไม่ว่าง ตั้ง `PAWROUTINE_PORT=3002` ใน `.env` แล้วใช้:
 
 ```bash
