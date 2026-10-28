@@ -32,4 +32,4 @@
 
 ## รุ่นส่งเก่า
 
-Tag submission-20261028 และ ZIP วันที่ 28 ต.ค. เป็น snapshot ก่อน cleanup ไม่แก้ทับเพื่อรักษาความตรงกับผล CI เดิม รุ่นสำหรับให้ทีมทดสอบต้อง push source ใหม่รวมไฟล์รอบนี้ก่อน สมาชิกจึง clone branch ที่ระบุใน README ได้
+Tag submission-20261028 และ ZIP วันที่ 28 ต.ค. เป็น snapshot ก่อน cleanup ไม่แก้ทับเพื่อรักษาความตรงกับผล CI เดิม งานหลัง cleanup ถูกรวมเข้า `main` ในเครื่องเพื่อให้ผู้ดูแล push `main` เอง สมาชิกจึง clone `main` ตาม README และได้ source รุ่นใหม่

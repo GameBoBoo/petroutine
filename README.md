@@ -6,10 +6,10 @@
 
 ต้องมี **Git, Docker Desktop พร้อม Docker Compose และ Node.js 22** เปิด Docker Desktop ก่อนเริ่ม Node ใช้เตรียม config; การรันเว็บด้วย Docker ไม่ต้องติดตั้ง npm dependencies บนเครื่อง
 
-รุ่นเตรียมทดสอบอยู่ branch `delivery/course-verification-20261028` ผู้ดูแลต้อง push branch นี้ก่อนส่งลิงก์ให้ทีม หาก merge เข้า `main` แล้วให้เปลี่ยนชื่อ branch ในคำสั่ง
+รุ่นสำหรับทีมทดสอบใช้ branch **`main`** ผู้ดูแลต้อง push `main` ที่รวมงานล่าสุดแล้วก่อนส่งลิงก์ให้ทีม
 
 ```bash
-git clone --branch delivery/course-verification-20261028 https://github.com/GameBoBoo/pawroutine.git
+git clone --branch main https://github.com/GameBoBoo/pawroutine.git
 cd pawroutine
 node scripts/setup-local.mjs
 docker compose up -d --build --wait --wait-timeout 180
@@ -99,7 +99,7 @@ npm run test:e2e
 
 ## เอกสารสำหรับทีม
 
-ผู้ดูแล push branch ที่มีการแก้รอบนี้ก่อนให้ทีม clone จากนั้นส่งชื่อ branch และผล `git rev-parse --short HEAD` ให้ทีมตรวจว่าได้รุ่นเดียวกัน หากยังไม่ commit ให้ตรวจ `git status` และ `git diff` แล้ว commit ตาม workflow ของทีม ไม่ใช้ ZIP/tag รุ่นส่งเก่าแทน source หลัง cleanup
+ผู้ดูแลตรวจ `git status` ให้ไม่มีงานค้าง จากนั้นใช้ `git push origin main` ก่อนให้ทีม clone ส่งผล `git rev-parse --short HEAD` ให้ทีมตรวจว่าได้รุ่นเดียวกัน ใช้ source จาก `main` สำหรับทดสอบหลัง cleanup ส่วน ZIP/tag รุ่นส่งเก่าเก็บเป็นหลักฐานของ snapshot เดิม
 
 - [ทดสอบระบบและรายงานปัญหา](docs/team-testing.md)
 - [สรุปการจัดระเบียบไฟล์](docs/maintenance.md)
