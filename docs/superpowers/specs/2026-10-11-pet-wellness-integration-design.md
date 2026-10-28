@@ -1,3 +1,5 @@
+> เอกสารแผน/การออกแบบย้อนหลัง ไม่ใช่คู่มือติดตั้งหรือสถานะล่าสุด อ่าน [README](../../../README.md), [Requirements](../../requirements.md) และ [Project Status](../../project-status.md) ประกอบ
+
 # PawRoutine Pet Wellness Integration Design
 
 สถานะ: Product design ที่ผู้ใช้อนุมัติเมื่อ 11 ตุลาคม 2026; Phase 5–10 implement, deploy และผ่าน test gate แล้ว ส่วน Phase 11 ยังเป็น optional plan

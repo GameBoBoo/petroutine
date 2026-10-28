@@ -1,0 +1,38 @@
+name: แจ้งปัญหาจากการทดสอบ
+description: ระบุ source รุ่นที่ใช้ ขั้นตอนทำซ้ำ และผลที่คาดหวัง
+title: "[Bug] "
+body:
+  - type: input
+    id: revision
+    attributes:
+      label: Commit / โหมดรัน
+      description: ผล git rev-parse --short HEAD และ Docker หรือ dev
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser / viewport / บทบาท
+      placeholder: Chrome, 375px, Member
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: ขั้นตอนทำซ้ำ
+      description: ใช้ชื่อและข้อมูลสมมติ ห้ามใส่ password, token, API key หรือข้อมูลส่วนตัว
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: ผลที่คาดหวัง
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: ผลจริง / หลักฐาน / ความถี่
+      description: แนบภาพหรือ log ที่ลบข้อมูลอ่อนไหวแล้ว ไม่แนบ .env, demo-access.json หรือ database dump
+    validations:
+      required: true

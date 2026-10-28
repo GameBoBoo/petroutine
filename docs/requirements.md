@@ -35,7 +35,7 @@
 
 ไฟล์แนบ, email/push notification, server-generated binary PDF, คำแนะนำทางการแพทย์, การวินิจฉัย และ dose calculation ยังคงนอกขอบเขต ส่วน Jenkins/Course Container เป็นข้อกำหนดของ delivery track ตามรายวิชา ไม่ใช่ข้อยกเว้นจากการส่งงาน ดู [Delivery runbook](delivery/README.md)
 
-## AI Phase 11 (implement แล้วในขอบเขตอ่านอย่างเดียว)
+## AI Phase 11 — อ่าน/สรุปและเตรียมแบบร่างที่ต้องยืนยัน
 
 1. AI เป็น optional chatbot สำหรับถามค้นและสรุปข้อมูลที่มีสิทธิ์เข้าถึงพร้อมอ้างอิง ใช้ context/ผลคำนวณที่ระบบเตรียมให้ มี metadata logging/guardrail/fallback และปิดได้โดย core Wellness ยังทำงานครบ
 2. โค้ดปัจจุบันมี Care Brief/สรุปและแบบร่างจากข้อความ ผู้ใช้ต้องตรวจและยืนยันผ่าน API ปกติก่อนบันทึก AI ไม่เขียนข้อมูลเอง ข้อผูกพันและผลตรวจของความสามารถนี้ต้องระบุแยกจาก chatbot ใน AC-20–23 และ traceability

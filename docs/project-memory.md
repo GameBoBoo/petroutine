@@ -1,3 +1,5 @@
+> เอกสารย้อนหลัง: บันทึกการออกแบบจาก session เก่า ไม่ใช่สถานะหรือคู่มือติดตั้งปัจจุบัน เริ่มจาก [README](../README.md), [Project Status](project-status.md) และ [Maintenance](maintenance.md)
+
 # PawRoutine Project Memory
 
 ## เติมจังหวะหน้าแรกโดยไม่ใช้ภาพซ้ำ

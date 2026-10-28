@@ -1,19 +1,23 @@
-# Project Status — 28 ตุลาคม 2026
+﻿# Project Status — 28 ตุลาคม 2026
 
-ผลิตภัณฑ์มี Auth, Household, Pets, Routines, Today/Calendar, Activity/Timeline, wellness logs/baseline/alerts/dashboard, shared follow-up, Health Passport, Vet Report และ optional AI Chatbot/Care Brief/แบบร่างที่ต้องตรวจยืนยันก่อนบันทึก
+PawRoutine (UI: PetRoutine) มีระบบ Auth/Household/Pets/Routines, Today/Calendar, wellness logs/baseline/alerts/dashboard, Health Passport, shared follow-up, Timeline/Vet Report และ optional AI chatbot/Care Brief/care draft ที่ผู้ใช้ต้องตรวจยืนยันก่อนบันทึก
 
-## ผล delivery ที่ตรวจจริง
+## สำหรับสมาชิกที่เริ่มทดสอบ
 
-Next.js 15.5.28; Course Jenkins baseline #8 ที่ revision `fde294f` ผ่าน audit, unit/API 76/76, build, E2E 14 ผ่าน/4 ข้าม, registry push/pull, Compose deploy, health/API smoke และ backup/restore ดู [Course results](delivery/course-results.md) และ [JSON evidence](delivery/evidence/course-build-8.json)
+อ่าน [README](../README.md) เพื่อ clone/setup/run และ [Team testing](team-testing.md) สำหรับ checklist/ข้อมูลสังเคราะห์/รายงานปัญหา ฐานข้อมูลและ .env ของแต่ละเครื่องแยกกัน AI ปิดเป็นค่าเริ่มต้น
 
-Live-provider synthetic Chat 5/5 และ Draft 3/3 ผ่านในกรณีที่เลือก หลังแก้ date grounding; ไม่ใช่ clinical validation
+## หลักฐานการตรวจ
 
-รุ่นส่งสุดท้ายให้ดู revision และผล CI ใน `manifest.json` กับ `evidence/release-verification.json` ของ ZIP เอกสารใน source เก็บ baseline ก่อนจัดแพ็กเกจ ดู [รายงานหลัก](delivery/submission-report.md) และ [Checklist](delivery/submission-checklist.md)
+Baseline ก่อน cleanup คือ Jenkins #10 ที่ commit 9d6ef80: Next.js 15.5.28, audit/build ผ่าน, unit/API 76/76 และ E2E 14 ผ่าน/4 platform skips ภายใน tuchsanai/devtools:2569_1 พร้อม image push-pull/deploy/health/smoke/restore ผลหลัง cleanup ดู [Maintenance](maintenance.md) ไม่ใช้ผลเก่ามาติดป้ายว่ารุ่นใหม่ผ่าน
 
-## งานที่ต้องใช้ข้อมูลจริง
+ผล live-provider synthetic Chat 5/5 และ Draft 3/3 เป็นรอบแยกบน host ไม่ใช่ clinical validation หรือหลักฐาน production adapter ผ่าน app จริงใน Course ทั้งเส้นทาง
 
-ได้รับรายชื่อสมาชิก 4 คนและจัดแผนหน้าที่แล้ว ผลผู้ใช้จริง/ผลกระทบ หลักฐานการมีส่วนร่วม ต้นทุนที่จ่ายจริงและผู้สนับสนุนยังเป็น Pending; มีงบวางแผนพร้อมราคาอ้างอิงและสูตรแล้ว มีบทสัมภาษณ์จำลองสำหรับซ้อมแยกจากผลจริง ดู docs/delivery/interview-rehearsal.md
+## งานที่ยังต้องยืนยัน
 
-Git อยู่บน branch local delivery/course-verification-20261028 ตามที่ผู้ใช้เลือกให้เก็บ commits ในเครื่อง รายการ deferred คือ email/push, attachment service, server PDF, การวินิจฉัย/ปรับยา และโมเดลธุรกิจที่ยังไม่พิสูจน์
+- ผลสัมภาษณ์/ทดลองใช้จริงและ outcome; บทสัมภาษณ์จำลองเป็นบทซ้อมเท่านั้น
+- การทบทวนและผลงานสมาชิกจริง รายชื่อ/แผนหน้าที่ 4 คนมีแล้ว
+- GitHub รุ่นล่าสุดและ trigger ไป Jenkins; ผู้ใช้จะ push เอง
+- ต้นทุนที่จ่ายจริง/ผู้สนับสนุน/partnership; งบวางแผนพร้อมสูตรมีแล้ว
+- Proposal/การยอมรับ scope change ของผู้สอน หากมีข้อตกลงนอก workspace
 
-[Runbook ทีละขั้น](delivery/README.md) · [Traceability](delivery/traceability.md) · [สไลด์](delivery/presentation.html)
+รอบจัดระเบียบไฟล์ลบโค้ด/asset ที่ไม่มีผู้เรียกและ SQL seed ที่ TRUNCATE ตาราง ไม่ลบ migrations หรือ backend audit ที่ยังใช้ รุ่น ZIP/tag เก่าคงไว้เป็น snapshot ตามหลักฐานเดิม รายละเอียดการแก้อยู่ [Maintenance](maintenance.md)

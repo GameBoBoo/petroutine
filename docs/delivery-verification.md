@@ -1,3 +1,5 @@
+> ประวัติผล local วันที่ 27 ตุลาคม 2026 ก่อนตรวจ Course/Jenkins ภายหลัง ข้อความว่า “ยังไม่มี Jenkins/Course” ด้านล่างเป็นสถานะ ณ วันนั้น ดู [ผล Course](delivery/course-results.md), [Project Status](project-status.md) และ [ผลหลัง cleanup](maintenance.md) สำหรับหลักฐานรุ่นใหม่กว่า
+
 # Delivery Verification — 27 ตุลาคม 2026
 
 **อ่านผลต่อเนื่องวันที่ 28 ตุลาคมใน [Course results](delivery/course-results.md)** พบและแก้การตั้ง migration ของ full-schema tests ที่ไม่ครบจาก clean DB แล้ว ผล local เดิมในหน้านี้เป็นประวัติ ไม่ใช่ผลรับรอง Course ตัว Jenkins/registry และ runbook ใหม่อยู่ใน `docs/delivery/`

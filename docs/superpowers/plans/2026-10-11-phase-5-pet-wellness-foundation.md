@@ -1,3 +1,5 @@
+> เอกสารแผน/การออกแบบย้อนหลัง ไม่ใช่คู่มือติดตั้งหรือสถานะล่าสุด อ่าน [README](../../../README.md), [Requirements](../../requirements.md) และ [Project Status](../../project-status.md) ประกอบ
+
 # Phase 5 Pet & Wellness Data Foundation — Implementation Plan
 
 สถานะ: เสร็จและผ่าน test gate เมื่อ 11 ตุลาคม 2026

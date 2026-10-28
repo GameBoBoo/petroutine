@@ -1,5 +1,11 @@
 # ผลส่งมอบและตรวจ Course — 28 ตุลาคม 2026
 
+## Baseline ก่อนจัดระเบียบไฟล์
+
+Jenkins **#10 SUCCESS** ที่ source `9d6ef80e17755ddada624e6fcbe1bd1339b90979` มีผล audit/build, unit/API 76/76, E2E 14 ผ่าน/4 platform skips, image push-pull/deploy/smoke/restore ผ่าน ดู [JSON build 10](evidence/course-build-10.json) การแก้ source หลังจากนั้นอ่าน [Maintenance](../maintenance.md); ผลนี้ไม่ใช่การรับรอง source หลัง cleanup
+
+## ประวัติ build #8 และการแก้ก่อนหน้า
+
 ตรวจจริงใน `tuchsanai/devtools:2569_1` ด้วย nested Docker daemon Source ที่ยืนยันด้าน runtime คือ `fde294f8e1eace2fe4d19e4ea9c0b947ffedfa92` และ Jenkins build **#8 SUCCESS** ผลเครื่องเดิมวันที่ 27 ต.ค. เป็นประวัติประกอบ
 
 ## ผลที่ยืนยันแล้ว

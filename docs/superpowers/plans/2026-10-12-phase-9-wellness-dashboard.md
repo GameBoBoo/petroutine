@@ -1,3 +1,5 @@
+> เอกสารแผน/การออกแบบย้อนหลัง ไม่ใช่คู่มือติดตั้งหรือสถานะล่าสุด อ่าน [README](../../../README.md), [Requirements](../../requirements.md) และ [Project Status](../../project-status.md) ประกอบ
+
 # Phase 9 Wellness Dashboard — Implementation Plan
 
 สถานะ: เสร็จและ deploy แล้ว 12 ตุลาคม 2026 — `npm test` 60/60, production build ผ่าน, Playwright 4 passed/2 skipped, Docker health `ok/ok`, ไม่มี 500 และข้อมูลเดิมครบ

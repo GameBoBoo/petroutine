@@ -7,8 +7,6 @@ playwright-report
 .env
 .env.*
 !.env.example
-legacy
-PawRoutine-Codex-Starter
 .codex
 .superpowers
 docs
@@ -18,5 +16,6 @@ tests
 .delivery.env
 .delivery-build
 artifacts
+tmp
 *.dump
 *.dump.sha256

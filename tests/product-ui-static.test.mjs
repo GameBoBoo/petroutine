@@ -8,9 +8,9 @@ const read = path => readFile(new URL(path, root), 'utf8');
 test('authenticated shell and Today workflow expose the approved accessible structure', async () => {
   const files = await Promise.all([
     'components/Icon.jsx', 'components/Modal.jsx', 'components/UndoBar.jsx',
-    'features/today/TodayView.jsx', 'features/today/TaskCard.jsx', 'features/today/useToday.js', 'features/today/TaskOptions.jsx',
+    'features/today/TodayView.jsx', 'features/today/TaskCard.jsx', 'app/page.jsx', 'features/today/TaskOptions.jsx',
   ].map(read));
-  const [icon, modal, undo, today, task, hook, taskOptions] = files;
+  const [icon, modal, undo, today, task, page, taskOptions] = files;
   assert.match(icon, /aria-hidden/);
   assert.match(modal, /Escape/);
   assert.match(modal, /aria-modal="true"/);
@@ -32,8 +32,8 @@ test('authenticated shell and Today workflow expose the approved accessible stru
   assert.match(taskOptions, /ปรับเฉพาะงานครั้งนี้/);
   assert.match(undo, /aria-live="polite"/);
   assert.match(undo, /ย้อนกลับ/);
-  assert.match(hook, /expected_version/);
-  assert.match(hook, /idempotency-key/);
+  assert.match(page, /expected_version/);
+  assert.match(page, /idempotency-key/);
 });
 
 test('responsive styles reserve safe mobile space and accessible targets', async () => {

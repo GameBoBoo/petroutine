@@ -32,6 +32,6 @@
 
 ## ผลตรวจและงานต่อ
 
-20 ตุลาคม 2026: `npm test` 68/68, Playwright E2E เต็มชุด 10 ผ่าน/2 ข้ามตามแพลตฟอร์ม, `npm run build` ผ่าน, `npm run ai:check` ตรวจ model/completion ด้วยข้อมูลสังเคราะห์ได้ HTTP 200 และ Docker health `ok/ok` ผลนี้เป็น smoke/functional verification ยังต้องประเมินคุณภาพคำตอบและการอ้างอิงกับชุดข้อมูลหลายกรณี รวมถึงตรวจใน Course Container ก่อนอ้างว่าพร้อมส่งงาน
+ผลย้อนหลัง 20 ตุลาคม 2026 (ก่อน Course/cleanup; ผลใหม่ดู [Project Status](project-status.md) และ [Maintenance](maintenance.md)): `npm test` 68/68, Playwright E2E เต็มชุด 10 ผ่าน/2 ข้ามตามแพลตฟอร์ม, `npm run build` ผ่าน, `npm run ai:check` ตรวจ model/completion ด้วยข้อมูลสังเคราะห์ได้ HTTP 200 และ Docker health `ok/ok` ผลนี้เป็น smoke/functional verification ยังต้องประเมินคุณภาพคำตอบและการอ้างอิงกับชุดข้อมูลหลายกรณี รวมถึงตรวจใน Course Container ก่อนอ้างว่าพร้อมส่งงาน
 
 โค้ดปัจจุบันมี Natural-language care draft ที่ผู้ใช้ต้องตรวจยืนยันก่อนบันทึก ผล synthetic live-provider 3 กรณีผ่าน แต่ยังไม่ครอบคลุมทุกข้อความ ดู AC-23 และผล delivery ล่าสุด ดู [Roadmap](roadmap.md), [Project Status](project-status.md) และ [Implementation Plan เดิม](superpowers/plans/2026-10-19-phase-11-ai-insight-layer.md) โดย implementation plan เดิมบันทึกแนวคิดก่อนเปลี่ยน UI มาเป็น Chatbot

@@ -1,3 +1,5 @@
+> เอกสารแผน/การออกแบบย้อนหลัง ไม่ใช่คู่มือติดตั้งหรือสถานะล่าสุด อ่าน [README](../../../README.md), [Requirements](../../requirements.md) และ [Project Status](../../project-status.md) ประกอบ
+
 # Phase 10 Reminders, Shared Monitoring & Vet Report — Implementation Plan
 
 สถานะ: เสร็จและ deploy แล้ว 12 ตุลาคม 2026

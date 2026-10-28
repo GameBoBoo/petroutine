@@ -1,153 +1,112 @@
-# PawRoutine
+﻿# PawRoutine · PetRoutine
 
-## ส่งมอบตามเกณฑ์รายวิชา
+เว็บภาษาไทยสำหรับจัดกิจวัตรและบันทึกการดูแลสุนัข/แมวร่วมกันในบ้าน ใช้ Next.js 15, React 19 และ PostgreSQL 16 ชื่อใน UI คือ **PetRoutine** ระบบไม่วินิจฉัยโรคหรือแนะนำขนาดยา
 
-เริ่มจาก [Delivery runbook ทีละขั้น](docs/delivery/README.md), [Course/Jenkins](docs/delivery/course-and-ci.md), [Traceability](docs/delivery/traceability.md) และ [ผล Course ล่าสุด](docs/delivery/course-results.md) ชุดนำเสนอเปิดจาก [HTML slides](docs/delivery/presentation.html) พร้อม [บท Demo](docs/delivery/demo-script.md)
+## ให้สมาชิกทีมเริ่มใช้งาน
 
-ผล local เดิมไม่แทนการตรวจ Course Container การมี Jenkinsfile ไม่ใช่หลักฐานว่า pipeline ผ่าน ต้องอ่าน build result และ commit ที่ใช้จริง ส่วนผลวิจัย/ทีม/ต้นทุนที่ยังไม่มีข้อมูลถูกระบุ Pending ในเอกสารส่งมอบ
+ต้องมี **Git, Docker Desktop พร้อม Docker Compose และ Node.js 22** เปิด Docker Desktop ก่อนเริ่ม Node ใช้เตรียม config; การรันเว็บด้วย Docker ไม่ต้องติดตั้ง npm dependencies บนเครื่อง
 
-## UX ล่าสุด — 23 ตุลาคม 2026
+รุ่นเตรียมทดสอบอยู่ branch `delivery/course-verification-20261028` ผู้ดูแลต้อง push branch นี้ก่อนส่งลิงก์ให้ทีม หาก merge เข้า `main` แล้วให้เปลี่ยนชื่อ branch ในคำสั่ง
 
-กิจวัตรหลักแสดงแถวกระชับ ค้นหา/กรองสัตว์และแบ่ง 10 รายการ รายละเอียดเสริมพับได้ UI ใช้ “ลบ” พร้อมยืนยันก่อนดำเนินการ โดย backend ยัง soft archive รักษาประวัติ ฟอร์มและการเปลี่ยนสถานะสำคัญมีหน้าต่างยืนยันของระบบ ดู [UX/UI](docs/ux-ui.md), [Popup fields](docs/popup-fields.md) และ [สถานะล่าสุด/ข้อจำกัดการทดสอบ](docs/project-status.md)
-
-การปรับปรุงประสบการณ์ใช้งานล่าสุดและขอบเขต AI สำหรับค้น/สรุปข้อมูล: [Care experience update](docs/care-experience.md)
-
-PawRoutine คือระบบภาษาไทยสำหรับจัดกิจวัตรและประวัติการดูแลสุนัข/แมวร่วมกันในครอบครัว ใช้ข้อมูลที่ผู้ใช้กรอกเอง ไม่มี AI วินิจฉัยโรค คำนวณยา หรือแนะนำการรักษา
-
-## ความสามารถปัจจุบัน
-
-- Today แบ่งงานเป็นต้องดูแลก่อน รายการถัดไป บันทึกวันนี้ และเสร็จแล้ว พร้อมรวมรายการ Quick Add ที่มีวันเวลาเป็นวันนี้และกรองผู้รับผิดชอบ สัตว์เลี้ยง และสถานะ
-- Complete มีหมายเหตุ optional; Skip ต้องระบุเหตุผล; เลื่อนเวลา/เปลี่ยนผู้รับผิดชอบเฉพาะครั้งนั้นได้ โดยมีหน้าต่างยืนยันก่อนเปลี่ยนข้อมูล
-- Undo การเปลี่ยนสถานะงานภายใน 8 วินาที พร้อม optimistic concurrency และ idempotency
-- Quick Add สำหรับเช็กอินสุขภาพรายวัน กิจวัตร งานครั้งเดียว บันทึกการดูแลนอกตาราง และข้อมูลสุขภาพแบบข้อความ/ตัวเลข
-- กิจวัตรรองรับรายสัปดาห์หลายวัน/หลายเวลา ทุก X วัน ครั้งเดียว วันเริ่ม/สิ้นสุด และช่วงพัก
-- Pet Workspace มีภาพรวม กิจวัตร Wellness Dashboard เช็กอินรายวัน สุขภาพ สมุดสุขภาพ (Health Passport) และ Timeline พร้อมโปรไฟล์สายพันธุ์/เพศ/ทำหมัน/น้ำหนักตั้งต้น
-- Daily Wellness Log เลือกกรอกอาหาร น้ำ กิจกรรม การนอน ขับถ่าย อารมณ์ น้ำหนัก หรือข้อสังเกตได้ รองรับย้อนหลัง หลายบันทึกต่อวัน การแก้ไข และ soft archive โดยช่องว่างยังคงเป็น “ไม่มีข้อมูล” ไม่ใช่ศูนย์
-- Learning Mode คำนวณ baseline แยกสัตว์และ metric จาก 14 วันล่าสุด แสดงจำนวนวันที่เก็บ/เหลือและ “ข้อมูลยังไม่เพียงพอ” โดยคำนวณใหม่ทันทีเมื่อแก้หรือ archive บันทึกย้อนหลัง
-- Change Detection ตรวจแนวโน้มต่อเนื่อง 3 วันเทียบ baseline พร้อม Alert ที่แสดงหลักฐาน รับทราบ/เริ่มติดตาม และกลับสู่ปกติอัตโนมัติ โดยไม่วินิจฉัยโรค
-- Wellness Dashboard แสดงสถานะรวม แนวโน้ม 7/14/30/90 วัน ช่วง baseline และ Alert ที่กำลังติดตาม โดยเว้นช่องวันที่ไม่มีข้อมูลและมีตารางข้อมูลสำหรับการเข้าถึง
-- การแจ้งเตือนในเว็บรวมงาน วัคซีน/นัดหมายที่ใกล้ถึงกำหนด และวันติดตาม Alert โดยตั้งระยะเตือนสุขภาพล่วงหน้า 7/14/30/60/90 วันและลบแจ้งเตือนเฉพาะบัญชีได้
-- Shared Monitoring ให้สมาชิกบ้านมอบหมายผู้ติดตาม วันติดตาม และหมายเหตุของ Wellness Alert ร่วมกัน พร้อมบันทึก Activity
-- Vet Report เลือกช่วงวันที่สูงสุด 366 วัน รวมโปรไฟล์ สมุดสุขภาพ เช็กอิน Alert และ Timeline พร้อมดาวน์โหลด PDF จาก browser โดยตรง โดยไม่พึ่ง AI
-- ระบบยังเก็บ Activity audit ภายในแบบ immutable สำหรับความสอดคล้องและ Undo แต่ไม่นำหน้า “ประวัติการเปลี่ยนแปลง” มาแสดงในผลิตภัณฑ์
-- เจ้าของบ้านลบบ้านได้ด้วยการพิมพ์ชื่อยืนยัน บ้านที่ลบจะถูกซ่อนและไม่แสดงรายการถังขยะในหน้า “บ้านของเรา” โดยข้อมูลเดิมยังไม่ถูกลบถาวร
-- Calendar, History, notifications, Household และ Settings ใช้ PostgreSQL จริงและแสดงเวลา `Asia/Bangkok`
-
-ข้อมูลสุขภาพเป็นข้อมูลที่ผู้ใช้กรอกเองเท่านั้น และรุ่นนี้ยังไม่รองรับการอัปโหลดไฟล์/รูป
-
-## ทิศทางถัดไป: Pet Wellness Intelligence
-
-PawRoutine จะรักษาความสามารถด้าน Shared Care เดิมและเพิ่มระบบติดตามสุขภาวะตามลำดับ: ขยาย Pet/Health Passport → Daily Wellness Log → Learning Mode และ baseline 14 วัน → ตรวจจับความเปลี่ยนแปลงด้วยกฎ → Wellness Dashboard → reminders/shared monitoring/Vet Report → AI แบบ optional เป็น Phase สุดท้าย
-
-Phase 5–10 ตั้งแต่ Pet & Wellness Data Foundation ถึง Reminders, Shared Monitoring และ Vet Report พร้อมใช้งานแล้ว Phase 11 มี AI Chatbot สำหรับอ่าน/สรุปข้อมูล และ care draft ที่ผู้ใช้ต้องตรวจยืนยันผ่าน API ปกติก่อนบันทึก ถามข้อมูลสัตว์เลี้ยงรายตัวหรือทุกตัวในบ้าน พร้อมลิงก์บันทึกต้นทาง เจ้าของบ้านเปิดใช้ AI ใน Settings และสมาชิกยินยอมครั้งแรกต่อบ้านก่อนส่งข้อมูลให้ Provider รายละเอียดอยู่ใน [AI Phase 11](docs/ai-phase-11.md) และ [Roadmap](docs/roadmap.md)
-
-หลังเปิด AI สำหรับบ้านแล้ว ปุ่ม **ถาม AI** มุมขวาล่างใช้พิมพ์คำถามเกี่ยวกับสัตว์เลี้ยงที่เลือกได้จากทุกหน้า โดยเลือกดูบันทึกย้อนหลัง 7, 30 หรือ 365 วัน ประวัติแชตอยู่เฉพาะในหน้าเว็บที่เปิดอยู่
-
-## เทคโนโลยี
-
-Next.js 15, React 19, PostgreSQL 16, `pg`, JWT, bcryptjs, Docker Compose, Node test runner และ Playwright
-
-## เริ่มใช้งานด้วย Docker (แนะนำ)
-
-ต้องมี Docker Desktop ระบบเปิดสู่เครื่องเฉพาะเว็บที่ port 3000 ส่วน PostgreSQL อยู่ใน Docker private network และไม่เปิด port สู่ภายนอก
-
-```powershell
-cd "C:\Users\Chawa\OneDrive\เดสก์ท็อป\PawRoutine"
-if (-not (Test-Path .env)) { Copy-Item .env.example .env }
-docker compose up -d --build
+```bash
+git clone --branch delivery/course-verification-20261028 https://github.com/GameBoBoo/pawroutine.git
+cd pawroutine
+node scripts/setup-local.mjs
+docker compose up -d --build --wait --wait-timeout 180
 ```
 
-เปิด <http://localhost:3000> และตรวจ health ที่ <http://localhost:3000/api/v1/health>
+สคริปต์ setup สร้าง `.env` พร้อม JWT secret สุ่มและปิด AI เป็นค่าเริ่มต้น ถ้ามี `.env` อยู่แล้วจะเก็บไว้ ไฟล์นี้ไม่ถูกส่งขึ้น Git แต่ละเครื่องต้องสร้างของตน ไม่ใช้ secret ของคนอื่น
 
-โครงสร้างปกติ:
+เปิด **http://127.0.0.1:3000** และตรวจ **http://127.0.0.1:3000/api/v1/health** ซึ่งควรตอบ `{"status":"ok","database":"ok"}` ครั้งแรกอาจใช้เวลาสักครู่เพื่อดาวน์โหลด image และ build
 
-```text
-localhost:3000 → PawRoutine Web/API → db:5432 (Docker private network)
+1. สมัครบัญชีใหม่ → สร้างบ้าน → เพิ่มสุนัข/แมว → สร้างกิจวัตร
+2. อีกบัญชีเข้าร่วมบ้านด้วยรหัสเชิญ เจ้าของและสมาชิกต้องใช้เว็บ/ฐานข้อมูลชุดเดียวกัน
+3. ทดลอง Today, Calendar, ทำงานเสร็จ/ข้าม/Undo, เช็กอิน Wellness, Timeline และ Vet Report
+4. ส่งปัญหาตาม [คู่มือทีมทดสอบ](docs/team-testing.md) รวมถึงกรณี Cancel, ไม่มีสิทธิ์ และข้อมูลเปลี่ยนพร้อมกัน
+
+แต่ละคนรันบนเครื่องตนเองจะได้ฐานข้อมูลคนละชุด การทดสอบร่วมบ้านสองคนบนเครื่องเดียวใช้ browser profile หรือ incognito แยกกัน ค่าเริ่มต้นรับเฉพาะเครื่องตัวเอง ยังไม่เปิดเว็บให้เครื่องอื่นใน LAN
+
+## คำสั่งดูแลเว็บและข้อมูล
+
+```bash
+docker compose ps
+docker compose logs --tail 100 web
+docker compose logs --tail 100 db
+docker compose stop
+docker compose start
+docker compose down
 ```
 
-พอร์ต `5432` ในแผนภาพเป็นพอร์ตภายใน Docker ไม่ใช่พอร์ตที่เปิดบนเครื่องผู้ใช้ ดังนั้นการใช้งานปกติมีทางเข้าเพียง `localhost:3000` จุดเดียว
+`stop`/`down` เก็บข้อมูลใน named volume ไว้ เปิดใหม่ด้วย `docker compose up -d --wait` Migration 001–018 รันอัตโนมัติก่อนเว็บเริ่ม ห้ามใช้ `docker compose down -v` หากต้องการเก็บข้อมูล
 
-คำสั่งดูแลระบบที่ใช้บ่อย:
+อัปเดตรุ่นหลังผู้ดูแล push แล้ว:
 
-```powershell
-docker compose ps              # ดูสถานะ
-docker compose logs -f web     # ดู log ของเว็บและ API
-docker compose logs -f db      # ดู log ของฐานข้อมูล
-docker compose restart         # เริ่ม container ใหม่โดยไม่ลบข้อมูล
-docker compose down            # หยุดระบบโดยเก็บ named volume ไว้
+```bash
+git pull --ff-only
+node scripts/setup-local.mjs
+docker compose up -d --build --wait --wait-timeout 180
 ```
 
-## โหมดพัฒนาและทดสอบจากเครื่อง
+หาก port 3000 ถูกใช้ ให้ตั้ง `PAWROUTINE_PORT=3002` ใน `.env` แล้วรัน Compose ใหม่ เปิดเว็บที่ port 3002 ตามที่ตั้ง ฐานข้อมูลปกติไม่เปิด port ออกสู่ host บัญชี DB แบบ local ใน Compose ใช้เฉพาะเครื่องพัฒนา/ทดสอบ; สำหรับส่งมอบแยกใช้ [Delivery runbook](docs/delivery/README.md)
 
-เมื่อต้องใช้ `npm run dev`, `npm test`, migration หรือ DBeaver จาก host ให้เปิดฐานข้อมูลผ่าน dev override ซึ่ง bind เฉพาะ loopback:
+## พัฒนาโดยรัน Next.js บนเครื่อง
 
-```powershell
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d db
-npm install
+ใช้โค้ดบน host และ PostgreSQL ใน Docker เหมาะกับการแก้โค้ดแล้วเห็นผลทันที:
+
+```bash
+node scripts/setup-local.mjs
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --wait db
+npm ci
 npm run db:migrate
-npm test
+npm run dev
 ```
 
-ค่าเริ่มต้นของ dev database คือ `127.0.0.1:55430` และไม่รับ connection จาก network interface อื่น คำสั่ง `npm run dev` ใช้ `127.0.0.1:3001` โดยตั้งใจ เพื่อไม่ให้แย่ง `localhost:3000` ของ Docker หรือเกิดกรณี IPv4/IPv6 ชี้ไปคนละเซิร์ฟเวอร์
+เปิด **http://127.0.0.1:3001** (ต่างจาก Docker web ที่ port 3000) กด Ctrl+C เพื่อหยุด dev server ฐานข้อมูลจาก host อยู่ที่ `127.0.0.1:55430` ถ้าเปลี่ยน `PAWROUTINE_DB_PORT` ต้องแก้ port ใน `DATABASE_URL` ให้ตรงด้วย
 
-| โหมด | URL เว็บ | การเข้าถึงฐานข้อมูลจาก host |
-| --- | --- | --- |
-| ใช้งานปกติด้วย Docker | `http://localhost:3000` | ปิด |
-| พัฒนา/ทดสอบด้วย dev override | `http://127.0.0.1:3001` | `127.0.0.1:55430` เท่านั้น |
+อย่ารัน `npm run dev` และ production build/E2E พร้อมกันใน checkout เดียว เพราะใช้ `.next` ร่วมกัน ใช้ verification container ด้านล่างเมื่อต้องการทดสอบแยก
 
-ตั้ง `JWT_SECRET` ใน `.env` เป็นค่าสุ่มยาวก่อนใช้จริง ฐานข้อมูลอยู่ใน named volume จึงยังอยู่หลัง `docker compose restart`; ห้ามใช้ `docker compose down -v` หากต้องการเก็บข้อมูล
+## Automated tests
 
-## Migration และการทดสอบ
+### แยกฐานข้อมูลและ dependencies ด้วย Docker
 
-Migration 001–018 ใช้ผ่าน `db/migrations.mjs` ชุดเดียวกันใน runtime และ full-schema tests โดยรันตามลำดับชื่อไฟล์ ครอบคลุม core care, wellness, AI consent/context, follow-up outcomes และ care draft; migration-specific tests แยกตรวจการอัปเกรดและการรันซ้ำ
+ไม่ใช้ `.env` หรือฐานข้อมูลของผู้ใช้งาน test DB เป็น tmpfs และไม่เปิด host port:
 
-```powershell
-npm run db:migrate
+```bash
+docker compose --env-file .env.example -p pawroutine-team-check -f compose.verify.yml up --build --abort-on-container-exit --exit-code-from verify
+docker compose --env-file .env.example -p pawroutine-team-check -f compose.verify.yml down
+```
+
+รัน audit → unit/API → production build → E2E ทั้ง desktop/mobile ผลอยู่ที่ `artifacts/verification/` ครั้งแรกต้องดาวน์โหลด Chromium และ dependencies AI ในชุดนี้ใช้ mock ไม่ใช่ provider จริง
+
+### รัน tests บน host
+
+หลังเตรียม dev DB และ `npm ci` ตามด้านบน:
+
+```bash
 npm test
 npm run build
+npx playwright install chromium
 npm run test:e2e
-docker compose config
-docker compose -f docker-compose.yml -f docker-compose.dev.yml config
 ```
 
-Unit/API/E2E สร้าง PostgreSQL schema ชื่อสุ่มและลบเฉพาะ schema ทดสอบ ไม่แก้ schema ใช้งานจริง
+บน Linux หาก browser ขาด system libraries ใช้ `npx playwright install --with-deps chromium` ซึ่งอาจต้องสิทธิ์ติดตั้ง package Tests สร้าง schema สุ่มและลบ schema ของตน ควรใช้ DB ทดสอบส่วนตัว ไม่ชี้ไปฐานข้อมูล production
 
-## API หลัก
+## AI เป็นตัวเลือก
 
-ทุก path อยู่ใต้ `/api/v1`
+งานดูแลหลักใช้ได้โดยไม่เปิด AI หากทีมต้องทดสอบ AI ให้กำหนด `PAWROUTINE_AI_ENABLED=true`, `AI_API_KEY`, `AI_MODEL` และ `AI_BASE_URL` ตามบริการที่ได้รับสิทธิ์ใน `.env` แล้วสร้าง web ใหม่ด้วย `docker compose up -d --force-recreate web`
 
-- Auth/บัญชี: `POST /auth/register`, `POST /auth/login`, `GET|PATCH /auth/me`, `GET|PATCH /auth/settings`, `GET /auth/activity`
-- บ้าน: `GET|POST /households`, `POST /households/join`, `GET|PATCH /households/:id`, `GET /households/:id/members`, `POST /households/:id/archive`
-- สัตว์: `GET|POST /households/:id/pets`, `PATCH /pets/:id`, `POST /pets/:id/archive`
-- กิจวัตร: `GET|POST /pets/:id/routines`, `PATCH /routines/:id`, `POST /routines/:id/archive`
-- งาน: `GET /households/:id/tasks/today`, `POST /tasks/:id/complete`, `POST /tasks/:id/skip`, `PATCH /tasks/:id`, `POST /activity/:id/undo`
-- การดูแล/สุขภาพ: สร้าง แก้ไข และ soft archive ผ่าน `/households/:id/care-entries`, `/care-entries/:id`, `/pets/:id/health-records`, `/health-records/:id`
-- สมุดสุขภาพ: `GET|POST /pets/:id/passport`, `PATCH /passport/:id`, `POST /passport/:id/archive`
-- เช็กอินรายวัน: `GET|POST /pets/:id/wellness-logs`, `PATCH /wellness-logs/:id`, `POST /wellness-logs/:id/archive`
-- Baseline: `GET /pets/:id/wellness-baseline?as_of=YYYY-MM-DD`
-- Wellness Alerts: `GET /pets/:id/wellness-alerts?status=active|resolved|all`, `POST /wellness-alerts/:id/acknowledge`, `POST /wellness-alerts/:id/monitor`, `PATCH /wellness-alerts/:id/follow-up`
-- Wellness Dashboard: `GET /pets/:id/wellness-dashboard?range=7|14|30|90&as_of=YYYY-MM-DD`
-- Vet Report: `GET /pets/:id/vet-report?from=YYYY-MM-DD&to=YYYY-MM-DD`
-- มุมมองรวม: `/households/:id/calendar`, `/history`, `/pets/:id/timeline`, `/notifications`; ลบแจ้งเตือนด้วย `POST /households/:id/notifications/dismiss`
+จากนั้น Owner เปิด AI ใน Settings ของบ้าน และสมาชิกยินยอมก่อนใช้งาน ใช้ข้อมูล synthetic ทดสอบเท่านั้น เก็บ API key ฝั่ง server และไม่ commit `.env` ค่าโควตาปกติ 10 คำขอ/ผู้ใช้/ชั่วโมง ดู [AI configuration และข้อจำกัด](docs/ai-phase-11.md)
 
-Mutation งานรับ `expected_version` และควรส่ง `Idempotency-Key`; stale update ตอบ 409 เพื่อให้ client โหลดข้อมูลล่าสุด
+## เอกสารสำหรับทีม
 
-## สิทธิ์
+ผู้ดูแล push branch ที่มีการแก้รอบนี้ก่อนให้ทีม clone จากนั้นส่งชื่อ branch และผล `git rev-parse --short HEAD` ให้ทีมตรวจว่าได้รุ่นเดียวกัน หากยังไม่ commit ให้ตรวจ `git status` และ `git diff` แล้ว commit ตาม workflow ของทีม ไม่ใช้ ZIP/tag รุ่นส่งเก่าแทน source หลัง cleanup
 
-สมาชิกบ้านอ่านข้อมูลและจัดการงานรายครั้งได้ ผู้สร้างรายการหรือ Owner แก้/ลบ care/health record ได้ ส่วนการแก้/ลบกิจวัตร ลบสัตว์ และลบบ้านเป็นสิทธิ์ Owner บ้านที่ลบถูกซ่อนและปิดการเข้าถึง โดยคำสั่งแก้ข้อมูลล็อกสถานะบ้านใน transaction และคำสั่งอ่านตรวจ `archived_at` ใน query ข้อมูลจริงเพื่อป้องกัน race condition
+- [ทดสอบระบบและรายงานปัญหา](docs/team-testing.md)
+- [สรุปการจัดระเบียบไฟล์](docs/maintenance.md)
+- [Requirements](docs/requirements.md) · [Acceptance Criteria](docs/acceptance-criteria.md)
+- [Architecture](docs/architecture.md) · [API](docs/api-design.md) · [Database](docs/database-design.md)
+- [สถานะและขอบเขต](docs/project-status.md) · [Roadmap](docs/roadmap.md)
+- [Course / Jenkins](docs/delivery/course-and-ci.md) · [ผล Course ที่บันทึกไว้](docs/delivery/course-results.md)
+- [รายงานหลัก](docs/delivery/submission-report.md) · [สไลด์](docs/delivery/presentation.html) · [ข้อจำกัด](docs/delivery/known-limitations.md)
 
-## เอกสาร
-
-- [Requirements](docs/requirements.md)
-- [Acceptance Criteria](docs/acceptance-criteria.md)
-- [User Flow](docs/user-flow.md)
-- [UX/UI](docs/ux-ui.md)
-- [API Design](docs/api-design.md)
-- [Database Design](docs/database-design.md)
-- [Architecture](docs/architecture.md)
-- [Project Status](docs/project-status.md)
-- [Project Memory](docs/project-memory.md)
-- [Session Handoff](docs/session-handoff.md)
-- [Pet Wellness Integration Design](docs/superpowers/specs/2026-10-11-pet-wellness-integration-design.md)
-- [AI Phase 11 (Optional)](docs/ai-phase-11.md)
-- [Phase 11 Implementation Plan and Status](docs/superpowers/plans/2026-10-19-phase-11-ai-insight-layer.md)
+ผล Jenkins #10 ของ commit `9d6ef80` เป็น baseline ก่อนจัดระเบียบไฟล์รอบนี้ ผลทดสอบของ source ที่แก้ล่าสุดดู [บันทึกการตรวจ](docs/maintenance.md) ยังไม่มีผลทดลองผู้ใช้จริง และต้องให้สมาชิกทบทวนส่วนที่รับผิดชอบก่อนนำเสนอ

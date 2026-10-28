@@ -1,3 +1,5 @@
+> เอกสารแผน/การออกแบบย้อนหลัง ไม่ใช่คู่มือติดตั้งหรือสถานะล่าสุด อ่าน [README](../../../README.md), [Requirements](../../requirements.md) และ [Project Status](../../project-status.md) ประกอบ
+
 # Phase 8 Change Detection & Wellness Alerts — Implementation Plan
 
 สถานะ: เสร็จสิ้นและ deploy แล้ว 11 ตุลาคม 2026

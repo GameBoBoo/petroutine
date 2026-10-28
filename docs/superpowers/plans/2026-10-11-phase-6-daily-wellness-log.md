@@ -1,3 +1,5 @@
+> เอกสารแผน/การออกแบบย้อนหลัง ไม่ใช่คู่มือติดตั้งหรือสถานะล่าสุด อ่าน [README](../../../README.md), [Requirements](../../requirements.md) และ [Project Status](../../project-status.md) ประกอบ
+
 # Phase 6 Daily Wellness Log & Quick Check-in — Implementation Plan
 
 สถานะ: เสร็จสมบูรณ์และผ่าน production verification — 11 ตุลาคม 2026

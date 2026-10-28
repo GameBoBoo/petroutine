@@ -22,6 +22,7 @@ Thumbs.db
 .delivery.env
 .delivery-build/
 artifacts/
+tmp/
 *.dump
 *.dump.sha256
 .docker-auth/

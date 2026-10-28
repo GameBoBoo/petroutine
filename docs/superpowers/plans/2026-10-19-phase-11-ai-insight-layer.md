@@ -1,3 +1,5 @@
+> เอกสารแผน/การออกแบบย้อนหลัง ไม่ใช่คู่มือติดตั้งหรือสถานะล่าสุด อ่าน [README](../../../README.md), [Requirements](../../requirements.md) และ [Project Status](../../project-status.md) ประกอบ
+
 # แผนพัฒนา Phase 11 — AI ช่วยอธิบายข้อมูล (Optional)
 
 สถานะ: Implementation ของ Daily Summary และ Wellness Questions พร้อมสวิตช์เจ้าของบ้านแล้ว (20 ต.ค. 2026); ตรวจ Provider จริงด้วยข้อมูลสังเคราะห์ผ่าน `npm run ai:check`, Unit/API 68/68 และ AI E2E desktop/mobile 2/2 ผ่าน ยังต้องปรับ E2E เดิม 6 เคสที่อ้าง UI รุ่นก่อนและประเมินคุณภาพคำตอบก่อนอ้าง release gate เต็มรูปแบบ

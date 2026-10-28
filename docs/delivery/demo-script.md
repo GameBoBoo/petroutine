@@ -23,7 +23,7 @@ node scripts/seed-delivery-demo.mjs
 7. เปิด Vet Report เลือกช่วง/หัวข้อ ดาวน์โหลดและเปิด PDF ตรวจชื่อสัตว์/วันที่/ข้อมูลที่ตรงกับบันทึก
 8. หากมี provider พร้อม ให้ Owner เปิด AI และสมาชิก consent ถามจากบันทึกแล้วเปิด source ข้อมูลไม่พอให้พูดตามจริง ไม่เติมคำตอบแทน provider
 
-Baseline ต้องใช้ข้อมูลหลายวัน ห้ามอ้างว่าข้อมูลเพิ่งสร้างวันเดียวเป็น longitudinal data จริง `scripts/seed-demo-data.sql` เป็นตัวช่วยที่ต้องอ่านและตรวจ target ก่อนใช้ ห้าม import ลง DB production เดิมโดยไม่ตรวจ schema/ผลกระทบ
+Baseline ต้องใช้ข้อมูลหลายวัน ห้ามอ้างว่าข้อมูลเพิ่งสร้างวันเดียวเป็น longitudinal data จริง ใช้ `scripts/seed-delivery-demo.mjs` ด้านบนเพื่อสร้างบ้านและข้อมูล synthetic ใหม่ผ่าน API โดยไม่ล้างตารางเดิม SQL seed เก่าที่ TRUNCATE ตารางถูกนำออกแล้ว
 
 ## Failure cases ที่ต้องสาธิต
 
