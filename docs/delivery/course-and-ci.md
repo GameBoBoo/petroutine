@@ -84,4 +84,14 @@ docker start pawroutine-course
 
 อย่าใช้ `down -v` หรือ prune ระหว่างตรวจ หากเริ่ม Course ใหม่โดยลบ container ต้องคัดลอก backup/evidence ออกก่อน Filesystem ของ Course ไม่ใช่แหล่งสำรองถาวร
 
+หลัง `docker start` ให้ตรวจ `docker exec pawroutine-course docker info` อีกครั้ง Image นี้เริ่มด้วย shell จึงอาจไม่ได้เปิด nested daemon อัตโนมัติ ถ้าไม่ทำงาน ให้เปิดจาก host ด้วยคำสั่งต่อไปนี้ แล้วรอ `docker info` สำเร็จและ Jenkins พร้อมก่อนสั่ง build ห้ามเปิด daemon ซ้ำถ้าทำงานอยู่แล้ว
+
+```bash
+docker exec -d pawroutine-course sh -c 'dockerd > /workspace/dockerd-resume.log 2>&1'
+docker exec pawroutine-course docker info
+docker exec pawroutine-course node /workspace/jenkins-local.mjs status
+```
+
+ไฟล์ helper ของชุดนี้อยู่ใน source ที่ `scripts/jenkins-local.mjs` หากเปิดกล่องใหม่ต้องคัดลอกไป `/workspace/jenkins-local.mjs` ก่อนใช้ หรือเรียกด้วย path ของ source โดยตรง Jenkins อาจตอบ HTTP 503 ชั่วคราวระหว่างเริ่มระบบ
+
 แหล่งอ้างอิง Jenkins credentials: https://www.jenkins.io/doc/book/pipeline/jenkinsfile/
