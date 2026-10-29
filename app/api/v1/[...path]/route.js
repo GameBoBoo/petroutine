@@ -214,6 +214,16 @@ export async function GET(request, context) {
       const stored = await pool.query(`SELECT ct.*, r.title, r.activity_type, p.id AS pet_id, p.name AS pet_name FROM care_tasks ct JOIN routines r ON r.id = ct.routine_id JOIN pets p ON p.id = r.pet_id JOIN households h ON h.id = p.household_id WHERE p.household_id = $1 AND h.archived_at IS NULL AND (ct.scheduled_at AT TIME ZONE 'Asia/Bangkok')::date BETWEEN $2::date AND $3::date AND (ct.status <> 'pending' OR (r.active AND r.archived_at IS NULL AND p.archived_at IS NULL)) ORDER BY ct.scheduled_at`, [path[1], from, to]);
       const events = stored.rows.map(row => ({ id: row.id, mutation_version: row.mutation_version, routine_id: row.routine_id, pet_id: row.pet_id, pet_name: row.pet_name, title: row.title, activity_type: row.activity_type, assigned_user_id: row.assigned_user_id, date: bangkokDate(new Date(row.scheduled_at)), scheduled_at: row.scheduled_at, status: row.status === 'pending' ? (bangkokDate(new Date(row.scheduled_at)) > bangkokDate() ? 'scheduled' : new Date(row.scheduled_at) < new Date() ? 'overdue' : 'pending') : row.status }));
       events.push(...(await listScheduledHealthEvents(path[1], from, to)).map(event => ({ ...event, status: ['completed', 'skipped'].includes(event.status) ? event.status : 'scheduled' })));
+      const careEntries = await pool.query(
+        `SELECT ce.id, ce.pet_id, p.name AS pet_name, ce.title, ce.activity_type,
+                ce.occurred_at AS scheduled_at, ce.notes, u.name AS created_by_name
+         FROM care_entries ce JOIN pets p ON p.id = ce.pet_id
+         JOIN households h ON h.id = ce.household_id JOIN users u ON u.id = ce.created_by
+         WHERE ce.household_id = $1 AND ce.archived_at IS NULL AND p.archived_at IS NULL
+           AND h.archived_at IS NULL
+           AND (ce.occurred_at AT TIME ZONE 'Asia/Bangkok')::date BETWEEN $2::date AND $3::date
+         ORDER BY ce.occurred_at`, [path[1], from, to]);
+      events.push(...careEntries.rows.map(row => ({ ...row, source_type: 'care_entry', date: bangkokDate(new Date(row.scheduled_at)), status: 'completed', read_only: true, all_day: false })));
       const routines = await pool.query(`SELECT r.id, r.title, r.activity_type, r.assigned_user_id, r.schedule_value, p.id AS pet_id, p.name AS pet_name FROM routines r JOIN pets p ON p.id = r.pet_id JOIN households h ON h.id = p.household_id WHERE p.household_id = $1 AND h.archived_at IS NULL AND r.active AND r.archived_at IS NULL AND p.archived_at IS NULL`, [path[1]]);
       const today = bangkokDate();
       for (const routine of routines.rows) {

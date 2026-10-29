@@ -12,7 +12,7 @@ const STATUS = { pending: 'รอดำเนินการ', scheduled: 'ก�
 const bangkokToday = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Bangkok', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
 const dateAtUTC = date => new Date(`${date}T00:00:00.000Z`);
 const thaiDate = (date, options) => dateAtUTC(date).toLocaleDateString('th-TH', { timeZone: 'UTC', ...options });
-const eventKind = event => HEALTH_SOURCES.has(event.source_type) ? 'health' : 'task';
+const eventKind = event => HEALTH_SOURCES.has(event.source_type) ? 'health' : event.source_type === 'care_entry' ? 'recorded' : 'task';
 
 export default function CalendarView({ currentId, onToday, initialDate, pets = [], onOpenPet, apiClient, members = [] }) {
   const today = bangkokToday();
@@ -44,7 +44,7 @@ export default function CalendarView({ currentId, onToday, initialDate, pets = [
   }, [apiClient, currentId, dates, calendarRefresh]);
 
   const visibleEvents = useMemo(() => events.filter(event =>
-    (!filterPet || event.pet_id === filterPet) && (!filterKind || eventKind(event) === filterKind),
+      (!filterPet || event.pet_id === filterPet) && (!filterKind || (filterKind === 'task' ? eventKind(event) === 'task' : eventKind(event) !== 'task')),
   ), [events, filterPet, filterKind]);
   const eventsByDate = useMemo(() => {
     const byDate = new Map();
@@ -79,7 +79,7 @@ export default function CalendarView({ currentId, onToday, initialDate, pets = [
     <div className="section-header"><div><span className="section-kicker">วางแผนตามวัน</span><h2>ปฏิทินการดูแล</h2><p>เลือกวันเพื่อดูงานและนัดหมายของเพื่อนในบ้าน</p></div></div>
     <div className="history-filters calendar-filters">
       <label>สัตว์เลี้ยง<SelectField value={filterPet} onChange={event => setFilterPet(event.target.value)}><option value="">ทุกตัว</option>{pets.map(pet => <option key={pet.id} value={pet.id}>{pet.name}</option>)}</SelectField></label>
-      <label>ประเภท<SelectField value={filterKind} onChange={event => setFilterKind(event.target.value)}><option value="">ทั้งหมด</option><option value="task">งานตามกิจวัตร</option><option value="health">นัดหมายและสุขภาพ</option></SelectField></label>
+      <label>ประเภท<SelectField value={filterKind} onChange={event => setFilterKind(event.target.value)}><option value="">ทั้งหมด</option><option value="task">งานตามกิจวัตร</option><option value="health">นัดหมาย สุขภาพ และบันทึกดูแล</option></SelectField></label>
     </div>
     <div className="calendar-toolbar">
       <button type="button" className="icon-button" onClick={() => moveMonth(-1)} aria-label="เดือนก่อนหน้า"><Icon name="chevron" size={19} /></button>
@@ -103,7 +103,7 @@ export default function CalendarView({ currentId, onToday, initialDate, pets = [
         return <article className={`calendar-event calendar-event-${kind}`} key={`${event.source_type || 'task'}:${event.id || event.routine_id}:${event.date}:${event.scheduled_at}`}>
           <span className="calendar-event-time">{event.all_day ? 'ทั้งวัน' : new Date(event.scheduled_at).toLocaleTimeString('th-TH', { timeZone: 'Asia/Bangkok', hour: '2-digit', minute: '2-digit' })}</span>
           <div className="calendar-event-main"><button type="button" className="text-button" onClick={() => onOpenPet(event)}>{event.title}</button><p>{event.pet_name} · {ACTIVITIES[event.activity_type] || event.activity_type}</p>{event.routine_id && !['completed', 'skipped'].includes(event.status) && <button type="button" className="button ghost" onClick={() => setEditingEvent(event)}>แก้เฉพาะครั้งนี้</button>}</div>
-          <span className={`status status-${event.status}`}>{statusLabel}</span>
+          <span className={`status status-${event.status}`}>{kind === 'recorded' ? 'บันทึกแล้ว' : statusLabel}</span>
         </article>;
       })}</div> : <div className="calendar-empty"><Icon name="calendar" size={25} /><div><strong>ไม่มีงานในวันนี้</strong><p>เลือกวันอื่นหรือเพิ่มกิจวัตรเพื่อดูตารางการดูแล</p></div></div>}
     </div>

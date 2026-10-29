@@ -58,9 +58,9 @@ async function fixture() {
   return { owner, member, home: home.body.household, pet: pet.body.pet };
 }
 
-test('v2 weekly routines create every time once and write an activity', async () => {
-  const { owner, home, pet } = await fixture();
-  const createdRoutine = await call('POST', `pets/${pet.id}/routines`, owner.body.token, {
+test('members create weekly routines visible to the owner with an attributed activity', async () => {
+  const { owner, member, home, pet } = await fixture();
+  const createdRoutine = await call('POST', `pets/${pet.id}/routines`, member.body.token, {
     title: 'อาหารและยา',
     activity_type: 'medication',
     schedule: { type: 'weekly', times: ['08:00', '20:00'], days: [0, 1, 2, 3, 4, 5, 6] },
@@ -76,8 +76,20 @@ test('v2 weekly routines create every time once and write an activity', async ()
   assert.equal(new Set(tasks.map(item => item.scheduled_at)).size, 2);
   await call('GET', `households/${home.id}/tasks/today`, owner.body.token);
   assert.equal((await pool.query('SELECT COUNT(*)::int AS count FROM care_tasks WHERE routine_id = $1', [createdRoutine.body.routine.id])).rows[0].count, 2);
-  const activity = await pool.query("SELECT action FROM activity_logs WHERE entity_type = 'routine' AND entity_id = $1", [createdRoutine.body.routine.id]);
+  const activity = await pool.query("SELECT action, actor_user_id FROM activity_logs WHERE entity_type = 'routine' AND entity_id = $1", [createdRoutine.body.routine.id]);
   assert.deepEqual(activity.rows.map(row => row.action), ['create']);
+  assert.equal(activity.rows[0].actor_user_id, member.body.user.id);
+});
+
+test('members create one-time tasks but cannot create routines for another household', async () => {
+  const { member, home, pet } = await fixture();
+  const input = { title: 'นัดหมายครั้งเดียว', activity_type: 'vet', schedule: { type: 'once', date: thaiDate(), times: ['15:00'] } };
+  const added = await call('POST', `pets/${pet.id}/routines`, member.body.token, input);
+  assert.equal(added.status, 201);
+  const today = await call('GET', `households/${home.id}/tasks/today`, member.body.token);
+  assert.equal(today.body.tasks.filter(task => task.routine_id === added.body.routine.id).length, 1);
+  const other = await fixture();
+  assert.equal((await call('POST', `pets/${other.pet.id}/routines`, member.body.token, input)).status, 403);
 });
 
 test('interval pauses project correctly and only owners can update while history survives', async () => {
