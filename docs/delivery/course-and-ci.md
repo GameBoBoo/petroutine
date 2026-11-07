@@ -23,7 +23,7 @@ docker exec -it pawroutine-course bash
 ตรวจ `docker info` ภายใน Course ให้สำเร็จ หาก daemon ยังไม่เริ่มให้ใช้คำสั่งเปิด nested daemon ในหัวข้อ “หยุดและเปิดใหม่” ด้านล่าง จากนั้นภายใน Course ที่ยังไม่มี checkout:
 
 ```bash
-git clone --branch main https://github.com/GameBoBoo/pawroutine.git /workspace/pawroutine-source
+git clone --branch main https://github.com/GameBoBoo/petroutine.git /workspace/pawroutine-source
 cd /workspace/pawroutine-source
 git rev-parse HEAD
 export DELIVERY_BIND_ADDRESS=0.0.0.0
@@ -95,6 +95,8 @@ docker compose --env-file /workspace/jenkins-private.env -p pawroutine-ci -f com
 7. Archive log, JSON results, image ID, revision และผลกู้คืน ไม่ archive secret หรือ database dump
 
 ค่าเริ่มต้น registry คือ `127.0.0.1:5000` ภายใน Course ไม่ต้องใช้ credentials เพราะรับเฉพาะ loopback สำหรับ registry ภายนอกต้องตั้ง `REGISTRY_CREDENTIALS_ID` ชนิด username/password ใน Jenkins และใช้ HTTPS ของ registry นั้น ห้ามรัน pipeline จากโค้ดที่ไม่เชื่อถือพร้อม credentials ของทีม
+
+Jenkins รับ `DELIVERY_PROJECT` เพื่อแยกชื่อ Compose ของแต่ละสภาพแวดล้อม ค่าเริ่มต้นคือ `pawroutine-course-delivery` และรับ `WEB_PORT_OVERRIDE` เป็นพอร์ตเว็บทางเลือก หากเว้นว่างจะใช้การตั้งค่าใน delivery environment หรือค่าเริ่มต้น 3000 เมื่อต้องตรวจรุ่นแก้ไขข้างระบบเดิม ให้ใช้ชื่อ project และพอร์ตที่ว่างคนละชุด พร้อมเก็บ revision และผลตรวจของ job นั้น
 
 Jenkins agent กับ nested daemon ต้องเห็น absolute workspace path เดียวกัน เพราะ verification bind-mount โฟลเดอร์ evidence Bootstrap Compose แชร์ `/workspace` เพื่อให้ path ตรงกัน
 

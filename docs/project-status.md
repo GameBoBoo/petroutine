@@ -1,4 +1,14 @@
-﻿# Project Status — 28 ตุลาคม 2026
+# Project Status — 7 พฤศจิกายน 2569
+
+สถานะปัจจุบันและผลแยกตาม revision อยู่ใน [Current release](current-release.md) ล่าสุดอ้างอิง source `512009f` ไม่ได้นำ full-suite ของรุ่นก่อนมายืนยัน UI รุ่นนี้โดยอัตโนมัติ
+
+## รุ่นปัจจุบัน
+
+Full-suite baseline `c802bd8` ใน Course Jenkins #5 ผ่าน Unit/API 98/98 และ E2E 18/4 platform skips ก่อน UI รอบหลัง; UI header/context management ที่ `c97a4a8` ตรวจ 7 ส่วนทั้ง desktop/mobile และ static 7/7; บ้านและสมาชิกที่ `512009f` ตรวจ Owner/Member ทั้งสอง viewport 4 กรณีและ static 2/2 ผ่าน Build/deploy local ผ่าน ผลนี้ไม่ใช่ full-suite ใหม่ของ source ล่าสุด
+
+## บันทึกย้อนหลังของรุ่นเดิม
+
+การแก้ไขล่าสุดและวิธีอ่านผลรุ่นส่งอยู่ใน [Audit fixes 6 พฤศจิกายน 2569](delivery/audit-fixes-20261106.md) เนื้อหาด้านล่างเก็บประวัติของ revision ที่ระบุไว้
 
 PawRoutine (UI: PetRoutine) มีระบบ Auth/Household/Pets/Routines, Today/Calendar, wellness logs/baseline/alerts/dashboard, Health Passport, shared follow-up, Timeline/Vet Report และ optional AI chatbot/Care Brief/care draft ที่ผู้ใช้ต้องตรวจยืนยันก่อนบันทึก
 

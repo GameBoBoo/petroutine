@@ -40,6 +40,8 @@ Docker web ใช้ `localhost:3000` ส่วน `npm run dev` ถูกบั
 
 ## AI และเส้นทางข้อมูล
 
+UI ปัจจุบันไม่เรียก care-draft แล้ว service เดิมยังคงเป็น legacy API; Today summary cache อยู่ที่ Page แยก user/household และไม่ใช่ provider cache
+
 AI adapter อยู่ใน `lib/services/ai-insight-service.js` และ `ai-care-draft-service.js` ใช้ HTTP JSON ผ่าน HTTPS ไป provider แบบ OpenAI-compatible ชื่อ model/base URL/key อยู่ใน server environment ไม่ส่ง key ไป browser
 
 ```mermaid
@@ -49,17 +51,15 @@ sequenceDiagram
   participant API as Next.js API
   participant DB as PostgreSQL
   participant AI as Provider
-  Member->>UI: ถามข้อมูลหรือขอแบบร่าง
+  Member->>UI: ถามข้อมูลจากบันทึก
   UI->>API: HTTP JSON + Bearer token
   API->>DB: ตรวจ membership/AI enabled/consent/quota
   API->>DB: อ่าน context ตามสิทธิ์และช่วงเวลา
   API->>AI: HTTPS prompt + context ที่จำกัดขนาด
   alt Provider ตอบทันและ output ถูกต้อง
-    AI-->>API: JSON answer/source IDs หรือ draft
-    API->>API: ตรวจโครงสร้าง/source allowlist/ค่า draft
-    API-->>UI: คำตอบพร้อม source หรือแบบร่าง
-    Member->>UI: ตรวจและยืนยัน draft หากต้องการบันทึก
-    UI->>API: คำขอบันทึกปกติที่ผ่าน permission/validation
+    AI-->>API: JSON answer/source IDs
+    API->>API: ตรวจโครงสร้างและ source allowlist
+    API-->>UI: คำตอบพร้อม source
   else Provider ช้า/ผิดรูปแบบ/ไม่พร้อม
     API-->>UI: error envelope ภาษาไทย
     Note over UI,API: งานดูแลและบันทึกปกติยังใช้ได้

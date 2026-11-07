@@ -1,5 +1,15 @@
 ﻿# ผลทดสอบและขอบเขตหลักฐาน
 
+สถานะปัจจุบันและผลแยกตาม revision อยู่ใน [Current release](current-release.md) ล่าสุดอ้างอิง source `512009f` ไม่ได้นำ full-suite ของรุ่นก่อนมายืนยัน UI รุ่นนี้โดยอัตโนมัติ
+
+## รุ่นปัจจุบัน
+
+Full-suite baseline `c802bd8` ใน Course Jenkins #5 ผ่าน Unit/API 98/98 และ E2E 18/4 platform skips ก่อน UI รอบหลัง; UI header/context management ที่ `c97a4a8` ตรวจ 7 ส่วนทั้ง desktop/mobile และ static 7/7; บ้านและสมาชิกที่ `512009f` ตรวจ Owner/Member ทั้งสอง viewport 4 กรณีและ static 2/2 ผ่าน Build/deploy local ผ่าน ผลนี้ไม่ใช่ full-suite ใหม่ของ source ล่าสุด
+
+## บันทึกย้อนหลังของรุ่นเดิม
+
+รุ่นแก้ไขหลัง audit อ่าน [สรุป 6 พฤศจิกายน 2569](delivery/audit-fixes-20261106.md) และผลที่ Jenkins archive ตาม revision ส่วนเนื้อหาด้านล่างเป็นประวัติการตรวจ main เมื่อวันที่ 28 ตุลาคม 2026
+
 อัปเดต 28 ตุลาคม 2026 · Source ที่ตรวจ: `94313500fd5a9012a9d911f1722db90b1d1f9f26`
 
 [สรุปผล JSON](delivery/evidence/main-9431350-verification.json) ระบุ source, environment และ image ที่ตรวจ การเปลี่ยนเอกสารหลังจาก commit นี้ไม่ใช่ Jenkins run ใหม่ และผลนี้ไม่ยืนยันโค้ดที่แก้ภายหลังโดยอัตโนมัติ

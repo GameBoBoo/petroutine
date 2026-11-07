@@ -13,6 +13,8 @@
 
 ## ขอบเขตและการออกแบบที่ใช้ปัจจุบัน
 
+- [Current release — 7 พ.ย. 2569](current-release.md): UI, cache AI, PDF และขอบเขตหลักฐานล่าสุด
+
 - [Requirements](requirements.md) · [Acceptance Criteria](acceptance-criteria.md)
 - [User flow](user-flow.md) · [UX/UI](ux-ui.md) · [Popup fields](popup-fields.md)
 - [Architecture](architecture.md) · [API](api-design.md) · [Database](database-design.md)

@@ -15,7 +15,7 @@
 | AC-09 transactional audit | transaction/activity services | API mutation tests | Local suite ผ่าน; audit snapshot allowlist ต้องคงไว้ |
 | AC-10 mobile 375px | responsive views | product-refinement/workspace-consistency E2E | Local E2E ผ่าน |
 | AC-11 health boundary | HealthRecords, validation | care-health tests + demo disclaimer | มี disclaimer; ไม่ใช่ผล clinical validation |
-| AC-12 migration rerun | migrations 004–018, migrate.mjs | API schema setup + production startup | Local startup ผ่าน; recovery drill บันทึกแยก |
+| AC-12 migration rerun | migrations 001–019, migrate.mjs | product-refinement-migration tests + production startup | ตรวจ legacy backfill และการรักษา null assignment หลังรันทั้งชุดซ้ำ; ผลรุ่นส่งอยู่ใน verification artifact |
 | AC-13 household archive | household/access services | `household-trash-api.test.mjs` | Local suite ผ่าน; UI เดิมกับเอกสารต้องสอดคล้อง |
 | AC-14 profile/passport | passport service | `pet-wellness-foundation.test.mjs` | Local unit/API ผ่าน |
 | AC-15 wellness logs | wellness-log service | `daily-wellness-api.test.mjs` | Local unit/API ผ่าน |
@@ -26,7 +26,11 @@
 | AC-20 AI access/consent | ai-insight service/settings | `ai-insight-api.test.mjs`, ai-phase E2E | Mocked API และ consent E2E ผ่าน |
 | AC-21 source/JSON/empty data | AI parser/context | `ai-insight-unit.test.mjs`, `ai:evaluate` | Synthetic provider eval แยกจาก mocked tests |
 | AC-22 AI error/privacy/rate | provider adapter/audit | ai-insight API tests, synthetic eval | Error paths มี tests; ไม่อ้างว่า provider uptime ผ่าน SLA |
-| AC-23 AI care draft confirmation | ai-care-draft service/QuickAdd | `ai-care-draft-unit.test.mjs`, care-experience API, `evaluate-ai-draft.mjs` | Draft ไม่บันทึกเอง ต้องผู้ใช้ตรวจยืนยัน; live synthetic 3/3 ผ่านในกรณีที่เลือก ไม่ครอบคลุมทุกข้อความ |
+| AC-23 legacy AI care draft (ถอด UI แล้ว) | ai-care-draft service | `ai-care-draft-unit.test.mjs`, care-experience API, `evaluate-ai-draft.mjs` | Draft ไม่บันทึกเอง ต้องผู้ใช้ตรวจยืนยัน; live synthetic 3/3 ผ่านในกรณีที่เลือก ไม่ครอบคลุมทุกข้อความ |
+| AC-24 recurring-only views | PetWorkspace, RoutinesView | targeted browser: once + weekly, count/search/empty state | Local desktop/mobile ผ่าน; ดู current-release.md |
+| AC-25 contextual management | ManagementMode/ManagementControls, HouseholdView | targeted browser: 7 ส่วน, edit/delete/cancel, Owner/Member | Local ผ่าน; ลบบ้านเป็นข้อยกเว้นแสดงตรง |
+| AC-26 compact A4/logo | VetReport, pdf-report.css | ดาวน์โหลดและ render PDF จาก desktop/light กับ mobile/dark; ตรวจโลโก้ | Local ผ่าน; ไม่ใช่ tagged/searchable PDF |
+| AC-27 AI summary cache | Page state, AiCareBrief | ai-care-session E2E และ live browser request counter | ดูซ้ำ/สลับหน้า 1 request; explicit refresh เพิ่มเป็น 2 |
 | DEL-01 Course environment | compose.verify/delivery + scripts | `artifacts/verification/*`, `course-results.md` | ใช้ผลที่บันทึกจริงเท่านั้น |
 | DEL-02 Jenkins publish/deploy | Jenkinsfile, compose.ci | Jenkins build number/console + image revision | ต้องมี build result จริงก่อน Accepted |
 | DEL-03 backup/recovery | delivery.sh | `artifacts/recovery.txt` | Drill ใช้ DB แยก; ไม่ทดแทน full disaster-recovery plan |

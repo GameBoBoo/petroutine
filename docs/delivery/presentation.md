@@ -1,12 +1,14 @@
-# ต้นฉบับชุดนำเสนอ PawRoutine
+# ต้นฉบับชุดนำเสนอ PetRoutine
+
+ใช้ [พฤติกรรมและหลักฐานล่าสุด](../current-release.md) ประกอบการนำเสนอ: เปิดโหมดจัดการใน header ก่อนแก้/ลบ, ลบบ้านโดยตรง, ไม่สาธิต AI draft/เตรียมคุยสัตวแพทย์, แยกผล full-suite baseline จาก targeted UI รอบหลัง
 
 สไลด์ HTML: `presentation.html` ทุกคำกล่าวอ้างต้องตรงกับผลล่าสุดใน course-results.md และ commit ที่ส่ง ข้อความ Pending เป็นสิ่งที่ยังไม่มีหลักฐาน ไม่ควรลบทิ้งก่อนนำเสนอ
 
-## 1 — PawRoutine / PetRoutine
+## 1 — PetRoutine
 
 ระบบดูแลงานประจำวันและสุขภาวะสัตว์เลี้ยงร่วมกันในบ้าน
 
-Notes: ใช้ชื่อ repository PawRoutine; UI ปัจจุบันใช้แบรนด์ PetRoutine เติมสมาชิกจากข้อมูลจริงใน team-and-ai-disclosure.md เรื่องหลักคือผู้ดูแลสองคนรู้ว่าใครให้อาหารแล้ว
+Notes: ใช้ชื่อระบบ PetRoutine และ repository `GameBoBoo/petroutine` เติมสมาชิกจากข้อมูลจริงใน team-and-ai-disclosure.md เรื่องหลักคือผู้ดูแลสองคนรู้ว่าใครให้อาหารแล้ว
 
 ## 2 — ปัญหาและหลักฐาน
 
@@ -22,7 +24,7 @@ Notes: ผลต่อการลืมงานยังเป็นสมม�
 
 ## 4 — ผู้ใช้และสิทธิ์
 
-Owner จัดการบ้าน/สมาชิก/กิจวัตร สมาชิกบันทึกงานร่วมกันและดูข้อมูลในบ้านตนเอง รายงานใช้ประกอบการคุยกับสัตวแพทย์
+สมาชิกในบ้านสร้างกิจวัตร บันทึกงานร่วมกัน และดูข้อมูลในบ้านได้ Owner จัดการสมาชิกและแก้/ลบกิจวัตรเดิม รายงานใช้ประกอบการคุยกับสัตวแพทย์
 
 Notes: ไม่อ้างว่ามีคลินิกเป็น partner หรือระบบแพทย์ login หากไม่มีจริง
 
@@ -64,9 +66,9 @@ Notes: เปิด Jenkins build จริงและ course-results.md ไม
 
 ## 11 — หลักฐานและข้อจำกัด
 
-Course Jenkins #8: audit ผ่าน, unit/API 76/76, E2E 14 ผ่าน 4 skip; AI live synthetic Chat 5/5 และ Draft 3/3 ดู revision fde294f กับผลจริงใน course-results.md
+รุ่นแก้ไขหลัง audit มี regression tests สำหรับงานหลายเวลา migration การมอบหมาย การแก้บันทึกผ่าน Timeline และเขตเวลา UTC ใช้ revision และผลของ job PetRoutine-audit-fix-20261106 ประกอบการนำเสนอ ดู audit-fixes-20261106.md และ artifact ของ Jenkins
 
-Notes: ผล local 27 ต.ค. 2026 ไม่ใช่ผล Course ใหม่ ห้ามสรุป AI quality ผ่านครบจาก mocked tests
+Notes: แสดงผลตาม commit และ environment ผล Jenkins #10 ของ 9d6ef80 และ #8 ของ fde294f เป็นประวัติแยกจากรุ่นแก้ไข การตรวจ AI จำลองและ provider จริงต้องระบุคนละรอบ
 
 ## 12 — งานที่ต้องยืนยันก่อนส่ง
 

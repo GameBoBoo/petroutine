@@ -1,5 +1,7 @@
 # ส่งมอบ PawRoutine ทีละขั้น
 
+สถานะหน้าจอและผลตรวจรุ่นปัจจุบัน: [Current release](../current-release.md) — ผลเก่าในเอกสารนี้ต้องอ่านร่วมกับ revision เดิม; `ai-care-draft` เป็น legacy API ไม่มีทางเข้าใน UI ปัจจุบัน
+
 เอกสารชุดนี้ใช้กับ source รุ่นปัจจุบัน ไม่ใช้จำนวนฟีเจอร์เป็นหลักฐานว่าผ่านรายวิชา ผลที่ยังไม่ได้ตรวจต้องระบุว่า Pending
 
 สำหรับสมาชิกที่ต้องการลองใช้งานบนเครื่อง ให้เริ่ม [README หลัก](../../README.md), [Configuration](../configuration.md) และ [Team testing](../team-testing.md) โดยใช้ `main` ส่วนหน้านี้เป็นกระบวนการส่งมอบและตรวจใน Course/Jenkins ผลตรวจแต่ละชุดมี revision กำกับ; ZIP/tag เดิมเป็น snapshot คนละรุ่นกับ main หลัง cleanup

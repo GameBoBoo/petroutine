@@ -10,7 +10,7 @@
 | Product refinement | ตารางยืดหยุ่น, occurrence control, confirmation, Undo, care/health records และ Timeline; Activity audit อยู่ใน backend ไม่มีหน้า Activity แยก |
 | Household safety | Owner จัดการสมาชิก/รหัสเชิญ/โอนเจ้าของและลบบ้านแบบ soft archive; ไม่มี UI ถังขยะ/กู้คืนในรุ่นปัจจุบัน |
 | Wellness (Phase 5–10) | Passport, daily logs, baseline 14 วัน, change detection, dashboard, follow-up/reminders และ Vet Report PDF ฝั่ง browser |
-| Optional AI (Phase 11) | Chatbot/Care Brief และ care draft ที่ผู้ใช้ต้องตรวจยืนยันผ่าน mutation ปกติก่อนบันทึก; consent/authorization/source validation/fallback |
+| Optional AI (Phase 11) | Chatbot/Care Brief สรุปส่งต่อพร้อม cache; consent/authorization/source validation/fallback ส่วน care draft ถอดจาก UI แล้ว เหลือ legacy API |
 | Delivery | Docker/Compose, Course nested Docker, Jenkins/local registry, verification, deploy/health/smoke และ backup/restore |
 
 Migration ล่าสุด 018 ส่วนแผนเดิมก่อนปรับ UI อยู่ใน `superpowers/` และเป็นประวัติการตัดสินใจ ไม่ใช่ checklist ติดตั้ง

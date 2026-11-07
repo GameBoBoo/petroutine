@@ -1,0 +1,18 @@
+.management-header-actions { display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap; gap:10px; margin-left:auto; }
+.management-toolbar { display:flex; align-items:center; }
+.app-shell .management-header-actions .management-toggle { display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:10px 16px; border:1.5px solid #B9610D; border-radius:10px; color:#874000; background:#FFF3DF; font-weight:700; white-space:nowrap; }
+.app-shell .management-toggle:hover { background:#FFE7C2; border-color:#914500; }
+.app-shell .management-toggle:focus-visible { outline:3px solid #E3A55D; outline-offset:3px; }
+.app-shell .management-toolbar.is-managing .management-toggle { color:#155B3C; background:#E9F5ED; border-color:#2F7A50; }
+.management-menu { display:flex; align-items:center; flex-wrap:wrap; gap:8px; min-width:0; margin-top:10px; padding-top:8px; }
+.management-menu .button { min-height:44px; }
+.compact-routine-actions .management-menu,.pet-section-heading .management-menu { margin-top:0; padding-top:0; }
+html[data-theme='dark'] .app-shell .management-header-actions .management-toggle { color:#FFD095; background:#3B3027; border-color:#CE8B42; }
+html[data-theme='dark'] .app-shell .management-toolbar.is-managing .management-toggle { color:#C4F0D1; background:#253E33; border-color:#70B48B; }
+@media(max-width:640px) {
+ .routine-page-heading,.pet-routine-heading,.subview-head,.pet-section-heading { flex-wrap:wrap; }
+ .management-header-actions { width:100%; justify-content:flex-start; margin-left:0; gap:10px; }
+ .management-header-actions > .button,.management-header-actions > .management-toolbar { flex:1 1 0; }
+ .management-toolbar .management-toggle { width:100%; }
+ .management-menu > .button { flex:1 1 auto; }
+}

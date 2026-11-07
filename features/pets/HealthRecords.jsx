@@ -1,14 +1,16 @@
 "use client";
+import ManagementMenu, { ManagementControls } from '../../components/ManagementMenu.jsx';
 
 import DateTimePicker from '../../components/DateTimePicker.jsx';
 import { useConfirmation } from '../../components/ConfirmationProvider.jsx';
 import { HEALTH_RECORD_OPTIONS } from '../../lib/form-options.js';
+import { bangkokDateTimeInput, bangkokDateTimeToIso } from '../../lib/bangkok-datetime.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Pagination from '../../components/Pagination.jsx';
 
 const TYPES = Object.fromEntries(HEALTH_RECORD_OPTIONS.map(([value,label])=>[value,label]));
 
-export default function HealthRecords({ petId, api, onAdd }) {
+export default function HealthRecords({ petId, api, onAdd, onUpdated }) {
   const confirm = useConfirmation();
   const [items, setItems] = useState([]);
   const [error, setError] = useState('');
@@ -27,10 +29,7 @@ export default function HealthRecords({ petId, api, onAdd }) {
   useEffect(() => { load(); }, [load]);
 
   function startEdit(item) {
-    const recorded = new Intl.DateTimeFormat('sv-SE', {
-      timeZone: 'Asia/Bangkok', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false,
-    }).format(new Date(item.recorded_at)).replace(' ', 'T');
-    setEditing({ id: item.id, title: item.title, details: item.details || '', numeric_value: item.numeric_value ?? '', unit: item.unit || '', recorded_at: recorded });
+    setEditing({ id: item.id, title: item.title, details: item.details || '', numeric_value: item.numeric_value ?? '', unit: item.unit || '', recorded_at: bangkokDateTimeInput(item.recorded_at), original_recorded_at: item.recorded_at });
   }
 
   async function save(event) {
@@ -39,12 +38,15 @@ export default function HealthRecords({ petId, api, onAdd }) {
     setBusy(editing.id);
     setError('');
     try {
+      const recordedAt = editing.recorded_at === bangkokDateTimeInput(editing.original_recorded_at)
+        ? editing.original_recorded_at : bangkokDateTimeToIso(editing.recorded_at);
       await api(`/health-records/${editing.id}`, {
         method: 'PATCH',
-        body: JSON.stringify({ title: editing.title, details: editing.details, numeric_value: editing.numeric_value === '' ? null : Number(editing.numeric_value), unit: editing.unit || null, recorded_at: new Date(editing.recorded_at).toISOString() }),
+        body: JSON.stringify({ title: editing.title, details: editing.details, numeric_value: editing.numeric_value === '' ? null : Number(editing.numeric_value), unit: editing.unit || null, recorded_at: recordedAt }),
       });
       setEditing(null);
       await load();
+      await onUpdated?.();
     } catch (problem) { setError(problem.message); }
     finally { setBusy(''); }
   }
@@ -56,6 +58,7 @@ export default function HealthRecords({ petId, api, onAdd }) {
     try {
       await api(`/health-records/${item.id}/archive`, { method: 'POST', body: '{}' });
       await load();
+      await onUpdated?.();
     } catch (problem) { setError(problem.message); }
     finally { setBusy(''); }
   }
@@ -63,7 +66,7 @@ export default function HealthRecords({ petId, api, onAdd }) {
   return <section>
     <header className="subview-head">
       <div><h3>บันทึกเหตุการณ์สุขภาพ</h3><p>บันทึกเหตุการณ์ที่เกิดขึ้นแล้ว เช่น การชั่งน้ำหนัก การให้ยาตามคำสั่ง หรือการพบสัตวแพทย์</p></div>
-      {onAdd && <button type="button" className="button primary" onClick={onAdd}>เพิ่มเหตุการณ์</button>}
+      <ManagementControls>{onAdd && <button type="button" className="button primary" onClick={onAdd}>เพิ่มเหตุการณ์</button>}</ManagementControls>
     </header>
     {error && <p className="form-error" role="alert">{error} <button onClick={load}>ลองอีกครั้ง</button></p>}
     {items.length > 0 && <>
@@ -71,18 +74,18 @@ export default function HealthRecords({ petId, api, onAdd }) {
         {pageItems.map(item => <article key={item.id}>
           {editing?.id === item.id ? <form className="form-stack" onSubmit={save}>
             <label>ชื่อรายการ <span className="required-mark" aria-hidden="true">*</span><input required maxLength="160" value={editing.title} onChange={event => setEditing({ ...editing, title: event.target.value })} /></label>
-            <label>วันและเวลา <span className="required-mark" aria-hidden="true">*</span><DateTimePicker required value={editing.recorded_at} onChange={event => setEditing({ ...editing, recorded_at: event.target.value })} /></label>
+            <label>วันและเวลา (เวลาไทย) <span className="required-mark" aria-hidden="true">*</span><DateTimePicker required disabled={busy === item.id} value={editing.recorded_at} onChange={event => setEditing({ ...editing, recorded_at: event.target.value })} /></label>
             {item.record_type === 'weight' && <div className="form-grid">
               <label>ค่า <span className="required-mark" aria-hidden="true">*</span><input required type="number" min="0" step="0.001" value={editing.numeric_value} onChange={event => setEditing({ ...editing, numeric_value: event.target.value })} /></label>
               <label>หน่วย <span className="required-mark" aria-hidden="true">*</span><input required maxLength="30" value={editing.unit} onChange={event => setEditing({ ...editing, unit: event.target.value })} /></label>
             </div>}
             <label>รายละเอียด<textarea maxLength="5000" value={editing.details} onChange={event => setEditing({ ...editing, details: event.target.value })} /></label>
-            <div className="form-actions"><button type="button" className="button ghost" onClick={() => setEditing(null)}>ยกเลิก</button><button className="button primary" disabled={busy === item.id || !editing.title.trim() || !editing.recorded_at || (item.record_type === 'weight' && (!editing.numeric_value || Number(editing.numeric_value) < 0 || !editing.unit.trim()))}>บันทึกการแก้ไข</button></div>
+            <div className="form-actions"><button type="button" className="button ghost" disabled={busy === item.id} onClick={() => setEditing(null)}>ยกเลิก</button><button className="button primary" disabled={busy === item.id || !editing.title.trim() || !editing.recorded_at || (item.record_type === 'weight' && (!editing.numeric_value || Number(editing.numeric_value) < 0 || !editing.unit.trim()))}>บันทึกการแก้ไข</button></div>
           </form> : <>
             <strong>{item.title}</strong><span>{TYPES[item.record_type]}</span><p>{item.details}</p>
             {item.numeric_value != null && <b>{item.numeric_value} {item.unit}</b>}
             <time>{new Date(item.recorded_at).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })}</time>
-            {item.can_edit && <div className="manage-actions"><button className="button ghost" onClick={() => startEdit(item)}>แก้ไข</button><button className="button subtle-danger" disabled={busy === item.id} onClick={() => archive(item)}>ลบ</button></div>}
+            {item.can_edit && <ManagementMenu label={item.title}><button className="button ghost" onClick={() => startEdit(item)}>แก้ไข</button><button className="button subtle-danger" disabled={busy === item.id} onClick={() => archive(item)}>ลบ</button></ManagementMenu>}
           </>}
         </article>)}
       </div>

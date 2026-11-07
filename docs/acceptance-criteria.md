@@ -8,12 +8,12 @@
 | AC-04 | Complete มีหมายเหตุแบบเลือกได้, Skip มีเหตุผล, reschedule/reassign ไม่เปลี่ยน parent routine และต้องยืนยันก่อนเปลี่ยนข้อมูล |
 | AC-05 | คำขอซ้ำด้วย idempotency key เดิมเกิด mutation/log เดียว; payload ต่างกันตอบ 409 |
 | AC-06 | Undo สำเร็จภายใน 8 วินาที และตอบ 409 หากหมดเวลา/ถูกเปลี่ยนต่อแล้ว |
-| AC-07 | care/health create-edit-archive เคารพสิทธิ์และไม่ลบประวัติ |
+| AC-07 | care/health create-edit-archive ผ่านหน้าเว็บเคารพสิทธิ์และไม่ลบประวัติ เวลาเดิมคงอยู่เมื่อแก้เฉพาะข้อความแม้เบราว์เซอร์ใช้เขตเวลาอื่น |
 | AC-08 | Timeline และประวัติการเปลี่ยนแปลงอ่านข้อมูลจริง แยก household/account และ paginate ได้ |
 | AC-09 | ทุก product-data mutation ที่สำเร็จมี Activity ภายในพร้อม actor/time และ sanitized before/after โดยไม่มีหน้า Change History ใน UI |
 | AC-10 | มือถือ 375px ไม่มี horizontal overflow และเมนูคือ วันนี้ ปฏิทิน เพิ่ม สัตว์เลี้ยง เพิ่มเติม |
 | AC-11 | Health เป็นข้อความ/ตัวเลขเท่านั้น และแสดงคำชี้แจงว่าไม่ใช่คำวินิจฉัย |
-| AC-12 | migration 004–005 รันซ้ำได้และรักษาข้อมูล legacy |
+| AC-12 | migrations 001–019 รันซ้ำได้ รักษาข้อมูล legacy และไม่เปลี่ยนการมอบหมายเฉพาะงานที่ผู้ใช้ตั้งไว้ |
 | AC-13 | เฉพาะ Owner ลบบ้านได้หลังพิมพ์ชื่อยืนยัน บ้านถูกซ่อนจากสมาชิกและไม่แสดงรายการถังขยะใน UI ขณะที่ข้อมูลเดิมยังคงอยู่ |
 | AC-14 | โปรไฟล์ Wellness และ Health Passport ทั้ง 5 ประเภทสร้าง/อ่าน/แก้/archive ตามสิทธิ์ได้ ข้อมูลเดิมยังอยู่ มี Activity/Timeline และบ้านในถังขยะเข้าถึงไม่ได้ |
 | AC-15 | Daily Wellness เลือกกรอกข้อมูลบางส่วน ย้อนหลัง และหลายรายการต่อวันได้ ช่องว่างไม่เป็นศูนย์ ผู้สร้างหรือ Owner แก้/archive ได้ และมี Activity/Timeline แม้รายการถูก archive |
@@ -24,7 +24,11 @@
 | AC-20 | AI ตรวจ membership, เปิดใช้รายบ้าน, consent ของสมาชิก และ quota ก่อนส่ง context; ถอน consent หรือปิด AI แล้ว core care ยังทำงานได้ |
 | AC-21 | AI chatbot ตอบจาก context ตามสิทธิ์ ตรวจ JSON/source IDs กับ allowlist; ข้อมูลไม่พอต้องไม่สร้างข้อเท็จจริงขึ้นเอง และแจ้งเมื่อ context ถูกตัด |
 | AC-22 | เมื่อ provider timeout, HTTP error หรือ output ผิดรูปแบบ UI แสดงข้อผิดพลาดที่เข้าใจได้ ไม่มี key รั่ว และไม่ทำให้ข้อมูลดูแลเปลี่ยนเอง |
-| AC-23 | AI care draft ตรวจ mode/type/ค่าตัวเลขและความยาว ไม่สร้าง record จนผู้ใช้ตรวจและยืนยันผ่าน mutation ปกติ; ไม่สร้างคำวินิจฉัยหรือปรับขนาดยา |
+| AC-23 | Legacy AI care-draft API ไม่เขียน record เอง; ถูกถอดออกจาก UI/Quick Add แล้ว ไม่เป็นกรณี demo ของรุ่นปัจจุบัน และยังต้องปรับ numeric type validation |
+| AC-24 | Sidebar/รายสัตว์แสดงและนับเฉพาะกิจวัตรทำซ้ำ; once ยังอยู่ Today/Calendar |
+| AC-25 | ปุ่มจัดการอยู่ใน header ใกล้ปุ่มเพิ่ม เปิด/ปิดเครื่องมือได้ตามสิทธิ์; Owner ลบบ้านได้โดยตรงพร้อมพิมพ์ชื่อบ้านยืนยัน |
+| AC-26 | PDF A4 มีโลโก้ PetRoutine และสัดส่วนกระชับเหมือนกันข้าม viewport/ธีม |
+| AC-27 | Today จำเครื่องมือและสรุประหว่างสลับหน้า ดูซ้ำไม่เพิ่ม AI request; explicit refresh เพิ่มหนึ่งคำขอและ logout ล้าง cache |
 
 เกณฑ์ AI ด้านเนื้อหาต้องตรวจด้วย provider จริงเพิ่มเติมจาก mocked API tests โดยเฉพาะหลายสัตว์ ข้อมูลไม่พอ medical boundary และ prompt injection ผล heuristic evaluation ไม่ใช่การรับรองทุกคำตอบ ดู [Traceability](delivery/traceability.md)
 

@@ -37,7 +37,7 @@ docker compose up -d --wait
 1. ตั้ง server flag, key, model และ base URL ตามบัญชี provider ของผู้ทดสอบใน `.env`
 2. สำหรับ Docker ใช้ `docker compose up -d --force-recreate --wait web`; สำหรับ host dev ให้หยุดแล้วเริ่ม dev server ใหม่
 3. Owner เปิด AI ใน Settings ของบ้าน สมาชิกต้องให้ consent ก่อนใช้
-4. ใช้ข้อมูลสังเคราะห์ ตรวจ source และให้ผู้ใช้ยืนยัน draft ก่อนบันทึก ดูข้อจำกัด/การประเมินใน [AI guide](ai-phase-11.md)
+4. ใช้ข้อมูลสังเคราะห์ตรวจคำตอบและ source อ้างอิง; UI ปัจจุบันมีแชต/สรุปส่งต่อ ไม่มี AI draft ดู [AI guide](ai-phase-11.md)
 
 การเปิด server flag ไม่แทนการเปิดใช้รายบ้านและ consent ไม่ส่ง key ไป browser หรือใส่ `.env` ใน Issue โควตาในแอปไม่ใช่วงเงินรายเดือนของ provider
 

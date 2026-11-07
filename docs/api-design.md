@@ -1,8 +1,10 @@
 # REST API Design
 
+สถานะหน้าจอและผลตรวจรุ่นปัจจุบัน: [Current release](current-release.md) — ผลเก่าในเอกสารนี้ต้องอ่านร่วมกับ revision เดิม; `ai-care-draft` เป็น legacy API ไม่มีทางเข้าใน UI ปัจจุบัน
+
 ## AI Chatbot (Phase 11)
 
-`POST /pets/:id/ai-insights` ใช้ `intent: "chat_question"`, `question` ไม่เกิน 500 ตัวอักษร, `from`/`to` ไม่เกิน 365 วัน และ `history` สูงสุด 6 ข้อความ ผู้ส่งต้องเป็นสมาชิกบ้านที่เปิด AI และมีความยินยอมที่ยังไม่ถูกถอน `POST /households/:id/ai-insights` ใช้รูปแบบเดียวกันสำหรับสัตว์เลี้ยงทุกตัวในบ้าน คำถามแนวโน้มยังจำกัด 30 วัน `PATCH /households/:id/ai-consent` รับ `{ "consented": true|false }` สำหรับสมาชิกจัดการความยินยอมของตนเอง `GET /pets/:id/ai-insights/status` คืน `consented` ให้ UI คำตอบใช้รูปแบบเดียวกับ AI Insight (`answer`, `sources`, `range`, `disclaimer`) พร้อม `sources[].pet_id/pet_name` ประวัติสนทนาไม่บันทึกในฐานข้อมูล จำกัดข้อมูลต้นทาง 240 รายการต่อคำขอ โควตา 10 คำขอต่อผู้ใช้ต่อชั่วโมงรวมทุก intent
+`POST /pets/:id/ai-insights` ใช้ `intent: "chat_question"`, `question` ไม่เกิน 500 ตัวอักษร, `from`/`to` ไม่เกิน 365 วัน และ `history` สูงสุด 6 ข้อความ ผู้ส่งต้องเป็นสมาชิกบ้านที่เปิด AI และมีความยินยอมที่ยังไม่ถูกถอน `POST /households/:id/ai-insights` ใช้รูปแบบเดียวกันสำหรับสัตว์เลี้ยงทุกตัวในบ้าน UI ปัจจุบันใช้ intent `chat_question`; intent สรุปแบบเดิมไม่เปิดให้เรียก `PATCH /households/:id/ai-consent` รับ `{ "consented": true|false }` สำหรับสมาชิกจัดการความยินยอมของตนเอง `GET /pets/:id/ai-insights/status` คืน `consented` ให้ UI คำตอบใช้รูปแบบเดียวกับ AI Insight (`answer`, `sources`, `range`, `disclaimer`) พร้อม `sources[].pet_id/pet_name` ประวัติสนทนาไม่บันทึกในฐานข้อมูล จำกัดข้อมูลต้นทาง 240 รายการต่อคำขอ โควตา 10 คำขอต่อผู้ใช้ต่อชั่วโมงรวมทุก intent
 
 `hourly_limit` ใน endpoint สถานะเป็น `0` เมื่อปิดโควตาของแอปสำหรับทดสอบผ่าน `PAWROUTINE_AI_HOURLY_LIMIT=0`; ค่าเริ่มต้นคือ 10 คำขอต่อผู้ใช้ต่อชั่วโมง
 
@@ -50,4 +52,4 @@ Notifications รวม `task`, `health_due` จาก vaccination/appointment �
 
 ## Permissions
 
-ทุก endpoint ตรวจ household membership สมาชิกแก้ task occurrence และสร้าง/อ่าน Daily Wellness ได้ ผู้สร้างหรือ Owner แก้/archive care/health/wellness ได้ และ Owner เท่านั้นที่จัดการ lifecycle ของ routine/pet/household บ้านที่ archived ปฏิเสธการเข้าถึงทุก endpoint ยกเว้นรายการถังขยะและการกู้คืนของ Owner
+ทุก endpoint ตรวจ household membership สมาชิกสร้าง routine ของสัตว์ในบ้าน แก้ task occurrence และสร้าง/อ่าน Daily Wellness ได้ ผู้สร้างหรือ Owner แก้/archive care/health/wellness ได้ ส่วนการแก้/archive routine เดิมและการจัดการเจ้าของบ้านเป็นสิทธิ์ Owner การส่ง assigned_user_id เป็น null หมายถึงทุกคนในบ้าน หากละ field นี้ตอนสร้าง routine ระบบใช้ผู้สร้างเป็นค่าเริ่มต้น บ้านที่ archived ปฏิเสธการเข้าถึงทุก endpoint ยกเว้นรายการถังขยะและการกู้คืนของ Owner

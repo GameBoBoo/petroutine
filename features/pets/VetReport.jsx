@@ -48,9 +48,11 @@ export default function VetReport({ petId, api }) {
       const module = await import('html2pdf.js');
       const html2pdf = module.default || module;
       const filename = `PetRoutine-${safePetName}-Vet-Report-${filters.from}-to-${filters.to}.pdf`;
+      const exportPaper = reportRef.current.cloneNode(true);
+      exportPaper.classList.add('pdf-export');
       const blob = await html2pdf().set({
         filename: `PetRoutine-${safePetName}-Vet-Report-${filters.from}-to-${filters.to}.pdf`,
-        margin: [10, 10, 12, 10],
+        margin: [12, 12, 14, 12],
         image: { type: 'jpeg', quality: 0.96 },
         html2canvas: {
           scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollY: 0,
@@ -62,7 +64,7 @@ export default function VetReport({ petId, api }) {
         },
         pagebreak: { mode: ['css', 'legacy'], avoid: ['.report-section', '.report-table tr', '.report-profile div', '.report-note', '.report-footer'] },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      }).from(reportRef.current).outputPdf('blob');
+      }).from(exportPaper).outputPdf('blob');
       // Use the browser download API explicitly so the report name is preserved
       // across FileSaver/browser implementations (including headless Linux).
       const url = URL.createObjectURL(blob);
@@ -86,7 +88,7 @@ export default function VetReport({ petId, api }) {
     <fieldset className="metric-picker no-print"><legend>หัวข้อในรายงาน (ด้านล่างเป็นตัวอย่างก่อนดาวน์โหลด)</legend>{[['passport','สมุดสุขภาพ'],['health','เหตุการณ์สุขภาพ'],['wellness','เช็กอิน'],['alerts','การติดตาม'],['timeline','ไทม์ไลน์']].map(([key,label])=><label className="checkbox-row" key={key}><input type="checkbox" checked={sections.includes(key)} onChange={e=>setSections(current=>e.target.checked?[...current,key]:current.filter(s=>s!==key))}/>{label}</label>)}</fieldset><div className="report-controls no-print"><label>ตั้งแต่<DatePicker max={filters.to} value={filters.from} onChange={event => setFilters(current => ({ ...current, from: event.target.value }))} /></label><label>ถึง<DatePicker min={filters.from} max={today} value={filters.to} onChange={event => setFilters(current => ({ ...current, to: event.target.value }))} /></label>{loading && <span role="status">กำลังจัดทำรายงาน…</span>}</div>
     {error && <p className="form-error no-print" role="alert">{error} <button onClick={load}>ลองอีกครั้ง</button></p>}
     {report && <article ref={reportRef} className="vet-report-paper">
-      <header className="report-cover"><div className="report-cover-main"><BrandLogo className="report-logo" /><span className="report-kicker">รายงานสุขภาพสัตว์เลี้ยง</span><h2>รายงานข้อมูลสัตว์เลี้ยง</h2><p>{pet.name} · {pet.household_name}</p></div><dl><div><dt>ช่วงข้อมูล</dt><dd>{dateText(report.range.from)} – {dateText(report.range.to)}</dd></div><div><dt>จัดทำเมื่อ</dt><dd>{dateTimeText(report.generated_at)}</dd></div><div><dt>จัดทำโดย</dt><dd>{report.generated_by_name}</dd></div></dl></header>
+      <header className="report-cover"><div className="report-cover-main"><BrandLogo className="report-wordmark report-brand" /><span className="report-kicker">รายงานสุขภาพสัตว์เลี้ยง</span><h2>รายงานข้อมูลสัตว์เลี้ยง</h2><p>{pet.name} · {pet.household_name}</p></div><dl><div><dt>ช่วงข้อมูล</dt><dd>{dateText(report.range.from)} – {dateText(report.range.to)}</dd></div><div><dt>จัดทำเมื่อ</dt><dd>{dateTimeText(report.generated_at)}</dd></div><div><dt>จัดทำโดย</dt><dd>{report.generated_by_name}</dd></div></dl></header>
       <p className="report-disclaimer">เอกสารนี้รวบรวมข้อมูลที่ผู้ใช้บันทึกใน PetRoutine เพื่อช่วยสื่อสารกับสัตวแพทย์ ไม่ใช่การวินิจฉัย คำแนะนำการรักษา หรือการคำนวณยา</p>
       <section className="report-section"><h3>ข้อมูลสัตว์เลี้ยง</h3><dl className="report-profile"><div><dt>ชื่อ</dt><dd>{pet.name}</dd></div><div><dt>ประเภท</dt><dd>{pet.species === 'cat' ? 'แมว' : 'สุนัข'}</dd></div><div><dt>สายพันธุ์</dt><dd>{pet.breed || 'ไม่ระบุ'}</dd></div><div><dt>วันเกิด</dt><dd>{dateText(pet.birth_date)}</dd></div><div><dt>เพศ</dt><dd>{pet.sex === 'male' ? 'ผู้' : pet.sex === 'female' ? 'เมีย' : 'ไม่ระบุ'}</dd></div><div><dt>ทำหมัน</dt><dd>{pet.neuter_status === 'neutered' ? 'แล้ว' : pet.neuter_status === 'not_neutered' ? 'ยัง' : 'ไม่ระบุ'}</dd></div><div><dt>น้ำหนักตั้งต้น</dt><dd>{pet.baseline_weight_kg ? `${pet.baseline_weight_kg} กก. (${dateText(pet.baseline_weight_recorded_on)})` : 'ไม่ระบุ'}</dd></div><div><dt>ติดต่อสัตวแพทย์</dt><dd>{pet.vet_contact || 'ไม่ระบุ'}</dd></div></dl>{pet.notes && <p className="report-note"><strong>หมายเหตุ:</strong> {pet.notes}</p>}</section>
       {sections.includes('passport') && <section className="report-section"><h3>สมุดสุขภาพ</h3><DataTable label="สมุดสุขภาพ" empty="ไม่มีข้อมูลสมุดสุขภาพที่ใช้งาน" columns={[{ key: 'entry_type', label: 'ประเภท', render: row => TYPE_NAMES[row.entry_type] || row.entry_type }, { key: 'title', label: 'รายการ' }, { key: 'details', label: 'รายละเอียด' }, { key: 'next_due_date', label: 'กำหนดครั้งถัดไป', render: row => dateText(row.next_due_date) }]} rows={report.passport} /></section>}

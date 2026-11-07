@@ -1,3 +1,4 @@
+async function showManagement(page) { const button = page.locator('.management-toolbar button'); await button.waitFor(); if (await button.getAttribute('aria-pressed') !== 'true') await button.click(); }
 import { expect, test } from '@playwright/test';
 
 test('care screens use shared dropdowns and omit onboarding and recovery panels',async({page,request},testInfo)=>{
@@ -23,10 +24,11 @@ test('care screens use shared dropdowns and omit onboarding and recovery panels'
   await expect(routineCard.getByText('23:59 น.',{exact:true})).toBeVisible();
   await expect(routineCard.getByText('ให้อาหาร',{exact:true})).toBeVisible();
   await expect(routineCard.getByRole('button',{name:'ปิดชั่วคราว',exact:true})).toHaveCount(0);
+  await showManagement(page);
   await routineCard.getByRole('button',{name:'ลบ Dinner',exact:true}).click();
   await expect(page.getByRole('dialog').getByRole('heading',{name:'ลบรายการ'})).toBeVisible();
   await page.getByRole('dialog').getByRole('button',{name:'ยกเลิก',exact:true}).click();
-  await expect(routineCard.getByRole('button',{name:'ลบ Dinner',exact:true})).toBeVisible();
+  await expect(page.getByRole('button', { name: 'เสร็จสิ้น', exact: true })).toBeVisible();
   await page.screenshot({path:testInfo.outputPath('pet-routines.png'),fullPage:true});
   await page.goto('/#calendar');await expect(page.getByRole('heading',{name:'ปฏิทินการดูแล'})).toBeVisible();
   await page.getByRole('button',{name:'แก้เฉพาะครั้งนี้'}).first().click();await expect(page.getByRole('dialog')).toBeVisible();await page.getByRole('dialog').getByRole('combobox').click();await expect(page.getByRole('listbox')).toBeVisible();await page.getByRole('option',{name:'ทุกคนในบ้าน',exact:true}).click();await page.getByRole('button',{name:'ยืนยันผู้รับผิดชอบเฉพาะครั้งนี้'}).click();await page.getByRole('alertdialog',{name:'ยืนยันเปลี่ยนผู้รับผิดชอบ?'}).getByRole('button',{name:'ยืนยันการเปลี่ยนแปลง'}).click();await expect(page.getByRole('dialog')).toHaveCount(0);

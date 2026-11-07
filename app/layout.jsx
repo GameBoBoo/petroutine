@@ -15,6 +15,8 @@ import './household-ux.css';
 import './notification-ux.css';
 import './dark-mode.css';
 import './ai-care.css';
+import './pdf-report.css';
+import './management-menu.css';
 import ConfirmationProvider from '../components/ConfirmationProvider.jsx';
 
 export const metadata = {

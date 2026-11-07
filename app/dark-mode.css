@@ -113,20 +113,20 @@ html[data-theme='dark'] .date-picker-popover .date-picker-footer button:disabled
 /* The vet report remains a printable white document in either theme. */
 html[data-theme='dark'] .app-shell .vet-report-paper { color:#1F2937; background:#fff; border-color:#ECE8E3; }
 html[data-theme='dark'] .app-shell .vet-report-paper :is(h2,h3,h4,h5,h6) { color:#1F2937; }
-html[data-theme='dark'] .app-shell .vet-report-paper .report-cover { color:#1F2937; background:#FFFAF4; border-color:#F2E6D7; border-top-color:#F59E0B; }
+html[data-theme='dark'] .app-shell .vet-report-paper .report-cover { color:#1F2937; background:#FFFFFF; border-color:#DADADA; border-top-color:#DADADA; }
 html[data-theme='dark'] .app-shell .vet-report-paper .report-cover p { color:#536171; }
 html[data-theme='dark'] .app-shell .vet-report-paper .report-cover dt,
 html[data-theme='dark'] .app-shell .vet-report-paper .report-profile dt,
 html[data-theme='dark'] .app-shell .vet-report-paper .report-footer { color:#66717E; }
-html[data-theme='dark'] .app-shell .vet-report-paper .report-disclaimer { color:#1F2937; background:#FFFAF4; border-color:#F2E6D7; }
-html[data-theme='dark'] .app-shell .vet-report-paper .report-table th { color:#1F2937; background:#FEF3E7; }
+html[data-theme='dark'] .app-shell .vet-report-paper .report-disclaimer { color:#1F2937; background:#FFFFFF; border-color:#DADADA; }
+html[data-theme='dark'] .app-shell .vet-report-paper .report-table th { color:#1F2937; background:#F5F5F5; }
 html[data-theme='dark'] .app-shell .vet-report-paper .report-table td { color:#1F2937; background:#fff; }
-html[data-theme='dark'] .app-shell .vet-report-paper .report-logo.brand-logo,
-html[data-theme='dark'] .app-shell .vet-report-paper .report-logo .brand-logo-name { color:#1F2937; }
-html[data-theme='dark'] .app-shell .vet-report-paper .report-logo .brand-logo-name > span { color:#C76C00; }
-html[data-theme='dark'] .app-shell .vet-report-paper .report-logo .brand-logo-tagline { color:#687383; }
-html[data-theme='dark'] .app-shell .vet-report-paper .report-logo .brand-logo-symbol [stroke='#1F2937'] { stroke:#1F2937; }
-html[data-theme='dark'] .app-shell .vet-report-paper .report-logo .brand-logo-symbol [fill='#1F2937'] { fill:#1F2937; }
+
+
+
+
+
+
 
 /* Keep the illustrated orange welcome card as the brand landmark. */
 html[data-theme='dark'] .app-shell.view-today .today-welcome { background:#D98910; color:#1F2937; }

@@ -1,5 +1,7 @@
 # บท Demo และกรณีผิดพลาด
 
+ใช้ [พฤติกรรมและหลักฐานล่าสุด](../current-release.md) ประกอบการนำเสนอ: เปิดโหมดจัดการใน header ก่อนแก้/ลบ, ลบบ้านโดยตรง, ไม่สาธิต AI draft/เตรียมคุยสัตวแพทย์, แยกผล full-suite baseline จาก targeted UI รอบหลัง
+
 ใช้ฐานข้อมูล delivery synthetic ที่ port 3300 เท่านั้น ไม่แสดง password/API key หรือข้อมูลผู้ใช้จริง เปิด Jenkins console และ traceability เตรียมไว้ก่อนเริ่ม ระบุ commit และ build number ที่ใช้จริง
 
 หลัง Course delivery deploy ผ่านแล้ว เตรียมข้อมูลจาก host PowerShell โดยชี้ port 3300 ของ Course:

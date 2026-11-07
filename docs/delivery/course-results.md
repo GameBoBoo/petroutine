@@ -1,5 +1,9 @@
 # ผลส่งมอบและตรวจ Course — 28 ตุลาคม 2026
 
+สถานะหน้าจอและผลตรวจรุ่นปัจจุบัน: [Current release](../current-release.md) — ผลเก่าในเอกสารนี้ต้องอ่านร่วมกับ revision เดิม; `ai-care-draft` เป็น legacy API ไม่มีทางเข้าใน UI ปัจจุบัน
+
+รุ่นแก้ไขหลัง audit ใช้ [สรุป 6 พฤศจิกายน 2569](audit-fixes-20261106.md) และ artifact ของ job `PetRoutine-audit-fix-20261106` เพื่อระบุ commit ผลตรวจ และ image ส่วนผลด้านล่างเป็นประวัติของแต่ละรุ่น
+
 ## Baseline ก่อนจัดระเบียบไฟล์
 
 Jenkins **#10 SUCCESS** ที่ source `9d6ef80e17755ddada624e6fcbe1bd1339b90979` มีผล audit/build, unit/API 76/76, E2E 14 ผ่าน/4 platform skips, image push-pull/deploy/smoke/restore ผ่าน ดู [JSON build 10](evidence/course-build-10.json) การแก้ source หลังจากนั้นอ่าน [Maintenance](../maintenance.md); ผลนี้ไม่ใช่การรับรอง source หลัง cleanup

@@ -31,14 +31,6 @@ html[data-theme='dark'] .app-shell .ai-care-signals button:hover { background:#3
 html[data-theme='dark'] .app-shell :is(.ai-care-sources,.ai-care-footnote) { border-color:#544C42; }
 html[data-theme='dark'] .app-shell .ai-care-sources button { color:#FFCA85; background:#3B3027; border-color:#725333; }
 @media(max-width:640px) { .app-shell .ai-care-brief { padding:18px; } .app-shell .ai-care-actions .button { flex:1 1 100%; } }
-.app-shell .quick-ai-entry { display:flex; align-items:center; justify-content:space-between; gap:14px; width:100%; min-height:72px; padding:15px 18px; text-align:left; color:#1F2937; background:#FFF1D9; border:1px solid #E8B46B; border-radius:15px; cursor:pointer; }
-.app-shell .quick-ai-entry:hover { background:#FFE7BE; border-color:#C97816; }
-.app-shell .quick-ai-entry span:first-child { display:grid; gap:3px; }
-.app-shell .quick-ai-entry strong { font-size:14px; }
-.app-shell .quick-ai-entry small { color:#6F5435; font-size:12px; line-height:1.5; }
-.app-shell .quick-ai-entry > span:last-child { font-size:22px; }
-.app-shell .quick-ai-form .field-help { margin:0; }
-html[data-theme='dark'] .app-shell .quick-ai-entry { color:var(--ink); background:#3B3027; border-color:#725333; }
-html[data-theme='dark'] .app-shell .quick-ai-entry:hover { background:#4A3828; }
-html[data-theme='dark'] .app-shell .quick-ai-entry small { color:#CDBDAA; }
+.app-shell .ai-care-result-head { flex-wrap:wrap; gap:8px; }
+.app-shell .ai-care-result-head small { flex-basis:100%; order:3; color:var(--muted); font-size:12px; }
 .app-shell.view-today .ai-chat-toggle { display:none; }
