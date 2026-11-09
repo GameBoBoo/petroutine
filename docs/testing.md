@@ -1,10 +1,25 @@
 ﻿# ผลทดสอบและขอบเขตหลักฐาน
 
-สถานะปัจจุบันและผลแยกตาม revision อยู่ใน [Current release](current-release.md) ล่าสุดอ้างอิง source `512009f` ไม่ได้นำ full-suite ของรุ่นก่อนมายืนยัน UI รุ่นนี้โดยอัตโนมัติ
+หน้านี้บันทึกผลตาม revision และขอบเขตหลักฐาน ไม่ใช้ผลจาก source เก่าแทนการตรวจโค้ดที่เปลี่ยนภายหลัง
 
-## รุ่นปัจจุบัน
+## ผลตรวจ working tree ล่าสุด — 9 พฤศจิกายน 2569
 
-Full-suite baseline `c802bd8` ใน Course Jenkins #5 ผ่าน Unit/API 98/98 และ E2E 18/4 platform skips ก่อน UI รอบหลัง; UI header/context management ที่ `c97a4a8` ตรวจ 7 ส่วนทั้ง desktop/mobile และ static 7/7; บ้านและสมาชิกที่ `512009f` ตรวจ Owner/Member ทั้งสอง viewport 4 กรณีและ static 2/2 ผ่าน Build/deploy local ผ่าน ผลนี้ไม่ใช่ full-suite ใหม่ของ source ล่าสุด
+ตรวจ working tree บนฐาน commit `171d2b1` (`main`) ด้วย Docker verification suite ที่ใช้ PostgreSQL แบบ tmpfs แยกจากฐานข้อมูล Seed:
+
+| ชุดตรวจ | ผล | ขอบเขต |
+|---|---:|---|
+| Production dependency audit | ผ่าน, 0 high/critical vulnerabilities | `npm audit --omit=dev --audit-level=high` |
+| Unit/API | 77/77 ผ่าน | `tests/*.test.mjs`; API, validation, permissions, services และ pure logic |
+| Production build | ผ่าน | Next.js production build และ type validation |
+| E2E | 20 ผ่าน, 4 skipped | Playwright Chromium desktop/mobile projects |
+
+ผลมาจาก `compose.verify.yml` และสรุปอยู่ใน `artifacts/verification/verification.json` ซึ่งเป็นไฟล์ local ที่ Git ignore ชุดนี้ไม่ได้ใช้ AI provider จริง (E2E ใช้ค่าจำลอง) และไม่กระทบฐานข้อมูลที่ Seed ไว้ ผลนี้ยืนยันเฉพาะ working tree ที่ตรวจ ไม่ใช่ GitHub Actions/Jenkins หรือ source หลังมีการแก้ไขเพิ่มเติม
+
+ระหว่างตรวจพบ test Phase 4 ที่คาดว่า Member สร้าง routine ไม่ได้ ซึ่งขัดกับ API ปัจจุบันและ test routine v2; ปรับ test ให้ตรงพฤติกรรมปัจจุบัน นอกจากนี้ build พบ missing source imports ของ Bangkok datetime helper และ Care Entry editor จึงเพิ่มไฟล์ที่ขาด แล้ว E2E ยืนยันการแก้ไขและคง precision ของเวลาบันทึกดูแล
+
+## ผลตรวจย้อนหลัง
+
+Full-suite baseline `c802bd8` ใน Course Jenkins #5 ผ่าน Unit/API 98/98 และ E2E 18/4 platform skips ก่อน UI รอบหลัง; UI header/context management ที่ `c97a4a8` ตรวจ 7 ส่วนทั้ง desktop/mobile และ static 7/7; บ้านและสมาชิกที่ `512009f` ตรวจ Owner/Member ทั้งสอง viewport 4 กรณีและ static 2/2 ผ่าน ผลเหล่านั้นเป็นหลักฐานของ revision ในตาราง ไม่ใช่ผลล่าสุด
 
 ## บันทึกย้อนหลังของรุ่นเดิม
 

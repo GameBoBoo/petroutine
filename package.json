@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "db:migrate": "node scripts/migrate.mjs",
+    "seed:test": "node scripts/seed-test-data.mjs",
     "ai:check": "node scripts/check-ai-provider.mjs",
     "ai:evaluate": "node scripts/evaluate-ai-synthetic.mjs",
     "ai:evaluate:draft": "node scripts/evaluate-ai-draft.mjs",

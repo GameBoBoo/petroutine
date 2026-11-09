@@ -60,7 +60,12 @@ test('Phase 4 permissions, editing, archiving, assignment, and history filters',
   assert.equal((await call('PATCH', `pets/${petId}`, memberToken, { name: 'Nope', species: 'cat' })).status, 403);
   assert.equal((await call('POST', 'households/join', memberToken, { invite_code: home.body.household.invite_code })).status, 201);
   assert.equal((await call('PATCH', `pets/${petId}`, memberToken, { name: 'Mochi II', species: 'dog' })).status, 200);
-  assert.equal((await call('POST', `pets/${petId}/routines`, memberToken, { title: 'Feed', activity_type: 'feeding', time: '08:00', days: [0,1,2,3,4,5,6] })).status, 403);
+  const memberRoutine = await call('POST', `pets/${petId}/routines`, memberToken, {
+    title: 'Member-created routine', activity_type: 'feeding', time: '08:00',
+    days: [0,1,2,3,4,5,6], active: false,
+  });
+  assert.equal(memberRoutine.status, 201, 'household members can create routines');
+  assert.equal(memberRoutine.body.routine.assigned_user_id, other.body.user.id);
   const routineResult = await call('POST', `pets/${petId}/routines`, ownerToken, { title: 'Feed', activity_type: 'feeding', time: '08:00', days: [0,1,2,3,4,5,6], assigned_user_id: other.body.user.id });
   assert.equal(routineResult.status, 201);
   const routineId = routineResult.body.routine.id;

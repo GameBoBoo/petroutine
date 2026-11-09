@@ -55,6 +55,30 @@ node scripts/setup-local.mjs
 
 ## ข้อมูลสาธิตสำหรับ baseline/alert
 
+สำหรับชุดข้อมูลทดสอบที่ครอบคลุมหลายฟีเจอร์ ใช้ `scripts/seed-test-data.mjs` ซึ่งสร้างผู้ใช้ Owner/Member/คนนอก บ้าน สุนัข/แมว กิจวัตรหลายรูปแบบ งานที่มีหลายสถานะ บันทึกดูแล/สุขภาพ สมุดสุขภาพ การแจ้งเตือน ถังเก็บรายการ และข้อมูล Wellness 17 วันสำหรับ baseline/alert/report โดยใช้วันที่อ้างอิงตาม Asia/Bangkok ของวันที่รันทุกครั้ง
+
+สคริปต์สร้างชุดใหม่โดยไม่ลบหรือแก้ชุดข้อมูลเดิม และต้องรันเองพร้อม guard ยืนยันข้อมูลสังเคราะห์ ไฟล์เข้าสู่ระบบและ ID ส่วนตัวจะถูกเขียนไว้ใน `artifacts/test-seed-<id>.json` ซึ่ง Git ignore; หนึ่งครั้งจะสร้างบัญชีทดสอบใหม่สามบัญชี จึงควรเก็บไฟล์นี้ไว้ในเครื่องและไม่แนบใน Issue
+
+Undo ใช้งานได้ในช่วงสั้นหลังเปลี่ยนสถานะงาน จึงไม่สามารถเก็บแถบ Undo ให้พร้อมใช้ใน fixture ที่เปิดภายหลังได้ ให้ทดสอบโดยกดเสร็จสิ้นใน Today แล้วกด Undo ทันที ส่วน PDF สร้างจากหน้า Vet Report ใน browser; seed เตรียมข้อมูลรายงานให้ ไม่ได้สร้างไฟล์ PDF ไว้ล่วงหน้า
+
+PowerShell:
+
+```powershell
+$env:SEED_BASE_URL='http://127.0.0.1:3000'
+$env:SEED_CONFIRM_SYNTHETIC='yes'
+npm run seed:test
+```
+
+macOS/Linux:
+
+```bash
+SEED_BASE_URL=http://127.0.0.1:3000 SEED_CONFIRM_SYNTHETIC=yes npm run seed:test
+```
+
+เปลี่ยน port ได้เป็น `3001` สำหรับ host development หรือ `3300` สำหรับ Course environment สคริปต์สร้างข้อมูลเฉพาะบริการ local (`localhost`/`127.0.0.1`) และไม่เรียก AI provider; หากมี provider ตั้งไว้ จะเปิดการตั้งค่าบ้านและ consent เพื่อให้ตรวจ UI ได้ แต่จะไม่ส่ง prompt
+
+สคริปต์เก่า `scripts/seed-delivery-demo.mjs` ยังคงใช้สร้าง fixture 17 วันแบบสาธิตขนาดเล็กตามขั้นตอนด้านล่าง
+
 สำหรับ local Docker ที่ port 3000 ซึ่งยืนยันแล้วว่าเป็นฐานข้อมูลทดสอบ PowerShell:
 
 ```powershell

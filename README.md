@@ -171,6 +171,8 @@ docker compose --env-file .env.example -p pawroutine-team-check -f compose.verif
 
 รัน **dependency audit → Unit/API → production build → E2E desktop/mobile** โดยใช้ test DB แยกแบบ tmpfs ผลอยู่ `artifacts/verification/` ชุดนี้ใช้ค่า AI จำลอง และไม่ใช้ `.env` ของผู้ใช้ตามคำสั่งข้างต้น การตรวจ source อย่างเป็นทางการตามรายวิชาให้รันใน Course Container ด้วย
 
+**ผลตรวจ working tree ล่าสุด (9 พฤศจิกายน 2569):** audit ผ่านและไม่พบช่องโหว่ระดับ high/critical, Unit/API 77/77 ผ่าน, production build ผ่าน, E2E 20 ผ่าน/4 skipped ดู [ผลตรวจและขอบเขตหลักฐาน](docs/testing.md) ผลนี้อ้างอิง working tree บนฐาน commit `171d2b1` ก่อน push ไม่ใช่ผลจาก GitHub หรือ remote CI
+
 <details>
 <summary><strong>รัน tests บน host</strong></summary>
 
@@ -192,6 +194,8 @@ E2E ตั้งค่า AI จำลองให้เองเพื่อท
 </details>
 
 ดู [ผลทดสอบที่บันทึกและขอบเขตหลักฐาน](docs/testing.md) และ [คู่มือทีมทดสอบ/รายงาน Bug](docs/team-testing.md) ผลของ commit เก่าไม่ใช่การรับรอง source ที่เปลี่ยนภายหลัง
+
+สร้างข้อมูลสังเคราะห์สำหรับทดลองหลายฟีเจอร์ได้ด้วย `npm run seed:test` โดยตั้ง `SEED_CONFIRM_SYNTHETIC=yes` และ `SEED_BASE_URL` ให้ชี้เว็บ local ก่อน ดูขั้นตอนและขอบเขตใน [คู่มือทีมทดสอบ](docs/team-testing.md)
 
 <a id="ai"></a>
 ## ✨ เปิด AI เมื่อพร้อม
